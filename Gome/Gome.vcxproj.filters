@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{f7b890b4-ec98-4eee-bc0e-cc3879a8aebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Client">
+      <UniqueIdentifier>{11abe5d3-b948-4816-9c14-069a805151ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Server">
+      <UniqueIdentifier>{c327a1b9-0b13-42ba-affa-88d30b0d3ed4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shared\Client\TCPClient.h">
+      <Filter>Shared\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+</Project>
