@@ -5,12 +5,13 @@
     <ClCompile Include="Shared\Networking\Message\Header.cpp">
       <Filter>Shared\Message</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Message\Message.cpp">
+    <ClCompile Include="Shared\Networking\Message\Packet.cpp">
       <Filter>Shared\Message</Filter>
     </ClCompile>
     <ClCompile Include="Shared\Utility\GUID.cpp">
       <Filter>Shared\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Shared\Networking\Message\MessageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
@@ -37,12 +38,13 @@
     <ClInclude Include="Shared\Networking\Message\Header.h">
       <Filter>Shared\Message</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Message\Message.h">
+    <ClInclude Include="Shared\Networking\Message\Packet.h">
       <Filter>Shared\Message</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Utility\GUID.h">
       <Filter>Shared\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Networking\Message\MessageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

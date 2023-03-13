@@ -140,15 +140,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Shared\Networking\Message\MessageManager.cpp" />
     <ClCompile Include="Shared\Networking\Message\Header.cpp" />
-    <ClCompile Include="Shared\Networking\Message\Message.cpp" />
+    <ClCompile Include="Shared\Networking\Message\Packet.cpp" />
     <ClCompile Include="Shared\Utility\GUID.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Shared\Networking\Message\MessageManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shared\Networking\Client\TCPClient.h" />
     <ClInclude Include="Shared\Networking\Message\Header.h" />
-    <ClInclude Include="Shared\Networking\Message\Message.h" />
+    <ClInclude Include="Shared\Networking\Message\Packet.h" />
     <ClInclude Include="Shared\Utility\GUID.h" />
   </ItemGroup>
   <ItemGroup>
