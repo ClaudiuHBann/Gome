@@ -7,8 +7,10 @@ namespace Shared {
 		namespace Message {
 			class MessageManager {
 			public:
-				Message ToMessage(const wstring& data, HeaderMetadata::Type type, Utility::GUID guid) const;
-				tuple<Utility::GUID, HeaderMetadata::Type, wstring> FromMessage(const Message& message) const;
+				using bytes = vector<byte>;
+
+				static Message ToMessage(const bytes& bytes, HeaderMetadata::Type type, Utility::GUID guid);
+				static tuple<Utility::GUID, HeaderMetadata::Type, bytes> FromMessage(const Message& message);
 			};
 		}
 	}

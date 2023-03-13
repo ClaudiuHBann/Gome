@@ -4,27 +4,27 @@
 namespace Shared {
 	namespace Networking {
 		namespace Message {
-			Message MessageManager::ToMessage(const wstring& data, HeaderMetadata::Type type, Utility::GUID guid /* = {} */) const {
-				HeaderMetadata headerMetadata(guid, type, data.length());
+			/* static */ Message MessageManager::ToMessage(const bytes& bytes, HeaderMetadata::Type type, Utility::GUID guid /* = {} */) {
+				HeaderMetadata headerMetadata(guid, type, bytes.size());
 				PacketMetadata packetMetadata(headerMetadata);
 
 				Message message(packetMetadata);
 
-				auto packetsCount = data.length() / PacketData::CONTENT_SIZE_MAX;
+				auto packetsCount = bytes.size() / PacketData::CONTENT_SIZE_MAX;
 				for (size_t i = 0; i < packetsCount; i++) {
 					HeaderData headerData(guid, i);
-					auto&& content(data.substr(i * PacketData::CONTENT_SIZE_MAX, (i + 1) * PacketData::CONTENT_SIZE_MAX));
+					MessageManager::bytes content(bytes.begin() + i * PacketData::CONTENT_SIZE_MAX, bytes.begin() + (i + 1) * PacketData::CONTENT_SIZE_MAX);
 					PacketData packetData(headerData, content);
 
 					message.mPacketDatas.push_back(packetData);
 				}
 
-				auto packetLastSize = data.length() % PacketData::CONTENT_SIZE_MAX;
+				auto packetLastSize = bytes.size() % PacketData::CONTENT_SIZE_MAX;
 				if (packetLastSize) {
 					packetsCount++;
 
 					HeaderData headerData(guid, packetsCount);
-					auto&& content(data.substr(packetsCount * PacketData::CONTENT_SIZE_MAX));
+					MessageManager::bytes content(bytes.begin() + packetsCount * PacketData::CONTENT_SIZE_MAX, bytes.begin() + packetsCount * PacketData::CONTENT_SIZE_MAX + packetLastSize);
 					PacketData packetData(headerData, content);
 
 					message.mPacketDatas.push_back(packetData);
@@ -33,8 +33,18 @@ namespace Shared {
 				return message;
 			}
 
-			tuple<Utility::GUID, HeaderMetadata::Type, wstring> MessageManager::FromMessage(const Message& message) const {
-				return tuple<Utility::GUID, HeaderMetadata::Type, wstring>();
+			/* static */ tuple<Utility::GUID, HeaderMetadata::Type, MessageManager::bytes> MessageManager::FromMessage(const Message& message) {
+				bytes bytes(message.mPacketMetadata.GetHeaderMetadata().GetSize());
+
+				for (const auto& packetData : message.mPacketDatas) {
+					bytes.insert_range(bytes.begin() + packetData.GetHeaderData().GetIndex() * PacketData::CONTENT_SIZE_MAX, packetData.GetContent());
+				}
+
+				return {
+					message.mPacketMetadata.GetHeaderMetadata().GetGUID(),
+					message.mPacketMetadata.GetHeaderMetadata().GetType(),
+					bytes
+				};
 			}
 		}
 	}
