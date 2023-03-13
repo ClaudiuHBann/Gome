@@ -5,7 +5,7 @@
 namespace Shared {
 	namespace Networking {
 		namespace Message {
-			class Header {
+			class HeaderMetadata {
 			public:
 				using bytes = vector<byte>;
 
@@ -16,10 +16,10 @@ namespace Shared {
 					COUNT
 				};
 
-				static const size_t HEADER_SIZE = Utility::GUID::GUID_SIZE + sizeof(Type) + sizeof(size_t);
+				static const size_t HEADER_METADATA_SIZE = Utility::GUID::GUID_SIZE + sizeof(Type) + sizeof(size_t);
 
-				Header(const bytes& header);
-				Header(const Type type, const size_t bufferValid);
+				HeaderMetadata(const bytes& header);
+				HeaderMetadata(const Utility::GUID& guid, const Type type, const size_t size);
 
 				bytes ToBytes();
 				wstring ToString();
@@ -27,9 +27,26 @@ namespace Shared {
 			private:
 				Utility::GUID mGUID {};
 				Type mType = Type::NONE;
-				size_t mBufferValid {};
+				size_t mSize {};
 
 				wstring TypeToString();
+			};
+
+			class HeaderData {
+			public:
+				using bytes = vector<byte>;
+
+				static const size_t HEADER_DATA_SIZE = Utility::GUID::GUID_SIZE + sizeof(size_t);
+
+				HeaderData(const bytes& header);
+				HeaderData(const Utility::GUID& guid, const size_t index);
+
+				bytes ToBytes();
+				wstring ToString();
+
+			private:
+				Utility::GUID mGUID {};
+				size_t mIndex {};
 			};
 		}
 	}
