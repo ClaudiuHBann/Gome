@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "Gome/pch.h"
 #include "Packet.h"
 
 namespace Shared {

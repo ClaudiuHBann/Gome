@@ -9,6 +9,7 @@
 #include <Rpc.h>
 #pragma comment(lib, "Rpcrt4.lib")
 
-#include <bitset>
+#include <iostream>
+#include <string>
 
 using namespace std;

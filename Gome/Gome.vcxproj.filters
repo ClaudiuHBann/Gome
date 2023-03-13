@@ -20,6 +20,13 @@
     <ClCompile Include="Shared\Networking\Message\MessageConverter.cpp">
       <Filter>Shared\Message</Filter>
     </ClCompile>
+    <ClCompile Include="Shared\Utility\Utility.cpp">
+      <Filter>Shared\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\Utility\Logger.cpp">
+      <Filter>Shared\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\Utility\String.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
@@ -36,9 +43,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shared\Networking\Client\TCPClient.h">
-      <Filter>Shared\Client</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shared\Networking\Message\Header.h">
       <Filter>Shared\Message</Filter>
@@ -58,6 +62,13 @@
     <ClInclude Include="Shared\Networking\Message\MessageConverter.h">
       <Filter>Shared\Message</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Utility\Utility.h">
+      <Filter>Shared\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Utility\Logger.h">
+      <Filter>Shared\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Utility\String.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

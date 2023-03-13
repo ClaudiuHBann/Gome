@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Gome;$(SolutionDir)Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -93,7 +93,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Gome;$(SolutionDir)Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Gome;$(SolutionDir)Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -127,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Gome;$(SolutionDir)Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Shared\Utility\Logger.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Shared\Networking\Message\MessageConverter.cpp" />
     <ClCompile Include="Shared\Networking\Message\Message.cpp" />
@@ -146,16 +147,20 @@
     <ClCompile Include="Shared\Networking\Message\Header.cpp" />
     <ClCompile Include="Shared\Networking\Message\Packet.cpp" />
     <ClCompile Include="Shared\Utility\GUID.cpp" />
+    <ClCompile Include="Shared\Utility\Utility.cpp" />
+    <ClCompile Include="Shared\Utility\String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Shared\Utility\Logger.h" />
     <ClInclude Include="Shared\Networking\Message\MessageConverter.h" />
     <ClInclude Include="Shared\Networking\Message\Message.h" />
     <ClInclude Include="Shared\Networking\Message\MessageManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Shared\Networking\Client\TCPClient.h" />
     <ClInclude Include="Shared\Networking\Message\Header.h" />
     <ClInclude Include="Shared\Networking\Message\Packet.h" />
     <ClInclude Include="Shared\Utility\GUID.h" />
+    <ClInclude Include="Shared\Utility\Utility.h" />
+    <ClInclude Include="Shared\Utility\String.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

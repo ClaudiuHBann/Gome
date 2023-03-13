@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Shared/Utility/GUID.h"
+#include "Gome/Shared/Utility/GUID.h"
 
 namespace Shared {
 	namespace Networking {
