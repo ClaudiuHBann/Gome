@@ -16,6 +16,10 @@ namespace Shared {
 
 				PacketMetadata mPacketMetadata;
 				vector<PacketData> mPacketDatas;
+
+			public:
+				const PacketMetadata& GetPacketMetadata() const;
+				const vector<PacketData>& GetPacketDatas() const;
 			};
 		}
 	}

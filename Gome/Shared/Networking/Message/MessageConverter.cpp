@@ -17,7 +17,8 @@ namespace Shared {
 			/* static */ Message MessageConverter::BytesToMessage(const bytes& bytes) {
 				MessageConverter::bytes packetMetadataAsBytes(bytes.begin(), bytes.begin() + HeaderMetadata::SIZE);
 
-				Message message(BytesToPacketMetadata(packetMetadataAsBytes));
+				auto&& packetMetadata = BytesToPacketMetadata(packetMetadataAsBytes);
+				Message message(packetMetadata);
 
 				MessageConverter::bytes packetDatasAsBytes(bytes.begin() + HeaderMetadata::SIZE, bytes.end());
 				message.mPacketDatas = move(BytesToPacketDatas(packetDatasAsBytes));
@@ -42,7 +43,7 @@ namespace Shared {
 				MessageConverter::bytes headerAsBytes(bytes.begin(), bytes.begin() + HeaderData::SIZE);
 				auto&& header = BytesToHeaderData(headerAsBytes);
 
-				MessageConverter::bytes contentAsBytes(bytes.begin() + HeaderData::SIZE, bytes.begin() + PacketData::SIZE);
+				MessageConverter::bytes contentAsBytes(bytes.begin() + HeaderData::SIZE, bytes.end());
 
 				return PacketData(header, contentAsBytes);
 			}

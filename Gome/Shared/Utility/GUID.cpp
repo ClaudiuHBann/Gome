@@ -21,6 +21,10 @@ namespace Shared {
 			return *this;
 		}
 
+		bool GUID::operator==(const GUID& right) {
+			return mUUID == right.mUUID;
+		}
+
 		GUID::~GUID() {
 			Uninitialize();
 		}

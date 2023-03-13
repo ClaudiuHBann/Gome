@@ -8,6 +8,13 @@ namespace Shared {
 				: mPacketMetadata(packetMetadata) {
 			}
 
+			const PacketMetadata& Message::GetPacketMetadata() const {
+				return mPacketMetadata;
+			}
+
+			const vector<PacketData>& Message::GetPacketDatas() const {
+				return mPacketDatas;
+			}
 		}
 	}
 }

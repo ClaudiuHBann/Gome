@@ -21,10 +21,8 @@ namespace Shared {
 
 				auto packetLastSize = bytes.size() % PacketData::CONTENT_SIZE_MAX;
 				if (packetLastSize) {
-					packetsCount++;
-
 					HeaderData headerData(guid, packetsCount);
-					MessageManager::bytes content(bytes.begin() + packetsCount * PacketData::CONTENT_SIZE_MAX, bytes.begin() + packetsCount * PacketData::CONTENT_SIZE_MAX + packetLastSize);
+					MessageManager::bytes content(bytes.begin() + packetsCount * PacketData::CONTENT_SIZE_MAX, bytes.end());
 					PacketData packetData(headerData, content);
 
 					message.mPacketDatas.push_back(packetData);
@@ -34,7 +32,7 @@ namespace Shared {
 			}
 
 			/* static */ tuple<Utility::GUID, HeaderMetadata::Type, MessageManager::bytes> MessageManager::FromMessage(const Message& message) {
-				bytes bytes(message.mPacketMetadata.GetHeaderMetadata().GetSize());
+				bytes bytes;
 
 				for (const auto& packetData : message.mPacketDatas) {
 					bytes.insert_range(bytes.begin() + packetData.GetHeaderData().GetIndex() * PacketData::CONTENT_SIZE_MAX, packetData.GetContent());

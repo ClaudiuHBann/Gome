@@ -2,8 +2,28 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Shared\Networking\Message\MessageTests.cpp">
+      <Filter>Shared\Networking\Message</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Shared\Networking\Message\MessageTests.h">
+      <Filter>Shared\Networking\Message</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{ddc10a47-c48d-4688-adc9-166188347031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Networking">
+      <UniqueIdentifier>{ec752664-8e2d-489b-92f2-eb9e8853f819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Networking\Message">
+      <UniqueIdentifier>{3148d8e6-4440-465a-95bf-a0d10bce5740}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

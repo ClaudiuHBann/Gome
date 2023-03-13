@@ -11,6 +11,8 @@ namespace Shared {
 
 				const HeaderMetadata& GetHeaderMetadata() const;
 
+				bool operator==(const PacketMetadata& right);
+
 			private:
 				HeaderMetadata mHeaderMetadata;
 			};
@@ -26,6 +28,8 @@ namespace Shared {
 
 				const HeaderData& GetHeaderData() const;
 				const bytes& GetContent() const;
+
+				bool operator==(const PacketData& right);
 
 			private:
 				HeaderData mHeaderData;

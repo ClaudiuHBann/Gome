@@ -24,7 +24,6 @@ namespace Shared {
 				static bytes HeaderDataToBytes(const HeaderData& headerData);
 				static HeaderData BytesToHeaderData(const bytes& bytes);
 
-			private:
 				static bytes PacketDataToBytes(const PacketData& packetData);
 				static PacketData BytesToPacketData(const bytes& bytes);
 			};

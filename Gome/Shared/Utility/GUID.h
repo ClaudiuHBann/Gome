@@ -25,6 +25,8 @@ namespace Shared {
 
 			GUID& operator=(const GUID& right);
 
+			bool operator==(const GUID& right);
+
 		private:
 			bool IsGood() const;
 
