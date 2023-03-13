@@ -4,8 +4,12 @@
 namespace Shared {
 	namespace Networking {
 		namespace Message {
-			Packet::Packet(const Header& header, const wstring& content)
-				: mHeader(header) {
+			PacketMetadata::PacketMetadata(const HeaderMetadata& headerMetadata)
+				: mHeaderMetadata(headerMetadata) {
+			}
+
+			PacketData::PacketData(const HeaderData& headerData, const wstring& content)
+				: mHeaderData(headerData) {
 				assert(content.length() <= CONTENT_SIZE_MAX);
 				mContent = content;
 			}

@@ -5,14 +5,22 @@
 namespace Shared {
 	namespace Networking {
 		namespace Message {
-			class Packet {
+			class PacketMetadata {
 			public:
-				static const size_t CONTENT_SIZE_MAX = 8192 - Header::HEADER_SIZE;
-
-				Packet(const Header& header, const wstring& content);
+				PacketMetadata(const HeaderMetadata& headerMetadata);
 
 			private:
-				Header mHeader;
+				HeaderMetadata mHeaderMetadata;
+			};
+
+			class PacketData {
+			public:
+				static const size_t CONTENT_SIZE_MAX = 8192 - HeaderData::HEADER_DATA_SIZE;
+
+				PacketData(const HeaderData& headerData, const wstring& content);
+
+			private:
+				HeaderData mHeaderData;
 				wstring mContent {};
 			};
 		}
