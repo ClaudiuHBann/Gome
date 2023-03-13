@@ -12,6 +12,7 @@
       <Filter>Shared\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Shared\Networking\Message\MessageManager.cpp" />
+    <ClCompile Include="Shared\Networking\Message\Message.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
@@ -45,6 +46,7 @@
       <Filter>Shared\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Networking\Message\MessageManager.h" />
+    <ClInclude Include="Shared\Networking\Message\Message.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
