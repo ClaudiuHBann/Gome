@@ -2,6 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Shared\Networking\Message\Header.cpp">
+      <Filter>Shared\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\Networking\Message\Message.cpp">
+      <Filter>Shared\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\Utility\GUID.cpp">
+      <Filter>Shared\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
@@ -13,11 +22,29 @@
     <Filter Include="Shared\Server">
       <UniqueIdentifier>{c327a1b9-0b13-42ba-affa-88d30b0d3ed4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shared\Message">
+      <UniqueIdentifier>{9157e4e4-2e48-43d0-a197-fca8c477307f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Utility">
+      <UniqueIdentifier>{488e030b-55c9-4b39-84c8-deb896eebc63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shared\Client\TCPClient.h">
+    <ClInclude Include="Shared\Networking\Client\TCPClient.h">
       <Filter>Shared\Client</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Shared\Networking\Message\Header.h">
+      <Filter>Shared\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Networking\Message\Message.h">
+      <Filter>Shared\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Utility\GUID.h">
+      <Filter>Shared\Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
