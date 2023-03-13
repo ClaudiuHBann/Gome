@@ -13,37 +13,7 @@ namespace Shared {
 				mType = type;
 			}
 
-			HeaderMetadata::HeaderMetadata(const bytes& header) {
-				assert(header.size() == HEADER_METADATA_SIZE);
-
-				bytes guid(header.begin(), header.begin() + GUID::GUID_SIZE);
-				mGUID.SetUUID(*reinterpret_cast<UUID*>(guid.data()));
-				assert(!mGUID.GetString().empty());
-
-				mType = (Type)header[GUID::GUID_SIZE];
-				assert(Type::NONE < mType&& mType < Type::COUNT);
-
-				bytes size(header.begin() + GUID::GUID_SIZE + sizeof(Type), header.begin() + HEADER_METADATA_SIZE);
-				mSize = *reinterpret_cast<size_t*>(size.data());
-			}
-
-			HeaderMetadata::bytes HeaderMetadata::ToBytes() {
-				bytes headerAsBytes;
-
-				auto guidRawAsBytePtr = (byte*)&mGUID.GetUUID();
-				bytes guidRawAsBytes(guidRawAsBytePtr, guidRawAsBytePtr + GUID::GUID_SIZE);
-				headerAsBytes.append_range(guidRawAsBytes);
-
-				headerAsBytes.push_back((byte)mType);
-
-				auto sizeAsBytePtr = reinterpret_cast<byte*>(&mSize);
-				bytes sizeAsBytes(sizeAsBytePtr, sizeAsBytePtr + sizeof(mSize));
-				headerAsBytes.append_range(sizeAsBytes);
-
-				return headerAsBytes;
-			}
-
-			wstring HeaderMetadata::TypeToString() {
+			wstring HeaderMetadata::TypeToString() const {
 				switch (mType) {
 				case Type::PING:
 					return L"PING";
@@ -66,33 +36,20 @@ namespace Shared {
 				return headerAsString;
 			}
 
-			HeaderData::HeaderData(const bytes& header) {
-				assert(header.size() == HEADER_DATA_SIZE);
+			const Utility::GUID& HeaderMetadata::GetGUID() const {
+				return mGUID;
+			}
 
-				bytes guid(header.begin(), header.begin() + GUID::GUID_SIZE);
-				mGUID.SetUUID(*reinterpret_cast<UUID*>(guid.data()));
-				assert(!mGUID.GetString().empty());
+			const HeaderMetadata::Type& HeaderMetadata::GetType() const {
+				return mType;
+			}
 
-				bytes index(header.begin() + GUID::GUID_SIZE, header.begin() + HEADER_DATA_SIZE);
-				mIndex = *reinterpret_cast<size_t*>(index.data());
+			const size_t& HeaderMetadata::GetSize() const {
+				return mSize;
 			}
 
 			HeaderData::HeaderData(const Utility::GUID& guid, const size_t index)
 				: mGUID(guid), mIndex(index) {
-			}
-
-			HeaderData::bytes HeaderData::ToBytes() {
-				bytes headerAsBytes;
-
-				auto guidRawAsBytePtr = (byte*)&mGUID.GetUUID();
-				bytes guidRawAsBytes(guidRawAsBytePtr, guidRawAsBytePtr + GUID::GUID_SIZE);
-				headerAsBytes.append_range(guidRawAsBytes);
-
-				auto indexValidAsBytePtr = reinterpret_cast<byte*>(&mIndex);
-				bytes indexValidAsBytes(indexValidAsBytePtr, indexValidAsBytePtr + sizeof(mIndex));
-				headerAsBytes.append_range(indexValidAsBytes);
-
-				return headerAsBytes;
 			}
 
 			wstring HeaderData::ToString() {
@@ -103,6 +60,14 @@ namespace Shared {
 				headerAsString += to_wstring(mIndex);
 
 				return headerAsString;
+			}
+
+			const Utility::GUID& HeaderData::GetGUID() const {
+				return mGUID;
+			}
+
+			const size_t& HeaderData::GetIndex() const {
+				return mIndex;
 			}
 		}
 	}

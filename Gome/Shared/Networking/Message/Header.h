@@ -16,12 +16,14 @@ namespace Shared {
 					COUNT
 				};
 
-				static const size_t HEADER_METADATA_SIZE = Utility::GUID::GUID_SIZE + sizeof(Type) + sizeof(size_t);
+				static const size_t SIZE = Utility::GUID::GUID_SIZE + sizeof(Type) + sizeof(size_t);
 
-				HeaderMetadata(const bytes& header);
 				HeaderMetadata(const Utility::GUID& guid, const Type type, const size_t size);
 
-				bytes ToBytes();
+				const Utility::GUID& GetGUID() const;
+				const Type& GetType() const;
+				const size_t& GetSize() const;
+
 				wstring ToString();
 
 			private:
@@ -29,19 +31,20 @@ namespace Shared {
 				Type mType = Type::NONE;
 				size_t mSize {};
 
-				wstring TypeToString();
+				wstring TypeToString() const;
 			};
 
 			class HeaderData {
 			public:
 				using bytes = vector<byte>;
 
-				static const size_t HEADER_DATA_SIZE = Utility::GUID::GUID_SIZE + sizeof(size_t);
+				static const size_t SIZE = Utility::GUID::GUID_SIZE + sizeof(size_t);
 
-				HeaderData(const bytes& header);
 				HeaderData(const Utility::GUID& guid, const size_t index);
 
-				bytes ToBytes();
+				const Utility::GUID& GetGUID() const;
+				const size_t& GetIndex() const;
+
 				wstring ToString();
 
 			private:
