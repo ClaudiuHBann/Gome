@@ -28,9 +28,6 @@
     <Filter Include="Shared\Client">
       <UniqueIdentifier>{11abe5d3-b948-4816-9c14-069a805151ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shared\Server">
-      <UniqueIdentifier>{c327a1b9-0b13-42ba-affa-88d30b0d3ed4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shared\Message">
       <UniqueIdentifier>{9157e4e4-2e48-43d0-a197-fca8c477307f}</UniqueIdentifier>
     </Filter>
