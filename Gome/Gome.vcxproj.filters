@@ -11,8 +11,15 @@
     <ClCompile Include="Shared\Utility\GUID.cpp">
       <Filter>Shared\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Message\MessageManager.cpp" />
-    <ClCompile Include="Shared\Networking\Message\Message.cpp" />
+    <ClCompile Include="Shared\Networking\Message\Message.cpp">
+      <Filter>Shared\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\Networking\Message\MessageManager.cpp">
+      <Filter>Shared\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\Networking\Message\MessageConverter.cpp">
+      <Filter>Shared\Message</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
@@ -45,8 +52,15 @@
     <ClInclude Include="Shared\Utility\GUID.h">
       <Filter>Shared\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Message\MessageManager.h" />
-    <ClInclude Include="Shared\Networking\Message\Message.h" />
+    <ClInclude Include="Shared\Networking\Message\MessageManager.h">
+      <Filter>Shared\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Networking\Message\Message.h">
+      <Filter>Shared\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Networking\Message\MessageConverter.h">
+      <Filter>Shared\Message</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
