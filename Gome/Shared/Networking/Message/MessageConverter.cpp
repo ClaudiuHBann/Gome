@@ -101,7 +101,7 @@ namespace Shared {
 				MessageConverter::bytes guidAsBytes(bytes.begin(), bytes.begin() + GUID::GUID_SIZE);
 				Utility::GUID guid;
 				guid.SetUUID(*reinterpret_cast<UUID*>(guidAsBytes.data()));
-				assert(!guid.GetString().empty());
+				assert(guid.GetStr());
 
 				auto type = (HeaderMetadata::Type)bytes[GUID::GUID_SIZE];
 				assert(HeaderMetadata::Type::NONE < type&& type < HeaderMetadata::Type::COUNT);
@@ -132,7 +132,7 @@ namespace Shared {
 				MessageConverter::bytes guidAsBytes(bytes.begin(), bytes.begin() + GUID::GUID_SIZE);
 				Utility::GUID guid;
 				guid.SetUUID(*reinterpret_cast<UUID*>(guidAsBytes.data()));
-				assert(!guid.GetString().empty());
+				assert(guid.GetStr());
 
 				HeaderMetadata::bytes indexAsBytes(bytes.begin() + GUID::GUID_SIZE, bytes.begin() + HeaderData::SIZE);
 				auto index = *reinterpret_cast<size_t*>(indexAsBytes.data());

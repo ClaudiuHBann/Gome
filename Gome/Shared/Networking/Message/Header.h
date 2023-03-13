@@ -26,6 +26,12 @@ namespace Shared {
 
 				wstring ToString();
 
+				bool operator==(const auto& right) {
+					return this->mGUID.GetUUID() == right.mGUID.GetUUID() &&
+						this->mType == right.mType &&
+						this->mSize == right.mSize;
+				}
+
 			private:
 				Utility::GUID mGUID {};
 				Type mType = Type::NONE;
@@ -46,6 +52,11 @@ namespace Shared {
 				const size_t& GetIndex() const;
 
 				wstring ToString();
+
+				bool operator==(const auto& right) {
+					return this->mGUID.GetUUID() == right.mGUID.GetUUID() &&
+						this->mIndex == right.mIndex;
+				}
 
 			private:
 				Utility::GUID mGUID {};

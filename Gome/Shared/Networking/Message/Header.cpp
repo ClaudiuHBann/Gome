@@ -27,7 +27,7 @@ namespace Shared {
 			wstring HeaderMetadata::ToString() {
 				wstring headerAsString;
 
-				headerAsString += mGUID.GetString();
+				headerAsString += reinterpret_cast<const wchar_t*>(mGUID.GetStr());
 				headerAsString += L"|";
 				headerAsString += TypeToString();
 				headerAsString += L"|";
@@ -55,7 +55,7 @@ namespace Shared {
 			wstring HeaderData::ToString() {
 				wstring headerAsString;
 
-				headerAsString += mGUID.GetString();
+				headerAsString += reinterpret_cast<const wchar_t*>(mGUID.GetStr());
 				headerAsString += L"|";
 				headerAsString += to_wstring(mIndex);
 
