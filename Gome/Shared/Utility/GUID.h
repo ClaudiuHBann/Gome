@@ -3,45 +3,43 @@
 namespace Shared {
 	namespace Utility {
 		class GUID {
-#ifdef UNICODE
-			typedef ::RPC_WSTR RPC_STR;
+#if defined(UNICODE) || defined(_UNICODE)
+			using RPC_STR = ::RPC_WSTR;
 #else
-			typedef ::RPC_CSTR RPC_STR;
-#endif // UNICODE
+			using RPC_STR = ::RPC_CSTR;
+#endif // defined(UNICODE) || defined(_UNICODE)
 
 		public:
 			static const size_t GUID_SIZE = 16;
 
 			GUID();
-			GUID(const GUID& guid);
 			~GUID();
 
-			bool IsGlobal() const;
-
-			const RPC_STR& GetStr();
-
-			const ::UUID& GetUUID() const;
-			void SetUUID(const ::UUID& uuid);
-
+			GUID(const GUID& guid);
 			GUID& operator=(const GUID& right);
 
-			bool operator==(const GUID& right);
-
-		private:
+			bool IsGlobal() const;
 			bool IsGood() const;
 
-			void Uninitialize();
-			void Reset();
+			void SetUUID(const ::UUID& uuid);
+			void SetUUID(RPC_STR uuidStr);
 
-			::UUID mUUID {};
+			RPC_STR GetStr();
+			const ::UUID& GetUUID() const;
+			::RPC_STATUS GetStatus() const;
+
+		private:
+			void Uninitialize();
+
+			::UUID mUUID = GUID_NULL;
 			static inline ::UUID mUUIDDefault {};
 
 			RPC_STR mUUIDString {};
 			static inline RPC_STR mUUIDStringDefault = (RPC_STR)TEXT("");
 
 			::RPC_STATUS mStatus {};
+			bool mIsGood {};
 			bool mIsGlobal {};
-			bool mUUIDStringTryCreate {};
 		};
 	}
 }

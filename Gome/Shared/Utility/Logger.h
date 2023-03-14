@@ -2,38 +2,42 @@
 
 #include "String.h"
 
-static inline Shared::Utility::String MakeFileNameLength(Shared::Utility::String file, Shared::Utility::String line, const size_t length = 69) {
-	static Shared::Utility::String padding(TEXT("..."));
-
-	line += Shared::Utility::String(4 - line.length(), TEXT(' '));
-	Shared::Utility::String lineStr(TEXT(":") + line + TEXT(" "));
-
-	auto fileLength = file.length();
-	if (fileLength <= length) {
-		file += lineStr;
-		file += Shared::Utility::String(length - fileLength, TEXT(' '));
-	} else {
-		auto start = fileLength - length + padding.length();
-		file = padding + file.substr(start);
-		file += lineStr;
-	}
-
-	return file;
-}
-
-#define TRACE_LOCATION_PROCESS_THREAD_ID Shared::Utility::String(TEXT("PID:") + Shared::Utility::ToString(::GetCurrentProcessId()) + TEXT(" TID:") + Shared::Utility::ToString(::GetCurrentThreadId()))
-#define TRACE_LOCATION_FILE_LINE MakeFileNameLength(TEXT(__FILE__), Shared::Utility::ToString(__LINE__))
-#define TRACE_LOCATION Shared::Utility::String(TRACE_LOCATION_PROCESS_THREAD_ID + TEXT(" ") + TRACE_LOCATION_FILE_LINE)
+#define TRACE_LOCATION_PROCESS_THREAD_ID Shared::Utility::String(TEXT("PID: ") + Shared::Utility::ToString(::GetCurrentProcessId()) + TEXT(" TID: ") + Shared::Utility::ToString(::GetCurrentThreadId()))
+#define TRACE_LOCATION_FILE_LINE Shared::Utility::ClampFileNameLength(TEXT(__FILE__), Shared::Utility::ToString(__LINE__), 50)
+#define TRACE_LOCATION Shared::Utility::String(TRACE_LOCATION_PROCESS_THREAD_ID + TEXT(" ") + TRACE_LOCATION_FILE_LINE + TEXT("\t"))
 #define TRACE(strn) Shared::Utility::Print<const ::TCHAR*>((TRACE_LOCATION + (Shared::Utility::StringStream() << strn).str()).c_str())
 
 namespace Shared {
 	namespace Utility {
+		static inline String ClampFileNameLength(
+			String file,
+			String line,
+			const size_t lengthMaxFileName = 69,
+			const size_t lengthMaxLine = 4,
+			const String& padding = TEXT("...")
+		) {
+			line += String(lengthMaxLine - line.length(), TEXT(' '));
+			String lineStr(TEXT(":") + line);
+
+			auto fileLength = file.length();
+			if (fileLength <= lengthMaxFileName) {
+				file += lineStr;
+				file += String(lengthMaxFileName - fileLength, TEXT(' '));
+			} else {
+				auto start = fileLength - lengthMaxFileName + padding.length();
+				file = padding + file.substr(start);
+				file += lineStr;
+			}
+
+			return file;
+		}
+
 		static inline void OutputDebugStringForced(const ::TCHAR* str) {
 			if (::IsDebuggerPresent()) {
 				::OutputDebugString(str);
 			}
 
-			if (GetConsoleWindow()) {
+			if (::GetConsoleWindow()) {
 #if defined(_UNICODE) || defined(UNICODE)
 				wcout << str;
 #else
@@ -45,7 +49,7 @@ namespace Shared {
 		}
 
 		template<typename Object, typename Iterable>
-		void Print(
+		static void Print(
 			const Iterable& iterable,
 			const String& separatorDimensions = TEXT("\n"),
 			const function<void(const Object&)>& funcPrintElem = [] (const auto& obj) {

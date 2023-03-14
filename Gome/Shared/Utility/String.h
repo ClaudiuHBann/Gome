@@ -2,29 +2,27 @@
 
 namespace impl {
 	template<typename T>
-	inline constexpr bool is_basic_string_v = false;
+	constexpr bool is_basic_string_v = false;
 
 	template<typename... T>
-	inline constexpr bool is_basic_string_v<basic_string<T...>> = true;
+	constexpr bool is_basic_string_v<basic_string<T...>> = true;
 }
 
 template<typename T>
-inline constexpr bool is_basic_string_v = impl::is_basic_string_v<T>;
+constexpr bool is_basic_string_v = impl::is_basic_string_v<T>;
 
 namespace Shared {
 	namespace Utility {
 #if defined(_UNICODE) || defined(UNICODE)
 		using String = wstring;
 		using StringStream = wstringstream;
-		using IfStream = wifstream;
 #else
 		using String = string;
 		using StringStream = stringstream;
-		using IfStream = ifstream;
 #endif // defined(_UNICODE) || defined(UNICODE)
 
 		template <typename T>
-		inline String ToString(const T& t) {
+		static inline String ToString(const T& t) {
 			if constexpr (is_same_v<remove_const_t<remove_pointer_t<decay_t<T>>>, ::TCHAR> ||
 						  is_same_v<remove_const_t<remove_reference_t<decay_t<T>>>, String>) {
 				return t;
@@ -38,7 +36,7 @@ namespace Shared {
 		}
 
 		template<typename StringType, typename StringFrom>
-		inline auto ToStringType(const StringFrom& strTo) {
+		static inline auto ToStringType(const StringFrom& strTo) {
 			static_assert(is_basic_string_v<StringFrom>, "The StringFrom is not a basic_string!");
 			static_assert(is_arithmetic_v<StringType>, "The StringType is not a built-in type!");
 

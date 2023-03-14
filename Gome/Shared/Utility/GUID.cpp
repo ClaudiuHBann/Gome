@@ -5,7 +5,12 @@ namespace Shared {
 	namespace Utility {
 		GUID::GUID()
 			: mStatus(::UuidCreate(&mUUID)),
-			mIsGlobal(mStatus != RPC_S_UUID_LOCAL_ONLY) {
+			mIsGlobal(mStatus != RPC_S_UUID_LOCAL_ONLY),
+			mIsGood(mStatus != RPC_S_UUID_NO_ADDRESS) {
+		}
+
+		GUID::~GUID() {
+			Uninitialize();
 		}
 
 		GUID::GUID(const GUID& guid) {
@@ -13,69 +18,61 @@ namespace Shared {
 		}
 
 		GUID& GUID::operator=(const GUID& right) {
+			Uninitialize();
+
 			mUUID = right.mUUID;
+			mStatus = RPC_S_OK;
+			mIsGood = right.mIsGood;
 			mIsGlobal = right.mIsGlobal;
-			mStatus = ::UuidToString(&mUUID, &mUUIDString);
-			mUUIDStringTryCreate = true;
 
 			return *this;
-		}
-
-		bool GUID::operator==(const GUID& right) {
-			return mUUID == right.mUUID;
-		}
-
-		GUID::~GUID() {
-			Uninitialize();
 		}
 
 		bool GUID::IsGlobal() const {
 			return mIsGlobal;
 		}
 
-		const GUID::RPC_STR& GUID::GetStr() {
-			if (!mUUIDString && IsGood()) {
-				mStatus = ::UuidToString(&mUUID, &mUUIDString);
-				mUUIDStringTryCreate = true;
-			}
-
-			return IsGood() ? mUUIDString : mUUIDStringDefault;
+		bool GUID::IsGood() const {
+			return mIsGood;
 		}
 
-		const ::UUID& GUID::GetUUID() const {
-			return IsGood() ? mUUID : mUUIDDefault;
-		}
-
-		void GUID::SetUUID(const ::UUID& uuid) {
-			Reset();
+		void GUID::SetUUID(const::UUID& uuid) {
+			Uninitialize();
 
 			mUUID = uuid;
+			mStatus = RPC_S_OK;
+			mIsGood = true;
+			mIsGlobal = false;
+		}
+
+		void GUID::SetUUID(RPC_STR uuidStr) {
+			Uninitialize();
+
+			mStatus = ::UuidFromString(uuidStr, &mUUID);
+			mIsGood = mStatus == RPC_S_OK;
+			mIsGlobal = false;
+		}
+
+		GUID::RPC_STR GUID::GetStr() {
+			if (!mUUIDString) {
+				mStatus = ::UuidToString(&mUUID, &mUUIDString);
+			}
+
+			return mStatus == RPC_S_OK ? mUUIDString : mUUIDStringDefault;
+		}
+
+		const::UUID& GUID::GetUUID() const {
+			return mIsGood ? mUUID : mUUIDDefault;
+		}
+
+		::RPC_STATUS GUID::GetStatus() const {
+			return mStatus;
 		}
 
 		void GUID::Uninitialize() {
-			if (mUUIDString && IsGood()) {
+			if (mUUIDString) {
 				::RpcStringFree(&mUUIDString);
 				mUUIDString = nullptr;
-			}
-		}
-
-		void GUID::Reset() {
-			Uninitialize();
-
-			mStatus = RPC_S_OK;
-			mIsGlobal = false;
-			mUUIDStringTryCreate = false;
-		}
-
-		bool GUID::IsGood() const {
-			if (mUUIDStringTryCreate) {
-				return mStatus != RPC_S_OUT_OF_MEMORY;
-			} else {
-				if (mIsGlobal) {
-					return true;
-				} else {
-					return mStatus != RPC_S_UUID_NO_ADDRESS;
-				}
 			}
 		}
 	}
