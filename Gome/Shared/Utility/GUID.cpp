@@ -28,6 +28,10 @@ namespace Shared {
 			return *this;
 		}
 
+		bool GUID::operator==(const GUID& right) {
+			return mUUID == right.mUUID;
+		}
+
 		bool GUID::IsGlobal() const {
 			return mIsGlobal;
 		}

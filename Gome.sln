@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gome", "Gome\Gome.vcxproj", "{44357310-C900-4B8A-AAF8-C3C3D54A1376}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxproj", "{E4935B91-BF53-43C9-AE3A-832065D29B83}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44357310-C900-4B8A-AAF8-C3C3D54A1376} = {44357310-C900-4B8A-AAF8-C3C3D54A1376}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

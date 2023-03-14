@@ -7,9 +7,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shared\Networking\Message\MessageTests.h">
       <Filter>Shared\Networking\Message</Filter>

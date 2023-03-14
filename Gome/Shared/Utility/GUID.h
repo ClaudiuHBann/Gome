@@ -18,6 +18,8 @@ namespace Shared {
 			GUID(const GUID& guid);
 			GUID& operator=(const GUID& right);
 
+			bool operator==(const GUID& right);
+
 			bool IsGlobal() const;
 			bool IsGood() const;
 
@@ -31,7 +33,7 @@ namespace Shared {
 		private:
 			void Uninitialize();
 
-			::UUID mUUID = GUID_NULL;
+			::UUID mUUID {};
 			static inline ::UUID mUUIDDefault {};
 
 			RPC_STR mUUIDString {};

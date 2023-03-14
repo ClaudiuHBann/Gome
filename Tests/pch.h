@@ -1,5 +1,6 @@
 #pragma once
 
+// TODO: remove this Gome/pch.h dependency
 #include "Gome/pch.h"
 #include "Gome/Shared/Utility/Logger.h"
 
