@@ -11,25 +11,25 @@ namespace Shared::Networking::Message {
 		mType = type;
 	}
 
-	wstring HeaderMetadata::TypeToString() const {
+	String HeaderMetadata::TypeToString() const {
 		switch (mType) {
 		case Type::PING:
-			return L"PING";
+			return TEXT("PING");
 		case Type::TEXT:
-			return L"TEXT";
+			return TEXT("TEXT");
 		}
 
-		return L"";
+		return {};
 	}
 
-	wstring HeaderMetadata::ToString() {
-		wstring headerAsString;
+	String HeaderMetadata::ToString() {
+		String headerAsString;
 
-		headerAsString += reinterpret_cast<const wchar_t*>(mGUID.GetStr());
-		headerAsString += L"|";
+		headerAsString += reinterpret_cast<const ::TCHAR*>(mGUID.GetStr());
+		headerAsString += TEXT("|");
 		headerAsString += TypeToString();
-		headerAsString += L"|";
-		headerAsString += to_wstring(mSize);
+		headerAsString += TEXT("|");
+		headerAsString += Utility::ToString(mSize);
 
 		return headerAsString;
 	}
@@ -50,12 +50,12 @@ namespace Shared::Networking::Message {
 		: mGUID(guid), mIndex(index) {
 	}
 
-	wstring HeaderData::ToString() {
-		wstring headerAsString;
+	String HeaderData::ToString() {
+		String headerAsString;
 
-		headerAsString += reinterpret_cast<const wchar_t*>(mGUID.GetStr());
-		headerAsString += L"|";
-		headerAsString += to_wstring(mIndex);
+		headerAsString += reinterpret_cast<const ::TCHAR*>(mGUID.GetStr());
+		headerAsString += TEXT("|");
+		headerAsString += Utility::ToString(mIndex);
 
 		return headerAsString;
 	}

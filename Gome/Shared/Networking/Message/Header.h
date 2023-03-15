@@ -1,8 +1,11 @@
 #pragma once
 
 #include "Gome/Shared/Utility/GUID.h"
+#include "Gome/Shared/Utility/String.h"
 
 namespace Shared::Networking::Message {
+	using namespace Utility;
+
 	class HeaderMetadata {
 	public:
 		using bytes = vector<byte>;
@@ -22,7 +25,7 @@ namespace Shared::Networking::Message {
 		const Type& GetType() const;
 		const size_t& GetSize() const;
 
-		wstring ToString();
+		String ToString();
 
 		bool operator==(const auto& right) {
 			return this->mGUID.GetUUID() == right.mGUID.GetUUID() &&
@@ -35,7 +38,7 @@ namespace Shared::Networking::Message {
 		Type mType = Type::NONE;
 		size_t mSize {};
 
-		wstring TypeToString() const;
+		String TypeToString() const;
 	};
 
 	class HeaderData {
@@ -49,7 +52,7 @@ namespace Shared::Networking::Message {
 		const Utility::GUID& GetGUID() const;
 		const size_t& GetIndex() const;
 
-		wstring ToString();
+		String ToString();
 
 		bool operator==(const auto& right) {
 			return this->mGUID.GetUUID() == right.mGUID.GetUUID() &&
