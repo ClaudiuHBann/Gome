@@ -29,6 +29,12 @@
     <ClCompile Include="Shared\Networking\Client\TCPClientRaw.cpp">
       <Filter>Shared\Networking\Client</Filter>
     </ClCompile>
+    <ClCompile Include="Shared\Networking\IOContext.cpp">
+      <Filter>Shared\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared\Networking\Client\TCPClient.cpp">
+      <Filter>Shared\Networking\Client</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
@@ -74,6 +80,12 @@
       <Filter>Shared\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Networking\Client\TCPClientRaw.h">
+      <Filter>Shared\Networking\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Networking\IOContext.h">
+      <Filter>Shared\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Networking\Client\TCPClient.h">
       <Filter>Shared\Networking\Client</Filter>
     </ClInclude>
   </ItemGroup>

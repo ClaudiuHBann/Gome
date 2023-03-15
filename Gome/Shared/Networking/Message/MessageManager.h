@@ -7,7 +7,7 @@ namespace Shared::Networking::Message {
 	public:
 		using bytes = vector<byte>;
 
-		static Message ToMessage(const bytes& bytes, HeaderMetadata::Type type, Utility::GUID guid);
+		static Message ToMessage(const bytes& bytes, HeaderMetadata::Type type, Utility::GUID guid = {});
 		static tuple<Utility::GUID, HeaderMetadata::Type, bytes> FromMessage(const Message& message);
 	};
 }
