@@ -19,16 +19,10 @@ namespace Shared::Networking::Client {
 		mTCPClientRaw->Disconnect(callback);
 	}
 
-	void TCPClient::Send(const String& data, const CallbackSend& callback) {
-		auto dataSizeInBytes = data.length() * sizeof(String::value_type);
-		auto dataAsBytesRaw = (bytes*)data.data();
-		bytes dataAsBytes(dataAsBytesRaw->begin(), dataAsBytesRaw->begin() + dataSizeInBytes);
-
-		MessageManager manager;
-		auto message = manager.ToMessage(dataAsBytes, HeaderMetadata::Type::TEXT);
-
-		auto bytes = MessageConverter::MessageToBytes(message);
-		auto bytesShared = make_shared<decltype(bytes)>(bytes);
+	void TCPClient::Send(const bytes& data, const HeaderMetadata::Type type, const CallbackSend& callback) {
+		auto&& message = MessageManager::ToMessage(data, type);
+		auto&& bytes = MessageConverter::MessageToBytes(message);
+		auto bytesShared = make_shared<TCPClient::bytes>(move(bytes));
 
 		mTCPClientRaw->SendAllAsync(bytesShared,
 									[callback] (auto ec, auto size) {
@@ -37,12 +31,12 @@ namespace Shared::Networking::Client {
 	}
 
 	void TCPClient::Receive(const CallbackRead& callback) {
-		auto data = make_shared<bytes>();
+		//auto data = make_shared<bytes>();
 
-		// TODO: WRONGHIX
-		mTCPClientRaw->ReceiveAllAsync(data,
-									   [callback] (auto ec, auto size) {
-										   callback(ec, size);
-									   });
+		//// TODO: WRONGHIX
+		//mTCPClientRaw->ReceiveAllAsync(data,
+		//							   [callback] (auto ec, auto size) {
+		//								   callback(ec, size);
+		//							   });
 	}
 }

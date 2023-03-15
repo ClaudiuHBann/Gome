@@ -1,15 +1,18 @@
 #pragma once
 
 #include "TCPClientRaw.h"
+#include "Gome/Shared/Networking/Message/Header.h"
 
 namespace Shared::Networking::Client {
+	using namespace Message;
+
 	class TCPClient {
 	public:
 		using bytes = vector<byte>;
 
 		using CallbackConnect = function<void(error_code, tcp::endpoint)>;
 		using CallbackSend = function<void(error_code, size_t)>;
-		using CallbackRead = function<void(error_code, String)>;
+		using CallbackRead = function<void(error_code, bytes)>;
 		using CallbackDisconnect = function<void(error_code, error_code)>;
 
 		TCPClient(IOContext context);
@@ -17,7 +20,7 @@ namespace Shared::Networking::Client {
 		void Connect(const String& ip, const port_type port, const CallbackConnect& callback);
 		void Disconnect(const CallbackDisconnect& callback = [] (auto, auto) {});
 
-		void Send(const String& data, const CallbackSend& callback);
+		void Send(const bytes& data, const HeaderMetadata::Type type, const CallbackSend& callback);
 		void Receive(const CallbackRead& callback);
 
 	private:
