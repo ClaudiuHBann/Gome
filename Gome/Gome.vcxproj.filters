@@ -3,22 +3,22 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Shared\Networking\Message\Header.cpp">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClCompile>
     <ClCompile Include="Shared\Networking\Message\Packet.cpp">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClCompile>
     <ClCompile Include="Shared\Utility\GUID.cpp">
       <Filter>Shared\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Shared\Networking\Message\Message.cpp">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClCompile>
     <ClCompile Include="Shared\Networking\Message\MessageManager.cpp">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClCompile>
     <ClCompile Include="Shared\Networking\Message\MessageConverter.cpp">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClCompile>
     <ClCompile Include="Shared\Utility\Logger.cpp">
       <Filter>Shared\Utility</Filter>
@@ -26,43 +26,55 @@
     <ClCompile Include="Shared\Utility\String.cpp">
       <Filter>Shared\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Shared\Networking\Client\TCPClientRaw.cpp">
+      <Filter>Shared\Networking\Client</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
       <UniqueIdentifier>{f7b890b4-ec98-4eee-bc0e-cc3879a8aebe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shared\Message">
-      <UniqueIdentifier>{9157e4e4-2e48-43d0-a197-fca8c477307f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shared\Utility">
       <UniqueIdentifier>{488e030b-55c9-4b39-84c8-deb896eebc63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Networking">
+      <UniqueIdentifier>{25b91eab-63ff-4963-8971-431680bb3e5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Networking\Message">
+      <UniqueIdentifier>{9157e4e4-2e48-43d0-a197-fca8c477307f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Networking\Client">
+      <UniqueIdentifier>{eb622261-4eb1-4595-afb5-b4297ad1f224}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shared\Networking\Message\Header.h">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Networking\Message\Packet.h">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Utility\GUID.h">
       <Filter>Shared\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Networking\Message\MessageManager.h">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Networking\Message\Message.h">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Networking\Message\MessageConverter.h">
-      <Filter>Shared\Message</Filter>
+      <Filter>Shared\Networking\Message</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Utility\Logger.h">
       <Filter>Shared\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Shared\Utility\String.h">
       <Filter>Shared\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared\Networking\Client\TCPClientRaw.h">
+      <Filter>Shared\Networking\Client</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

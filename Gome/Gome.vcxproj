@@ -148,6 +148,7 @@
     <ClCompile Include="Shared\Networking\Message\Packet.cpp" />
     <ClCompile Include="Shared\Utility\GUID.cpp" />
     <ClCompile Include="Shared\Utility\String.cpp" />
+    <ClCompile Include="Shared\Networking\Client\TCPClientRaw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Utility\Logger.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Shared\Networking\Message\Packet.h" />
     <ClInclude Include="Shared\Utility\GUID.h" />
     <ClInclude Include="Shared\Utility\String.h" />
+    <ClInclude Include="Shared\Networking\Client\TCPClientRaw.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

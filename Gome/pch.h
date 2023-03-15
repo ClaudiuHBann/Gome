@@ -6,6 +6,9 @@
 #define ASIO_STANDALONE
 #include "packages/asio-cppp-latest.1.24.0/build/native/include/asio.hpp"
 
+using namespace asio;
+using namespace ip;
+
 #include <Rpc.h>
 #pragma comment(lib, "Rpcrt4.lib")
 
