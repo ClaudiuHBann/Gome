@@ -35,7 +35,9 @@
     <ClCompile Include="Shared\Networking\Client\TCPClient.cpp">
       <Filter>Shared\Networking\Client</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Server\TCPServerRaw.cpp" />
+    <ClCompile Include="Shared\Networking\Server\TCPServerRaw.cpp">
+      <Filter>Shared\Networking\Server</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
@@ -52,6 +54,12 @@
     </Filter>
     <Filter Include="Shared\Networking\Client">
       <UniqueIdentifier>{eb622261-4eb1-4595-afb5-b4297ad1f224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Networking\Server">
+      <UniqueIdentifier>{c4db3fa1-7c08-4b63-b1f5-c41363235732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Networking\Protocol">
+      <UniqueIdentifier>{52ba4de3-b862-4d66-81e3-ca9fadf87d6a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -89,7 +97,9 @@
     <ClInclude Include="Shared\Networking\Client\TCPClient.h">
       <Filter>Shared\Networking\Client</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Server\TCPServerRaw.h" />
+    <ClInclude Include="Shared\Networking\Server\TCPServerRaw.h">
+      <Filter>Shared\Networking\Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

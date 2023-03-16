@@ -3,7 +3,7 @@
 
 namespace Shared::Networking::Client {
 	TCPClientRaw::TCPClientRaw(tcp::socket&& socket)
-	  : mSocket(make_unique<tcp::socket>(move(socket))) {
+		: mSocket(make_unique<tcp::socket>(move(socket))) {
 	}
 
 	TCPClientRaw::~TCPClientRaw() {
@@ -15,17 +15,18 @@ namespace Shared::Networking::Client {
 	}
 
 	void TCPClientRaw::ConnectAsync(const basic_resolver_results<tcp>& endpoints, const CallbackConnect& callback) {
+		auto endpointsShared = make_shared<basic_resolver_results<tcp>>(endpoints);
+
 		auto self(shared_from_this());
-		// TODO endpoints still exists?
-		async_connect(*mSocket, endpoints,
-					  [self, callback] (const auto& ec, const auto& ep) {
+		async_connect(*self->GetSocket(), *endpointsShared,
+					  [self, endpointsShared, callback] (const auto& ec, const auto& ep) {
 						  callback(ec, ep);
 					  });
 	}
 
 	void TCPClientRaw::SendAsync(const shared_ptr<bytes>& data, const CallbackSend& callback) {
 		auto self(shared_from_this());
-		async_write(*mSocket, asio::buffer(*data),
+		async_write(*self->GetSocket(), asio::buffer(*data),
 					[self, data, callback] (const auto& ec, const auto& size) {
 						callback(ec, size);
 					});
@@ -33,31 +34,31 @@ namespace Shared::Networking::Client {
 
 	void TCPClientRaw::SendAllAsync(const shared_ptr<bytes>& data, const CallbackSend& callback) {
 		auto self(shared_from_this());
-		async_write(*mSocket, asio::buffer(*data),
-					[&, self, data, callback] (const auto& ec, const auto& size) {
+		async_write(*self->GetSocket(), asio::buffer(*data),
+					[self, data, callback] (const auto& ec, const auto& size) {
 						if (ec) {
 							callback(ec, size);
 						} else {
-							SendShardAsync(data, size, callback);
+							self->SendShardAsync(data, size, callback);
 						}
 					});
 	}
 
 	void TCPClientRaw::SendShardAsync(const shared_ptr<bytes>& data, const size_t offset, const CallbackSend& callback) {
 		auto self(shared_from_this());
-		async_write(*mSocket, asio::buffer(data->data() + offset, data->size() - offset),
-					[&, self, data, callback, offset] (const auto& ec, const auto& size) {
+		async_write(*self->GetSocket(), asio::buffer(data->data() + offset, data->size() - offset),
+					[self, data, callback, offset] (const auto& ec, const auto& size) {
 						if (ec) {
 							callback(ec, offset + size);
 						} else {
-							SendShardAsync(data, offset + size, callback);
+							self->SendShardAsync(data, offset + size, callback);
 						}
 					});
 	}
 
 	void TCPClientRaw::ReceiveAsync(const shared_ptr<bytes>& data, const CallbackRead& callback) {
 		auto self(shared_from_this());
-		async_read(*mSocket, asio::buffer(*data),
+		async_read(*self->GetSocket(), asio::buffer(*data),
 				   [self, data, callback] (const auto& ec, const auto& size) {
 					   data->resize(size);
 		callback(ec, data);
@@ -66,26 +67,26 @@ namespace Shared::Networking::Client {
 
 	void TCPClientRaw::ReceiveAllAsync(const shared_ptr<bytes>& data, const CallbackRead& callback) {
 		auto self(shared_from_this());
-		async_read(*mSocket, asio::buffer(*data),
-				   [&, self, data, callback] (const auto& ec, const auto& size) {
+		async_read(*self->GetSocket(), asio::buffer(*data),
+				   [self, data, callback] (const auto& ec, const auto& size) {
 					   if (ec) {
 						   data->resize(size);
 						   callback(ec, data);
 					   } else {
-						   ReceiveShardAsync(data, size, callback);
+						   self->ReceiveShardAsync(data, size, callback);
 					   }
 				   });
 	}
 
 	void TCPClientRaw::ReceiveShardAsync(const shared_ptr<bytes>& data, const size_t offset, const CallbackRead& callback) {
 		auto self(shared_from_this());
-		async_read(*mSocket, asio::buffer(data->data() + offset, data->size() - offset),
-				   [&, self, data, callback, offset] (const auto& ec, const auto& size) {
+		async_read(*self->GetSocket(), asio::buffer(data->data() + offset, data->size() - offset),
+				   [self, data, callback, offset] (const auto& ec, const auto& size) {
 					   if (ec) {
 						   data->resize(offset + size);
 						   callback(ec, data);
 					   } else {
-						   ReceiveShardAsync(data, offset + size, callback);
+						   self->ReceiveShardAsync(data, offset + size, callback);
 					   }
 				   });
 	}
