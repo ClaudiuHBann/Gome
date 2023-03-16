@@ -25,7 +25,7 @@ namespace Shared::Networking::Server {
 		mAcceptor->async_accept(*socket,
 								[self, socket, callback] (auto ec) {
 									if (!ec) {
-										callback(move(*socket)); // TODO: move shared_ptr object?
+										callback(make_shared<TCPClient>(move(*socket))); // TODO: move shared_ptr object?
 									}
 
 		self->Accept(callback);

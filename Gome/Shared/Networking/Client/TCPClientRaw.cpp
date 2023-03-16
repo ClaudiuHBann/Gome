@@ -48,7 +48,7 @@ namespace Shared::Networking::Client {
 		auto self(shared_from_this());
 		async_write(*self->GetSocket(), asio::buffer(data->data() + offset, data->size() - offset),
 					[self, data, callback, offset] (const auto& ec, const auto& size) {
-						if (ec) {
+						if (ec || !size) {
 							callback(ec, offset + size);
 						} else {
 							self->SendShardAsync(data, offset + size, callback);
@@ -82,7 +82,7 @@ namespace Shared::Networking::Client {
 		auto self(shared_from_this());
 		async_read(*self->GetSocket(), asio::buffer(data->data() + offset, data->size() - offset),
 				   [self, data, callback, offset] (const auto& ec, const auto& size) {
-					   if (ec) {
+					   if (ec || !size) {
 						   data->resize(offset + size);
 						   callback(ec, data);
 					   } else {

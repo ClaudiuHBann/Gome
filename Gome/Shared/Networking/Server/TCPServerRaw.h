@@ -8,7 +8,7 @@ namespace Shared::Networking::Server {
 
 	class TCPServerRaw : public enable_shared_from_this<TCPServerRaw> {
 	public:
-		using CallbackAccept = function<void(TCPClient)>;
+		using CallbackAccept = function<void(shared_ptr<TCPClient>)>;
 
 		TCPServerRaw(const IOContext& context, const port_type port);
 		~TCPServerRaw();

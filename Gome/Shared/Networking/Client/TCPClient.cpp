@@ -39,11 +39,14 @@ namespace Shared::Networking::Client {
 											   auto&& packetMetadata = MessageConverter::BytesToPacketMetadata(*bytes);
 											   auto data = make_shared<TCPClient::bytes>(packetMetadata.GetHeaderMetadata().GetSize());
 											   selfTCPClientRaw->ReceiveAllAsync(data,
-																				 [data, callback] (auto ec, auto bytes) {
+																				 [data, bytesMetadata = bytes, callback] (auto ec, auto bytes) {
 																					 if (ec) {
 																						 callback(ec, {});
 																					 } else {
-																						 auto&& messageBytes = MessageConverter::BytesToMessage(*bytes);
+																						 // TODO: wtf? copy all?
+																						 bytesMetadata->append_range(*bytes);
+
+																						 auto&& messageBytes = MessageConverter::BytesToMessage(*bytesMetadata);
 																						 auto&& tuple = MessageManager::FromMessage(messageBytes);
 
 																						 callback(ec, move(tuple));
