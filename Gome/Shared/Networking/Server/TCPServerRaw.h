@@ -3,43 +3,22 @@
 #include "Gome/Shared/Networking/IOContext.h"
 #include "Gome/Shared/Networking/Client/TCPClient.h"
 
-namespace Shared::Networking::Client {
-  class TCPServerRaw : public enable_shared_from_this<TCPServerRaw>
-  {
-  public:
-    using CallbackAccept = function<void(TCPClient)>;
+namespace Shared::Networking::Server {
+	using namespace Client;
 
-    TCPServerRaw(tcp::acceptor&& acceptor)
-      : mAcceptor(make_unique<tcp::acceptor>(move(acceptor))) {
-    }
+	class TCPServerRaw : public enable_shared_from_this<TCPServerRaw> {
+	public:
+		using CallbackAccept = function<void(TCPClient)>;
 
-    virtual ~TCPServerRaw() {
-      mAcceptor->cancel();
-      mAcceptor->close();
-    }
+		TCPServerRaw(const IOContext& context, const port_type port);
+		~TCPServerRaw();
 
-    void Start(const CallbackAccept& callback) {
-      Accept(callback);
-    }
+		void Start(const CallbackAccept& callback);
 
-  private:
-    void Accept(const CallbackAccept& callback)
-    {
-      auto self(shared_from_this());
-      auto socket = make_shared<tcp::socket>();
+	private:
+		void Accept(const CallbackAccept& callback);
 
-      mAcceptor->async_accept(*socket,
-        [self, socket, callback](auto ec)
-      {
-        if (ec) {
-          self->Accept(callback);
-        }
-        else {
-          callback(move(*socket));
-        }
-      });
-    }
-
-    unique_ptr<tcp::acceptor> mAcceptor;
-  };
+		IOContext mContext;
+		unique_ptr<tcp::acceptor> mAcceptor;
+	};
 }
