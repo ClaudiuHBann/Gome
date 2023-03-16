@@ -151,6 +151,7 @@
     <ClCompile Include="Shared\Utility\String.cpp" />
     <ClCompile Include="Shared\Networking\Client\TCPClientRaw.cpp" />
     <ClCompile Include="Shared\Networking\Client\TCPClient.cpp" />
+    <ClCompile Include="Shared\Networking\Server\TCPServerRaw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shared\Networking\IOContext.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Shared\Utility\String.h" />
     <ClInclude Include="Shared\Networking\Client\TCPClientRaw.h" />
     <ClInclude Include="Shared\Networking\Client\TCPClient.h" />
+    <ClInclude Include="Shared\Networking\Server\TCPServerRaw.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -15,5 +15,5 @@ int main() {
 /*
 	TODO:
 		 - add TCPClient with TCPClientRaw member and use the message manager methods in transferring data
-		 -
+		 - move the callbacks to the end, DON'T COPY THEM
 */

@@ -2,11 +2,19 @@
 #include "IOContext.h"
 
 namespace Shared::Networking {
-	IOContext::IOContext()
-		: mIOContext(make_shared<io_context>()) {
-	}
+  IOContext::IOContext()
+    : mIOContext(make_unique<io_context>()) {
+  }
 
-	shared_ptr<io_context> IOContext::Get() {
-		return mIOContext;
-	}
+  tcp::socket IOContext::CreateSocket() {
+    return tcp::socket(*mIOContext);
+  }
+
+  tcp::resolver IOContext::CreateResolver() {
+    return tcp::resolver(*mIOContext);
+  }
+
+  tcp::acceptor IOContext::CreateAcceptor() {
+    return tcp::acceptor(*mIOContext);
+  }
 }

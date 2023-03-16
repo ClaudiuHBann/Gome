@@ -2,9 +2,8 @@
 #include "TCPClientRaw.h"
 
 namespace Shared::Networking::Client {
-	TCPClientRaw::TCPClientRaw(IOContext context)
-		: mContext(context),
-		mSocket(make_unique<tcp::socket>(*mContext.Get())) {
+	TCPClientRaw::TCPClientRaw(tcp::socket&& socket)
+	  : mSocket(make_unique<tcp::socket>(move(socket))) {
 	}
 
 	TCPClientRaw::~TCPClientRaw() {
@@ -15,11 +14,9 @@ namespace Shared::Networking::Client {
 		return mSocket;
 	}
 
-	void TCPClientRaw::ConnectAsync(const String& ip, const port_type port, const CallbackConnect& callback) {
-		tcp::resolver resolver(*mContext.Get());
-		auto endpoints = resolver.resolve(ToStringType<char>(ip), ToStringType<char>(ToString(port)));
-
+	void TCPClientRaw::ConnectAsync(const basic_resolver_results<tcp>& endpoints, const CallbackConnect& callback) {
 		auto self(shared_from_this());
+		// TODO endpoints still exists?
 		async_connect(*mSocket, endpoints,
 					  [self, callback] (const auto& ec, const auto& ep) {
 						  callback(ec, ep);

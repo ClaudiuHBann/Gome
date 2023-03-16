@@ -1,13 +1,15 @@
 #pragma once
 
 namespace Shared::Networking {
-	class IOContext {
-	public:
-		IOContext();
+  class IOContext {
+  public:
+    IOContext();
 
-		shared_ptr<io_context> Get();
+    tcp::socket CreateSocket();
+    tcp::resolver CreateResolver();
+    tcp::acceptor CreateAcceptor();
 
-	private:
-		shared_ptr<io_context> mIOContext {};
-	};
+  private:
+    unique_ptr<io_context> mIOContext{};
+  };
 }
