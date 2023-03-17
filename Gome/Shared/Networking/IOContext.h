@@ -1,19 +1,21 @@
 #pragma once
 
-namespace Shared::Networking {
-	class IOContext {
-	public:
-		IOContext();
+namespace Shared::Networking
+{
+class IOContext
+{
+  public:
+    IOContext();
 
-		tcp::socket CreateSocket();
-		tcp::resolver CreateResolver();
-		tcp::acceptor CreateAcceptor();
+    tcp::socket CreateSocket();
+    tcp::resolver CreateResolver();
+    tcp::acceptor CreateAcceptor();
 
-		void Run();
+    void Run();
 
-		io_context& operator*();
+    io_context &operator*();
 
-	private:
-		shared_ptr<io_context> mIOContext {};
-	};
-}
+  private:
+    shared_ptr<io_context> mIOContext{};
+};
+} // namespace Shared::Networking

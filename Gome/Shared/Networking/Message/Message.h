@@ -2,21 +2,23 @@
 
 #include "Packet.h"
 
-namespace Shared::Networking::Message {
-	class MessageManager;
-	class MessageConverter;
+namespace Shared::Networking::Message
+{
+class MessageManager;
+class MessageConverter;
 
-	class Message {
-		friend class MessageManager;
-		friend class MessageConverter;
+class Message
+{
+    friend class MessageManager;
+    friend class MessageConverter;
 
-		Message(const PacketMetadata& packetMetadata);
+    Message(const PacketMetadata &packetMetadata);
 
-		PacketMetadata mPacketMetadata;
-		vector<PacketData> mPacketDatas;
+    PacketMetadata mPacketMetadata;
+    vector<PacketData> mPacketDatas;
 
-	public:
-		const PacketMetadata& GetPacketMetadata() const;
-		const vector<PacketData>& GetPacketDatas() const;
-	};
-}
+  public:
+    const PacketMetadata &GetPacketMetadata() const;
+    const vector<PacketData> &GetPacketDatas() const;
+};
+} // namespace Shared::Networking::Message

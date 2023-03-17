@@ -141,7 +141,6 @@
   <ItemGroup>
     <ClCompile Include="Shared\Networking\IOContext.cpp" />
     <ClCompile Include="Shared\Utility\Logger.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Shared\Networking\Message\MessageConverter.cpp" />
     <ClCompile Include="Shared\Networking\Message\Message.cpp" />
     <ClCompile Include="Shared\Networking\Message\MessageManager.cpp" />

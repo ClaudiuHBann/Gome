@@ -22,5 +22,8 @@
     <Filter Include="Shared\Networking\Message">
       <UniqueIdentifier>{3148d8e6-4440-465a-95bf-a0d10bce5740}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shared\Networking\TCP">
+      <UniqueIdentifier>{b60bf2ab-054b-4fb0-8db1-f0a10a51b522}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
