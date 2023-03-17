@@ -27,7 +27,7 @@ int main() {
 				});
 			});
 		});
-
+	dsadas
 	TCPClient client(context.CreateSocket());
 	auto&& resolver = context.CreateResolver();
 	auto&& endpoints = resolver.resolve(ToStringType<char>(String(TEXT("127.0.0.1"))), ToStringType<char>(ToString(6969)));
