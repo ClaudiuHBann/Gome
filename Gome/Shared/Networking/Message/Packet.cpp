@@ -32,4 +32,8 @@ namespace Shared::Networking::Message {
 	const PacketData::bytes& PacketData::GetContent() const {
 		return mContent;
 	}
+
+	const size_t PacketData::GetSize() const {
+		return mHeaderData.SIZE + mContent.size();
+	}
 }

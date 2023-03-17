@@ -13,6 +13,7 @@ using namespace ip;
 #pragma comment(lib, "Rpcrt4.lib")
 
 #include <iostream>
+#include <numeric>
 #include <string>
 
 using namespace std;

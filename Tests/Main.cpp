@@ -18,27 +18,30 @@ int main() {
 	IOContext context;
 
 	auto server = make_shared<TCPServerRaw>(context, port_type(6969));
-	server->Start([] (auto client) {
-		TRACE(TEXT("A mf connected."));
-	client->Receive([client] (auto, auto) {
-		TRACE(TEXT("A mf sent."));
-					});
-				  });
+	server->Start([](auto client) {
+		TRACE(TEXT("Server: A client connected."));
+		client->Receive([client](auto, auto tuple) {
+			TRACE(TEXT("Server: Received data."));
+			client->Send(get<2>(tuple), get<1>(tuple), [](auto, auto) {
+				TRACE(TEXT("Server: Sent data."));
+				});
+			});
+		});
 
 	TCPClient client(context.CreateSocket());
 	auto&& resolver = context.CreateResolver();
 	auto&& endpoints = resolver.resolve(ToStringType<char>(String(TEXT("127.0.0.1"))), ToStringType<char>(ToString(6969)));
 	client.Connect(endpoints,
-				   [&] (auto, auto) {
-					   TRACE(TEXT("Connected!"));
-	client.Send({ byte('6'), byte('9') }, HeaderMetadata::Type::PING,
-				[&] (auto, auto) {
-					TRACE(TEXT("Sent."));
-	client.Receive([] (auto, auto) {
-		TRACE(TEXT("Received."));
-				   });
+		[&](auto, auto) {
+			TRACE(TEXT("Client: Connected."));
+			client.Send({ byte('6'), byte('9') }, HeaderMetadata::Type::PING,
+				[&](auto, auto) {
+					TRACE(TEXT("Client: Sent."));
+					client.Receive([](auto, auto tuple) {
+						TRACE(TEXT("Client: Received."));
+						});
 				});
-				   });
+		});
 
 	context.Run();
 

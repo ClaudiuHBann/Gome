@@ -27,6 +27,8 @@ namespace Shared::Networking::Message {
 		const HeaderData& GetHeaderData() const;
 		const bytes& GetContent() const;
 
+		const size_t GetSize() const;
+
 		bool operator==(const PacketData& right);
 
 	private:

@@ -3,10 +3,7 @@
 
 namespace Shared::Networking::Message {
 	/* static */ Message MessageManager::ToMessage(const bytes& bytes, HeaderMetadata::Type type, Utility::GUID guid /* = {} */) {
-		HeaderMetadata headerMetadata(guid, type, bytes.size());
-		PacketMetadata packetMetadata(headerMetadata);
-
-		Message message(packetMetadata);
+		vector<PacketData> packetDatas;
 
 		auto packetsCount = bytes.size() / PacketData::CONTENT_SIZE_MAX;
 		for (size_t i = 0; i < packetsCount; i++) {
@@ -14,7 +11,7 @@ namespace Shared::Networking::Message {
 			MessageManager::bytes content(bytes.begin() + i * PacketData::CONTENT_SIZE_MAX, bytes.begin() + (i + 1) * PacketData::CONTENT_SIZE_MAX);
 			PacketData packetData(headerData, content);
 
-			message.mPacketDatas.push_back(packetData);
+			packetDatas.push_back(packetData);
 		}
 
 		auto packetLastSize = bytes.size() % PacketData::CONTENT_SIZE_MAX;
@@ -23,8 +20,16 @@ namespace Shared::Networking::Message {
 			MessageManager::bytes content(bytes.begin() + packetsCount * PacketData::CONTENT_SIZE_MAX, bytes.end());
 			PacketData packetData(headerData, content);
 
-			message.mPacketDatas.push_back(packetData);
+			packetDatas.push_back(packetData);
 		}
+
+		auto packetDatasSize = accumulate(packetDatas.begin(), packetDatas.end(), (size_t)0, [](auto sum, const auto& packetData) { return sum + packetData.GetSize(); });
+
+		HeaderMetadata headerMetadata(guid, type, packetDatasSize);
+		PacketMetadata packetMetadata(headerMetadata);
+
+		Message message(packetMetadata);
+		message.mPacketDatas = move(packetDatas);
 
 		return message;
 	}

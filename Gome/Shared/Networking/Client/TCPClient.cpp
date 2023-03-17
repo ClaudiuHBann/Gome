@@ -43,8 +43,8 @@ namespace Shared::Networking::Client {
 																					 if (ec) {
 																						 callback(ec, {});
 																					 } else {
-																						 // TODO: wtf? copy all?
-																						 bytesMetadata->append_range(*bytes);
+																						 // TODO: move shared_ptr's content?
+																						 bytesMetadata->append_range(move(*bytes));
 
 																						 auto&& messageBytes = MessageConverter::BytesToMessage(*bytesMetadata);
 																						 auto&& tuple = MessageManager::FromMessage(messageBytes);
