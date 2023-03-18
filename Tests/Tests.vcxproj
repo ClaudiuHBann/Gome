@@ -149,10 +149,12 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Shared\Networking\Message\MessageTests.cpp" />
+    <ClCompile Include="Shared\Networking\TCP\TCPTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shared\Networking\Message\MessageTests.h" />
+    <ClInclude Include="Shared\Networking\TCP\TCPTests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

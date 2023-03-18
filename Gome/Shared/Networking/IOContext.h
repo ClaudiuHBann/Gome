@@ -12,6 +12,7 @@ class IOContext
     tcp::acceptor CreateAcceptor();
 
     void Run();
+    void Stop();
 
     io_context &operator*();
 

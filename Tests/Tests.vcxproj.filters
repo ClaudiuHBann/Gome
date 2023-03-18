@@ -5,12 +5,14 @@
     <ClCompile Include="Shared\Networking\Message\MessageTests.cpp">
       <Filter>Shared\Networking\Message</Filter>
     </ClCompile>
+    <ClCompile Include="Shared\Networking\TCP\TCPTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shared\Networking\Message\MessageTests.h">
       <Filter>Shared\Networking\Message</Filter>
     </ClInclude>
+    <ClInclude Include="Shared\Networking\TCP\TCPTests.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">

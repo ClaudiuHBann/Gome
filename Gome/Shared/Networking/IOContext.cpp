@@ -33,4 +33,9 @@ void IOContext::Run()
 {
     mIOContext->run();
 }
+
+void IOContext::Stop()
+{
+    mIOContext->stop();
+}
 } // namespace Shared::Networking
