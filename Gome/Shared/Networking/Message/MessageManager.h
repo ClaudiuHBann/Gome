@@ -8,8 +8,9 @@ class MessageManager
 {
   public:
     using bytes = vector<byte>;
+    using MessageDisassembled = tuple<Utility::GUID, HeaderMetadata::Type, bytes>;
 
     static Message ToMessage(const bytes &bytes, HeaderMetadata::Type type, Utility::GUID guid = {});
-    static tuple<Utility::GUID, HeaderMetadata::Type, bytes> FromMessage(const Message &message);
+    static MessageDisassembled FromMessage(const Message &message);
 };
 } // namespace Shared::Networking::Message

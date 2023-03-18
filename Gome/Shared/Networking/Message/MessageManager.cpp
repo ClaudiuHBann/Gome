@@ -43,8 +43,7 @@ namespace Shared::Networking::Message
     return message;
 }
 
-/* static */ tuple<Utility::GUID, HeaderMetadata::Type, MessageManager::bytes> MessageManager::FromMessage(
-    const Message &message)
+/* static */ MessageManager::MessageDisassembled MessageManager::FromMessage(const Message &message)
 {
     bytes bytes;
 

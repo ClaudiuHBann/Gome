@@ -19,96 +19,102 @@ const unique_ptr<tcp::socket> &TCPClientRaw::GetSocket() const
     return mSocket;
 }
 
-void TCPClientRaw::ConnectAsync(const basic_resolver_results<tcp> &endpoints, const CallbackConnect &callback)
+void TCPClientRaw::ConnectAsync(const basic_resolver_results<tcp> &endpoints, CallbackConnect callback)
 {
     auto endpointsShared = make_shared<basic_resolver_results<tcp>>(endpoints);
 
     auto self(shared_from_this());
     async_connect(*self->GetSocket(), *endpointsShared,
-                  [self, endpointsShared, callback](const auto &ec, const auto &ep) { callback(ec, ep); });
+                  [self, endpointsShared, callbackInst1 = move(callback)](const auto &ec, const auto &ep) {
+                      callbackInst1(ec, make_shared<tcp::endpoint>(ep));
+                  });
 }
 
-void TCPClientRaw::SendAsync(const shared_ptr<bytes> &data, const CallbackSend &callback)
+void TCPClientRaw::SendAsync(const shared_ptr<bytes> &data, CallbackSend callback)
+{
+    auto self(shared_from_this());
+    async_write(
+        *self->GetSocket(), asio::buffer(*data),
+        [self, data, callbackInst1 = move(callback)](const auto &ec, const auto &size) { callbackInst1(ec, size); });
+}
+
+void TCPClientRaw::SendAllAsync(const shared_ptr<bytes> &data, CallbackSend callback)
 {
     auto self(shared_from_this());
     async_write(*self->GetSocket(), asio::buffer(*data),
-                [self, data, callback](const auto &ec, const auto &size) { callback(ec, size); });
-}
-
-void TCPClientRaw::SendAllAsync(const shared_ptr<bytes> &data, const CallbackSend &callback)
-{
-    auto self(shared_from_this());
-    async_write(*self->GetSocket(), asio::buffer(*data), [self, data, callback](const auto &ec, const auto &size) {
-        if (ec)
-        {
-            callback(ec, size);
-        }
-        else
-        {
-            self->SendShardAsync(data, size, callback);
-        }
-    });
-}
-
-void TCPClientRaw::SendShardAsync(const shared_ptr<bytes> &data, const size_t offset, const CallbackSend &callback)
-{
-    auto self(shared_from_this());
-    async_write(*self->GetSocket(), asio::buffer(data->data() + offset, data->size() - offset),
-                [self, data, callback, offset](const auto &ec, const auto &size) {
-                    if (ec || !size)
+                [self, data, callbackInst1 = move(callback)](const auto &ec, const auto &size) {
+                    if (ec)
                     {
-                        callback(ec, offset + size);
+                        callbackInst1(ec, size);
                     }
                     else
                     {
-                        self->SendShardAsync(data, offset + size, callback);
+                        self->SendShardAsync(data, size, move(callbackInst1));
                     }
                 });
 }
 
-void TCPClientRaw::ReceiveAsync(const shared_ptr<bytes> &data, const CallbackRead &callback)
+void TCPClientRaw::SendShardAsync(const shared_ptr<bytes> &data, const size_t offset, CallbackSend callback)
 {
     auto self(shared_from_this());
-    async_read(*self->GetSocket(), asio::buffer(*data), [self, data, callback](const auto &ec, const auto &size) {
-        data->resize(size);
-        callback(ec, data);
-    });
+    async_write(*self->GetSocket(), asio::buffer(data->data() + offset, data->size() - offset),
+                [self, data, callbackInst1 = move(callback), offset](const auto &ec, const auto &size) {
+                    if (ec || !size)
+                    {
+                        callbackInst1(ec, offset + size);
+                    }
+                    else
+                    {
+                        self->SendShardAsync(data, offset + size, move(callbackInst1));
+                    }
+                });
 }
 
-void TCPClientRaw::ReceiveAllAsync(const shared_ptr<bytes> &data, const CallbackRead &callback)
+void TCPClientRaw::ReceiveAsync(const shared_ptr<bytes> &data, CallbackRead callback)
 {
     auto self(shared_from_this());
-    async_read(*self->GetSocket(), asio::buffer(*data), [self, data, callback](const auto &ec, const auto &size) {
-        if (ec)
-        {
-            data->resize(size);
-            callback(ec, data);
-        }
-        else
-        {
-            self->ReceiveShardAsync(data, size, callback);
-        }
-    });
+    async_read(*self->GetSocket(), asio::buffer(*data),
+               [self, data, callbackInst1 = move(callback)](const auto &ec, const auto &size) {
+                   data->resize(size);
+                   callbackInst1(ec, data);
+               });
 }
 
-void TCPClientRaw::ReceiveShardAsync(const shared_ptr<bytes> &data, const size_t offset, const CallbackRead &callback)
+void TCPClientRaw::ReceiveAllAsync(const shared_ptr<bytes> &data, CallbackRead callback)
 {
     auto self(shared_from_this());
-    async_read(*self->GetSocket(), asio::buffer(data->data() + offset, data->size() - offset),
-               [self, data, callback, offset](const auto &ec, const auto &size) {
-                   if (ec || !size)
+    async_read(*self->GetSocket(), asio::buffer(*data),
+               [self, data, callbackInst1 = move(callback)](const auto &ec, const auto &size) {
+                   if (ec)
                    {
-                       data->resize(offset + size);
-                       callback(ec, data);
+                       data->resize(size);
+                       callbackInst1(ec, data);
                    }
                    else
                    {
-                       self->ReceiveShardAsync(data, offset + size, callback);
+                       self->ReceiveShardAsync(data, size, move(callbackInst1));
                    }
                });
 }
 
-void TCPClientRaw::Disconnect(const CallbackDisconnect &callback /* = [] (auto, auto) {} */)
+void TCPClientRaw::ReceiveShardAsync(const shared_ptr<bytes> &data, const size_t offset, CallbackRead callback)
+{
+    auto self(shared_from_this());
+    async_read(*self->GetSocket(), asio::buffer(data->data() + offset, data->size() - offset),
+               [self, data, callbackInst1 = move(callback), offset](const auto &ec, const auto &size) {
+                   if (ec || !size)
+                   {
+                       data->resize(offset + size);
+                       callbackInst1(ec, data);
+                   }
+                   else
+                   {
+                       self->ReceiveShardAsync(data, offset + size, move(callbackInst1));
+                   }
+               });
+}
+
+void TCPClientRaw::Disconnect(CallbackDisconnect callback /* = [] (auto, auto) {} */)
 {
     error_code ec1, ec2;
 

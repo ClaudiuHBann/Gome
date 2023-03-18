@@ -18,23 +18,23 @@ TCPServerRaw::~TCPServerRaw()
     mAcceptor->close();
 }
 
-void TCPServerRaw::Start(const CallbackAccept &callback)
+void TCPServerRaw::Start(CallbackAccept callback)
 {
-    Accept(callback);
+    Accept(move(callback));
 }
 
-void TCPServerRaw::Accept(const CallbackAccept &callback)
+void TCPServerRaw::Accept(CallbackAccept callback)
 {
     auto self(shared_from_this());
 
     auto socket = make_shared<tcp::socket>(mContext.CreateSocket());
-    mAcceptor->async_accept(*socket, [self, socket, callback](auto ec) {
+    mAcceptor->async_accept(*socket, [self, socket, callbackInst1 = move(callback)](auto ec) {
         if (!ec)
         {
-            callback(make_shared<TCPClient>(move(*socket))); // TODO: move shared_ptr object?
+            callbackInst1(make_shared<TCPClient>(move(*socket)));
         }
 
-        self->Accept(callback);
+        self->Accept(move(callbackInst1));
     });
 }
 } // namespace Shared::Networking::Server

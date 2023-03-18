@@ -19,10 +19,6 @@ int main()
 
 /*
     TODO:
-         - move the callbacks to the end, DON'T COPY THEM
-         - make a class from that message response tuple, or at least an using
          - a better sending/receiving logic (a sent packet waits a ACK and bis)
-         - should we work just with shared_ptr (like all callbacks and all) because we need something to work with
-   everywhere
          -
 */

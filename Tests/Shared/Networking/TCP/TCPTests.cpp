@@ -50,11 +50,9 @@ void TCPTests::TestServer()
 {
     mServer.Start([this](auto client) {
         client->Receive([this, client](auto, auto tuple) {
-            auto &&[guid, type, bytes] = tuple;
-
-            if (bytes == TEST_DATA_BYTES && type == TEST_DATA_TYPE)
+            if (get<2>(*tuple) == TEST_DATA_BYTES && get<1>(*tuple) == TEST_DATA_TYPE)
             {
-                client->Send(bytes, type, [this](auto ec, auto) {
+                client->Send(get<2>(*tuple), get<1>(*tuple), [this, tuple](auto ec, auto) {
                     if (ec)
                     {
                         Fail(TEXT("TestServer"));
@@ -96,7 +94,7 @@ void TCPTests::TestClient()
                 else
                 {
                     mClient.Receive([this](auto, auto tuple) {
-                        auto &&[guid, type, bytes] = tuple;
+                        auto &&[guid, type, bytes] = *tuple;
 
                         if (bytes == TEST_DATA_BYTES && type == TEST_DATA_TYPE)
                         {

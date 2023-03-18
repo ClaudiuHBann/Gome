@@ -13,7 +13,7 @@ class TCPServer
 
     TCPServer(const IOContext &context, const port_type port);
 
-    void Start(const CallbackAccept &callback);
+    void Start(CallbackAccept callback);
 
   private:
     shared_ptr<TCPServerRaw> mServer;

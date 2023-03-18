@@ -15,10 +15,10 @@ class TCPServerRaw : public enable_shared_from_this<TCPServerRaw>
     TCPServerRaw(const IOContext &context, const port_type port);
     ~TCPServerRaw();
 
-    void Start(const CallbackAccept &callback);
+    void Start(CallbackAccept callback);
 
   private:
-    void Accept(const CallbackAccept &callback);
+    void Accept(CallbackAccept callback);
 
     IOContext mContext;
     unique_ptr<tcp::acceptor> mAcceptor;

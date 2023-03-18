@@ -11,8 +11,8 @@ TCPServer::TCPServer(const IOContext &context, const port_type port) : mServer(m
 {
 }
 
-void TCPServer::Start(const CallbackAccept &callback)
+void TCPServer::Start(CallbackAccept callback)
 {
-    mServer->Start(callback);
+    mServer->Start(move(callback));
 }
 } // namespace Shared::Networking::Server
