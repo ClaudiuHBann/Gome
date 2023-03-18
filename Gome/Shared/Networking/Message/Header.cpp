@@ -8,6 +8,11 @@ namespace Shared::Networking::Message
 {
 using namespace Utility;
 
+constexpr auto HEADER_METADATA_TYPE_STRING_PING = TEXT("PING");
+constexpr auto HEADER_METADATA_TYPE_STRING_TEXT = TEXT("TEXT");
+
+constexpr auto HEADER_STRING_DELIMITATOR = TEXT("|");
+
 HeaderMetadata::HeaderMetadata(const Utility::GUID &guid, const Type type, const size_t size) : mGUID(guid), mSize(size)
 {
     assert(Type::NONE < type && type < Type::COUNT);
@@ -19,9 +24,9 @@ String HeaderMetadata::TypeToString() const
     switch (mType)
     {
     case Type::PING:
-        return TEXT("PING");
+        return HEADER_METADATA_TYPE_STRING_PING;
     case Type::TEXT:
-        return TEXT("TEXT");
+        return HEADER_METADATA_TYPE_STRING_TEXT;
     }
 
     return {};
@@ -32,9 +37,9 @@ String HeaderMetadata::ToString()
     String headerAsString;
 
     headerAsString += reinterpret_cast<const ::TCHAR *>(mGUID.GetStr());
-    headerAsString += TEXT("|");
+    headerAsString += HEADER_STRING_DELIMITATOR;
     headerAsString += TypeToString();
-    headerAsString += TEXT("|");
+    headerAsString += HEADER_STRING_DELIMITATOR;
     headerAsString += Utility::ToString(mSize);
 
     return headerAsString;
@@ -64,7 +69,7 @@ String HeaderData::ToString()
     String headerAsString;
 
     headerAsString += reinterpret_cast<const ::TCHAR *>(mGUID.GetStr());
-    headerAsString += TEXT("|");
+    headerAsString += HEADER_STRING_DELIMITATOR;
     headerAsString += Utility::ToString(mIndex);
 
     return headerAsString;
