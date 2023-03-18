@@ -37,7 +37,9 @@
     <ClCompile Include="Shared\Networking\Server\TCPServerRaw.cpp">
       <Filter>Shared\Networking\Server</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Server\TCPServer.cpp" />
+    <ClCompile Include="Shared\Networking\Server\TCPServer.cpp">
+      <Filter>Shared\Networking\Server</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shared">
@@ -100,7 +102,9 @@
     <ClInclude Include="Shared\Networking\Server\TCPServerRaw.h">
       <Filter>Shared\Networking\Server</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Server\TCPServer.h" />
+    <ClInclude Include="Shared\Networking\Server\TCPServer.h">
+      <Filter>Shared\Networking\Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

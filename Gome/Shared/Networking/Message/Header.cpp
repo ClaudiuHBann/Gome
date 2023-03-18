@@ -9,7 +9,6 @@ namespace Shared::Networking::Message
 using namespace Utility;
 
 constexpr auto HEADER_METADATA_TYPE_STRING_PING = TEXT("PING");
-constexpr auto HEADER_METADATA_TYPE_STRING_TEXT = TEXT("TEXT");
 
 constexpr auto HEADER_STRING_DELIMITATOR = TEXT("|");
 
@@ -25,8 +24,6 @@ String HeaderMetadata::TypeToString() const
     {
     case Type::PING:
         return HEADER_METADATA_TYPE_STRING_PING;
-    case Type::TEXT:
-        return HEADER_METADATA_TYPE_STRING_TEXT;
     }
 
     return {};

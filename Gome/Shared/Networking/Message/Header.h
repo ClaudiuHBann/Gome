@@ -16,7 +16,6 @@ class HeaderMetadata
     {
         NONE,
         PING,
-        TEXT,
         COUNT
     };
 
