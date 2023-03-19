@@ -2,14 +2,31 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Server\Server.cpp" />
     <ClCompile Include="Match.cpp" />
-    <ClCompile Include="Server\ServerProcessor.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Stone.cpp" />
+    <ClCompile Include="Server\Server.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="Server\ServerProcessor.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Server\Server.h" />
     <ClInclude Include="Match.h" />
-    <ClInclude Include="Server\ServerProcessor.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Stone.h" />
+    <ClInclude Include="Server\ServerProcessor.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Server\Server.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Server">
+      <UniqueIdentifier>{bbc5c2c5-d0d1-41c0-b791-af910b566d3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

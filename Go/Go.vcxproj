@@ -149,12 +149,16 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Match.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Stone.cpp" />
     <ClCompile Include="Server\ServerProcessor.cpp" />
     <ClCompile Include="Server\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Match.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Stone.h" />
     <ClInclude Include="Server\ServerProcessor.h" />
     <ClInclude Include="Server\Server.h" />
   </ItemGroup>
