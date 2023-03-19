@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Networking\IOContext.cpp" />
+    <ClCompile Include="Utility\Random.cpp" />
     <ClCompile Include="Utility\Logger.cpp" />
     <ClCompile Include="Networking\Message\MessageConverter.cpp" />
     <ClCompile Include="Networking\Message\Message.cpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Networking\IOContext.h" />
+    <ClInclude Include="Utility\Random.h" />
     <ClInclude Include="Utility\Logger.h" />
     <ClInclude Include="Networking\Message\MessageConverter.h" />
     <ClInclude Include="Networking\Message\Message.h" />

@@ -3,7 +3,7 @@
 #include "Player.h"
 //
 
-Player::Player(const Color color) : mColor(color)
+Player::Player(shared_ptr<Networking::Client::TCPClient> client, const Color color) : mClient(client), mColor(color)
 {
 }
 
@@ -27,4 +27,9 @@ void Player::RemoveStone(const Stone &stone)
 Player::Color Player::GetColor()
 {
     return mColor;
+}
+
+shared_ptr<Networking::Client::TCPClient> Player::GetClient()
+{
+    return mClient;
 }

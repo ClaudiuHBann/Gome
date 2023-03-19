@@ -14,6 +14,8 @@ using namespace ip;
 
 #include <iostream>
 #include <numeric>
+#include <random>
+#include <ranges>
 #include <string>
 
 using namespace std;

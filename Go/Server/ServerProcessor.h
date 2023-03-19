@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Go/Match.h"
 #include "Gome/Networking/Client/TCPClient.h"
+#include "MatchManager.h"
 
 namespace Server
 {
@@ -14,6 +14,8 @@ class ServerProcessor
     void Process(vector<shared_ptr<TCPClient>> clients);
 
   private:
-    vector<Match> mMatches;
+    Match ClientsToMatch(vector<shared_ptr<TCPClient>> clients);
+
+    MatchManager mMatchManager;
 };
 } // namespace Server
