@@ -1,10 +1,9 @@
 #include "Tests/pch.h"
 //
 
-#include "Shared/Networking/Message/MessageTests.h"
-#include "Tests/Shared/Networking/TCP/TCPTests.h"
+#include "Networking/Message/MessageTests.h"
+#include "Tests/Networking/TCP/TCPTests.h"
 
-using namespace Shared;
 using namespace Networking;
 using namespace Message;
 using namespace TCP;

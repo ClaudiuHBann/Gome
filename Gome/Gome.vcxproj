@@ -24,6 +24,7 @@
     <ProjectGuid>{44357310-c900-4b8a-aaf8-c3c3d54a1376}</ProjectGuid>
     <RootNamespace>Gome</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Gome</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -139,35 +140,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Shared\Networking\IOContext.cpp" />
-    <ClCompile Include="Shared\Utility\Logger.cpp" />
-    <ClCompile Include="Shared\Networking\Message\MessageConverter.cpp" />
-    <ClCompile Include="Shared\Networking\Message\Message.cpp" />
-    <ClCompile Include="Shared\Networking\Message\MessageManager.cpp" />
-    <ClCompile Include="Shared\Networking\Message\Header.cpp" />
-    <ClCompile Include="Shared\Networking\Message\Packet.cpp" />
-    <ClCompile Include="Shared\Utility\GUID.cpp" />
-    <ClCompile Include="Shared\Utility\String.cpp" />
-    <ClCompile Include="Shared\Networking\Client\TCPClientRaw.cpp" />
-    <ClCompile Include="Shared\Networking\Client\TCPClient.cpp" />
-    <ClCompile Include="Shared\Networking\Server\TCPServerRaw.cpp" />
-    <ClCompile Include="Shared\Networking\Server\TCPServer.cpp" />
+    <ClCompile Include="Networking\IOContext.cpp" />
+    <ClCompile Include="Utility\Logger.cpp" />
+    <ClCompile Include="Networking\Message\MessageConverter.cpp" />
+    <ClCompile Include="Networking\Message\Message.cpp" />
+    <ClCompile Include="Networking\Message\MessageManager.cpp" />
+    <ClCompile Include="Networking\Message\Header.cpp" />
+    <ClCompile Include="Networking\Message\Packet.cpp" />
+    <ClCompile Include="Utility\GUID.cpp" />
+    <ClCompile Include="Utility\String.cpp" />
+    <ClCompile Include="Networking\Client\TCPClientRaw.cpp" />
+    <ClCompile Include="Networking\Client\TCPClient.cpp" />
+    <ClCompile Include="Networking\Server\TCPServerRaw.cpp" />
+    <ClCompile Include="Networking\Server\TCPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shared\Networking\IOContext.h" />
-    <ClInclude Include="Shared\Utility\Logger.h" />
-    <ClInclude Include="Shared\Networking\Message\MessageConverter.h" />
-    <ClInclude Include="Shared\Networking\Message\Message.h" />
-    <ClInclude Include="Shared\Networking\Message\MessageManager.h" />
+    <ClInclude Include="Networking\IOContext.h" />
+    <ClInclude Include="Utility\Logger.h" />
+    <ClInclude Include="Networking\Message\MessageConverter.h" />
+    <ClInclude Include="Networking\Message\Message.h" />
+    <ClInclude Include="Networking\Message\MessageManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Shared\Networking\Message\Header.h" />
-    <ClInclude Include="Shared\Networking\Message\Packet.h" />
-    <ClInclude Include="Shared\Utility\GUID.h" />
-    <ClInclude Include="Shared\Utility\String.h" />
-    <ClInclude Include="Shared\Networking\Client\TCPClientRaw.h" />
-    <ClInclude Include="Shared\Networking\Client\TCPClient.h" />
-    <ClInclude Include="Shared\Networking\Server\TCPServerRaw.h" />
-    <ClInclude Include="Shared\Networking\Server\TCPServer.h" />
+    <ClInclude Include="Networking\Message\Header.h" />
+    <ClInclude Include="Networking\Message\Packet.h" />
+    <ClInclude Include="Utility\GUID.h" />
+    <ClInclude Include="Utility\String.h" />
+    <ClInclude Include="Networking\Client\TCPClientRaw.h" />
+    <ClInclude Include="Networking\Client\TCPClient.h" />
+    <ClInclude Include="Networking\Server\TCPServerRaw.h" />
+    <ClInclude Include="Networking\Server\TCPServer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -3,7 +3,7 @@
 // TODO: remove this Gome/pch.h dependency
 #include "Gome/pch.h"
 //
-#include "Gome/Shared/Utility/Logger.h"
+#include "Gome/Utility/Logger.h"
 
 #define CLASS_TEST_START(className, ...)                                                                               \
     class className                                                                                                    \

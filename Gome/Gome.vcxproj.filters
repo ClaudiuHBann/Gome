@@ -1,109 +1,103 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Shared\Networking\Message\Header.cpp">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClCompile Include="Networking\Message\Header.cpp">
+      <Filter>Networking\Message</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Message\Packet.cpp">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClCompile Include="Networking\Message\Packet.cpp">
+      <Filter>Networking\Message</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Utility\GUID.cpp">
-      <Filter>Shared\Utility</Filter>
+    <ClCompile Include="Utility\GUID.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Message\Message.cpp">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClCompile Include="Networking\Message\Message.cpp">
+      <Filter>Networking\Message</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Message\MessageManager.cpp">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClCompile Include="Networking\Message\MessageManager.cpp">
+      <Filter>Networking\Message</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Message\MessageConverter.cpp">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClCompile Include="Networking\Message\MessageConverter.cpp">
+      <Filter>Networking\Message</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Utility\Logger.cpp">
-      <Filter>Shared\Utility</Filter>
+    <ClCompile Include="Utility\Logger.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Utility\String.cpp">
-      <Filter>Shared\Utility</Filter>
+    <ClCompile Include="Utility\String.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Client\TCPClientRaw.cpp">
-      <Filter>Shared\Networking\Client</Filter>
+    <ClCompile Include="Networking\Client\TCPClientRaw.cpp">
+      <Filter>Networking\Client</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\IOContext.cpp">
-      <Filter>Shared\Networking</Filter>
+    <ClCompile Include="Networking\IOContext.cpp">
+      <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Client\TCPClient.cpp">
-      <Filter>Shared\Networking\Client</Filter>
+    <ClCompile Include="Networking\Client\TCPClient.cpp">
+      <Filter>Networking\Client</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Server\TCPServerRaw.cpp">
-      <Filter>Shared\Networking\Server</Filter>
+    <ClCompile Include="Networking\Server\TCPServerRaw.cpp">
+      <Filter>Networking\Server</Filter>
     </ClCompile>
-    <ClCompile Include="Shared\Networking\Server\TCPServer.cpp">
-      <Filter>Shared\Networking\Server</Filter>
+    <ClCompile Include="Networking\Server\TCPServer.cpp">
+      <Filter>Networking\Server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Shared">
-      <UniqueIdentifier>{f7b890b4-ec98-4eee-bc0e-cc3879a8aebe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shared\Utility">
-      <UniqueIdentifier>{488e030b-55c9-4b39-84c8-deb896eebc63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shared\Networking">
+    <Filter Include="Networking">
       <UniqueIdentifier>{25b91eab-63ff-4963-8971-431680bb3e5e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shared\Networking\Message">
+    <Filter Include="Networking\Message">
       <UniqueIdentifier>{9157e4e4-2e48-43d0-a197-fca8c477307f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shared\Networking\Client">
+    <Filter Include="Networking\Client">
       <UniqueIdentifier>{eb622261-4eb1-4595-afb5-b4297ad1f224}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shared\Networking\Server">
+    <Filter Include="Networking\Server">
       <UniqueIdentifier>{c4db3fa1-7c08-4b63-b1f5-c41363235732}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shared\Networking\Protocol">
-      <UniqueIdentifier>{52ba4de3-b862-4d66-81e3-ca9fadf87d6a}</UniqueIdentifier>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{488e030b-55c9-4b39-84c8-deb896eebc63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Shared\Networking\Message\Header.h">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClInclude Include="Networking\Message\Header.h">
+      <Filter>Networking\Message</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Message\Packet.h">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClInclude Include="Networking\Message\Packet.h">
+      <Filter>Networking\Message</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Utility\GUID.h">
-      <Filter>Shared\Utility</Filter>
+    <ClInclude Include="Utility\GUID.h">
+      <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Message\MessageManager.h">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClInclude Include="Networking\Message\MessageManager.h">
+      <Filter>Networking\Message</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Message\Message.h">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClInclude Include="Networking\Message\Message.h">
+      <Filter>Networking\Message</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Message\MessageConverter.h">
-      <Filter>Shared\Networking\Message</Filter>
+    <ClInclude Include="Networking\Message\MessageConverter.h">
+      <Filter>Networking\Message</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Utility\Logger.h">
-      <Filter>Shared\Utility</Filter>
+    <ClInclude Include="Utility\Logger.h">
+      <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Utility\String.h">
-      <Filter>Shared\Utility</Filter>
+    <ClInclude Include="Utility\String.h">
+      <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Client\TCPClientRaw.h">
-      <Filter>Shared\Networking\Client</Filter>
+    <ClInclude Include="Networking\Client\TCPClientRaw.h">
+      <Filter>Networking\Client</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\IOContext.h">
-      <Filter>Shared\Networking</Filter>
+    <ClInclude Include="Networking\IOContext.h">
+      <Filter>Networking</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Client\TCPClient.h">
-      <Filter>Shared\Networking\Client</Filter>
+    <ClInclude Include="Networking\Client\TCPClient.h">
+      <Filter>Networking\Client</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Server\TCPServerRaw.h">
-      <Filter>Shared\Networking\Server</Filter>
+    <ClInclude Include="Networking\Server\TCPServerRaw.h">
+      <Filter>Networking\Server</Filter>
     </ClInclude>
-    <ClInclude Include="Shared\Networking\Server\TCPServer.h">
-      <Filter>Shared\Networking\Server</Filter>
+    <ClInclude Include="Networking\Server\TCPServer.h">
+      <Filter>Networking\Server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
