@@ -156,6 +156,7 @@
     <ClCompile Include="Server\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="Server\MatchManager.h" />
     <ClInclude Include="Server\Match.h" />
     <ClInclude Include="pch.h" />

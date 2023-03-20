@@ -25,6 +25,7 @@
       <Filter>Server</Filter>
     </ClInclude>
     <ClInclude Include="Server\MatchManager.h" />
+    <ClInclude Include="json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Server">
