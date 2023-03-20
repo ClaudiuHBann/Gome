@@ -2,6 +2,7 @@
 //
 #include "Server.h"
 //
+#include "MatchManager.h"
 
 namespace Server
 {
@@ -13,7 +14,9 @@ Server::Server(const IOContext &context) : mServer(context, SERVER_PORT)
         mPlayersWaiting.push_back(client);
         if (PLAYERS_PER_MATCH == mPlayersWaiting.size())
         {
-            mServerProcessor.Process(mPlayersWaiting);
+            MatchManager matchManager(mPlayersWaiting);
+            matchManager.Process();
+
             mPlayersWaiting.clear();
         }
     });

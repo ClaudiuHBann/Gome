@@ -8,9 +8,6 @@
     <ClCompile Include="Server\Server.cpp">
       <Filter>Server</Filter>
     </ClCompile>
-    <ClCompile Include="Server\ServerProcessor.cpp">
-      <Filter>Server</Filter>
-    </ClCompile>
     <ClCompile Include="Server\MatchManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -18,9 +15,6 @@
     <ClInclude Include="Server\Match.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Stone.h" />
-    <ClInclude Include="Server\ServerProcessor.h">
-      <Filter>Server</Filter>
-    </ClInclude>
     <ClInclude Include="Server\Server.h">
       <Filter>Server</Filter>
     </ClInclude>

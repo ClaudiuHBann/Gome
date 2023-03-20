@@ -17,20 +17,6 @@ vector<Player> &Match::GetPlayers()
 
 Player &Match::GetCurrentPlayer()
 {
-    for (auto &player : mPlayers)
-    {
-        if (player.GetColor() == mPlayerCurrent)
-        {
-            return player;
-        }
-    }
-
-    assert(false);
-    return mPlayers[0];
-}
-
-void Match::SetCurrentPlayer(Player &player)
-{
-    mPlayerCurrent = player.GetColor();
+    return mPlayers[mPlayerCurrentIndex];
 }
 } // namespace Server

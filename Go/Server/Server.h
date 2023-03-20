@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Gome/Networking/Server/TCPServer.h"
-#include "ServerProcessor.h"
 
 namespace Server
 {
 using namespace Networking::Server;
+using namespace Networking;
 
 class Server
 {
@@ -14,8 +14,6 @@ class Server
 
   private:
     vector<shared_ptr<TCPClient>> mPlayersWaiting{};
-
-    ServerProcessor mServerProcessor;
 
     TCPServer mServer;
 };

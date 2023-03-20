@@ -10,12 +10,10 @@ class Match
     void AddPlayer(const Player &player);
 
     vector<Player> &GetPlayers();
-
     Player &GetCurrentPlayer();
-    void SetCurrentPlayer(Player &player);
 
   private:
     vector<Player> mPlayers{};
-    Player::Color mPlayerCurrent = Player::Color::NONE;
+    size_t mPlayerCurrentIndex = 0;
 };
 } // namespace Server
