@@ -9,6 +9,7 @@
       <Filter>Server</Filter>
     </ClCompile>
     <ClCompile Include="Server\MatchManager.cpp" />
+    <ClCompile Include="Table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -20,6 +21,7 @@
     </ClInclude>
     <ClInclude Include="Server\MatchManager.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="Table.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Server">

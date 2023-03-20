@@ -153,6 +153,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="Server\Server.cpp" />
+    <ClCompile Include="Table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="json.hpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Stone.h" />
     <ClInclude Include="Server\Server.h" />
+    <ClInclude Include="Table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
