@@ -2,30 +2,67 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Server\Match.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Stone.cpp" />
     <ClCompile Include="Server\Server.cpp">
       <Filter>Server</Filter>
     </ClCompile>
-    <ClCompile Include="Server\MatchManager.cpp" />
-    <ClCompile Include="Table.cpp" />
+    <ClCompile Include="Server\MatchManager.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="Server\Match.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Stone.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Table.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Client</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Client</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Server\Match.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Stone.h" />
     <ClInclude Include="Server\Server.h">
       <Filter>Server</Filter>
     </ClInclude>
-    <ClInclude Include="Server\MatchManager.h" />
-    <ClInclude Include="json.hpp" />
-    <ClInclude Include="Table.h" />
+    <ClInclude Include="Server\MatchManager.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Server\Match.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Stone.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Client</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Client</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Server">
       <UniqueIdentifier>{bbc5c2c5-d0d1-41c0-b791-af910b566d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{0dfe5607-8b5d-479f-a4c6-22ff1774b095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{c78896d4-f8fb-4885-b836-8a3870b470f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Client">
+      <UniqueIdentifier>{9ae92489-1318-4eb8-b45e-1c56842d0b95}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
