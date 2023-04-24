@@ -11,16 +11,16 @@
     <ClCompile Include="Server\Match.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Stone.cpp">
+    <ClCompile Include="Game\Stone.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Table.cpp">
+    <ClCompile Include="Game\Table.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Client.cpp">
+    <ClCompile Include="Client\Client.cpp">
       <Filter>Client</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Game\Player.cpp">
       <Filter>Client</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,16 +38,16 @@
     <ClInclude Include="Server\Match.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Stone.h">
+    <ClInclude Include="Game\Stone.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Table.h">
+    <ClInclude Include="Game\Table.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Client.h">
+    <ClInclude Include="Client\Client.h">
       <Filter>Client</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Game\Player.h">
       <Filter>Client</Filter>
     </ClInclude>
   </ItemGroup>

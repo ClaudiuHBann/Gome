@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Go/Player.h"
+#include "Go/Game/Player.h"
 
 namespace Server
 {

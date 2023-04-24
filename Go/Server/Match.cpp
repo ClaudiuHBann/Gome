@@ -1,7 +1,6 @@
 #include "Go/pch.h"
-//
+
 #include "Match.h"
-//
 
 namespace Server
 {

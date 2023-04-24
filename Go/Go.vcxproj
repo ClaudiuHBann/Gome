@@ -147,25 +147,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Client\Client.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Server\MatchManager.cpp" />
     <ClCompile Include="Server\Match.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Stone.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\Stone.cpp" />
     <ClCompile Include="Server\Server.cpp" />
-    <ClCompile Include="Table.cpp" />
+    <ClCompile Include="Game\Table.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client.h" />
+    <ClInclude Include="Client\Client.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Server\MatchManager.h" />
     <ClInclude Include="Server\Match.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Stone.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\Stone.h" />
     <ClInclude Include="Server\Server.h" />
-    <ClInclude Include="Table.h" />
+    <ClInclude Include="Game\Table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
