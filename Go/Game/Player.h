@@ -21,7 +21,6 @@ class Player
     Player(const Color color);
 
     void StoneAdd(const Stone &stone);
-    void StoneMove(const Stone &stone, const Coord &pos);
 
     Color GetColor() const;
 

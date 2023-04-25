@@ -1,21 +1,23 @@
 #pragma once
 
+#include "Go/Game/Stone.h"
 #include "Gome/Networking/Server/TCPServer.h"
 
 namespace Server
 {
-using namespace Networking::Server;
 using namespace Networking;
+using namespace Networking::Server;
 
-class Server
+class Server : public TCPServer
 {
   public:
-    Server(const IOContext &context);
+    Server(const IOContext &context, const port_type port, const uint8_t playersPerMatch = 2,
+           const Coord &size = {6, 10});
 
   private:
-    vector<shared_ptr<TCPClient>> mPlayersWaiting{};
-
-    TCPServer mServer;
+    list<shared_ptr<Networking::Client::TCPClient>> mPlayersWaiting{};
+    list<MatchManager> mMatchManagers{};
+    uint8_t mPlayersPerMatch{};
 };
 
 } // namespace Server

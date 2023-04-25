@@ -15,7 +15,7 @@ class TCPServer
 
     void Start(CallbackAccept callback);
 
-  private:
+  protected:
     shared_ptr<TCPServerRaw> mServer;
 };
 } // namespace Networking::Server

@@ -4,6 +4,8 @@
 
 namespace Server
 {
+using namespace Game;
+
 class Match
 {
   public:
@@ -14,6 +16,6 @@ class Match
 
   private:
     vector<Player> mPlayers{};
-    size_t mPlayerCurrentIndex = 0;
+    size_t mPlayerCurrentIndex{};
 };
 } // namespace Server

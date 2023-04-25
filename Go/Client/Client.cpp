@@ -7,7 +7,7 @@ namespace Client
 {
 using namespace Networking::Client;
 
-Client::Client(TCPClient &&client) : mClient()
+Client::Client(shared_ptr<TCPClient> client) : mClient(client)
 {
 }
 } // namespace Client

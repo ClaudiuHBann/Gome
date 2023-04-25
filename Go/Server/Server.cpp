@@ -1,20 +1,21 @@
 #include "Go/pch.h"
 
+#include "Gome/Networking/Client/TCPClient.h"
 #include "MatchManager.h"
 #include "Server.h"
 
 namespace Server
 {
-using namespace Networking::Server;
-
-Server::Server(const IOContext &context) : mServer(context, SERVER_PORT)
+Server::Server(const IOContext &context, const port_type port, const uint8_t playersPerMatch /* = 2 */,
+               const Coord &size /* = { 6, 10 } */)
+    : TCPServer(context, port), mPlayersPerMatch(playersPerMatch)
 {
-    mServer.Start([this](auto client) {
+    Start([=, this](shared_ptr<Networking::Client::TCPClient> client) {
         mPlayersWaiting.push_back(client);
-        if (PLAYERS_PER_MATCH == mPlayersWaiting.size())
+        if (mPlayersPerMatch == mPlayersWaiting.size())
         {
-            MatchManager matchManager(mPlayersWaiting);
-            matchManager.Process();
+            mMatchManagers.push_back(MatchManager(mPlayersWaiting, playersPerMatch, size));
+            mMatchManagers.back().Process();
 
             mPlayersWaiting.clear();
         }

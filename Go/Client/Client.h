@@ -7,7 +7,7 @@ class TCPClient;
 class Client
 {
   public:
-    Client(TCPClient &&client);
+    Client(shared_ptr<TCPClient> client);
 
   private:
     shared_ptr<TCPClient> mClient;

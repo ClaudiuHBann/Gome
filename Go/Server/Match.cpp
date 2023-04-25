@@ -1,5 +1,6 @@
 #include "Go/pch.h"
 
+#include "Go/Game/Stone.h"
 #include "Match.h"
 
 namespace Server
