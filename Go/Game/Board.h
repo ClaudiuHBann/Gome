@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Player.h"
+
 namespace Game
 {
 class Board
@@ -18,10 +20,14 @@ class Board
 
     void Draw();
 
+    void AddStone(Stone &stone);
+
   private:
     size_t mSizeRows{};
     size_t mSizeColumns{};
     HANDLE mHandleConsoleOutput{};
+
+    vector<vector<Player::Color>> mGameState{};
 
     void DrawLine(const uint8_t row) const;
     void DrawLineDivider() const;

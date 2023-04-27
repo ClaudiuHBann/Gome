@@ -26,6 +26,8 @@ class Stone
     const Coord &GetPosition() const;
     void SetPosition(const Coord &pos);
 
+    Player &GetPlayer();
+
     auto operator<=>(const Stone &) const = default;
 
   private:

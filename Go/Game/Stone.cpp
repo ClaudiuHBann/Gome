@@ -27,4 +27,9 @@ void Stone::SetPosition(const Coord &pos)
 {
     mPosition = pos;
 }
+
+Player &Stone::GetPlayer()
+{
+    return mPlayer;
+}
 }; // namespace Game

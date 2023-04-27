@@ -154,7 +154,7 @@
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\Stone.cpp" />
     <ClCompile Include="Server\Server.cpp" />
-    <ClCompile Include="Game\Table.cpp" />
+    <ClCompile Include="Game\Board.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client\Client.h" />
@@ -165,7 +165,7 @@
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\Stone.h" />
     <ClInclude Include="Server\Server.h" />
-    <ClInclude Include="Game\Table.h" />
+    <ClInclude Include="Game\Board.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

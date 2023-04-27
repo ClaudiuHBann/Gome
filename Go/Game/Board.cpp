@@ -1,7 +1,8 @@
 #include "Go/pch.h"
 
+#include "Board.h"
 #include "Player.h"
-#include "Table.h"
+#include "Stone.h"
 
 namespace Game
 {
@@ -19,8 +20,15 @@ constexpr uint8_t PIECE_HORIZONTAL_DOWN = 193;
 constexpr uint8_t PIECE_HORIZONTAL_UP = 194;
 
 Board::Board(const size_t sizeRows, const size_t sizeColumns)
-    : mSizeRows(sizeRows), mSizeColumns(sizeColumns), mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE))
+    : mSizeRows(sizeRows), mSizeColumns(sizeColumns), mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE)),
+      mGameState(sizeRows, vector<Player::Color>(sizeColumns))
 {
+}
+
+void Board::AddStone(Stone &stone)
+{
+    auto &&pos = stone.GetPosition().GetXY();
+    mGameState[pos.first][pos.second] = stone.GetPlayer().GetColor();
 }
 
 void Board::Draw()
@@ -41,11 +49,11 @@ void Board::Draw()
     ResetCursor();
 }
 
-void Board::DrawLine(const uint8_t /*row*/) const
+void Board::DrawLine(const uint8_t row) const
 {
     for (size_t column = 0; column < mSizeColumns; column++)
     {
-        cout << PIECE_VERTICAL << /*mGameState.board[row][column]*/ ' ';
+        cout << PIECE_VERTICAL << format("\033[1;{}m{}\033[0m\n", to_string((int)mGameState[row][column]), 'O');
     }
     cout << PIECE_VERTICAL << endl;
 }

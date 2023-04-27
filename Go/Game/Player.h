@@ -11,21 +11,19 @@ class Player
     enum class Color : uint8_t
     {
         UNKNOWN,
-        BLACK,
-        RED,
-        GREEN,
-        BLUE,
-        WHITE
+        BLACK = 30,
+        RED = 31,
+        GREEN = 32,
+        BLUE = 34,
+        WHITE = 37
     };
 
     Player(const Color color);
-
-    void StoneAdd(const Stone &stone);
 
     Color GetColor() const;
 
   private:
     Color mColor = Color::UNKNOWN;
-    list<Stone> mStones{};
+    vector<Stone> mStones{};
 };
 }; // namespace Game

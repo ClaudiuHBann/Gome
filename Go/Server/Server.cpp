@@ -6,11 +6,14 @@
 
 namespace Server
 {
+// TODO: remove all parameters except first 2
 Server::Server(const IOContext &context, const port_type port, const uint8_t playersPerMatch /* = 2 */,
                const Coord &size /* = { 6, 10 } */)
     : TCPServer(context, port), mPlayersPerMatch(playersPerMatch)
 {
     Start([=, this](shared_ptr<Networking::Client::TCPClient> client) {
+        scoped_lock lock(mMutex);
+
         mPlayersWaiting.push_back(client);
         if (mPlayersPerMatch == mPlayersWaiting.size())
         {

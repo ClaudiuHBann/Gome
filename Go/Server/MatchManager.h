@@ -1,14 +1,13 @@
 #pragma once
 
 #include "Go/Game/Player.h"
+#include "Go/Server/Match.h"
 #include "Gome/Networking/Message/MessageManager.h"
 
 namespace Networking::Client
 {
 class TCPClient;
 }
-
-class Match;
 
 namespace Server
 {
@@ -18,28 +17,22 @@ using namespace Networking::Message;
 
 class MatchManager
 {
-    class Client
-    {
-      public:
-        Player player;
-        shared_ptr<TCPClient> client;
-    };
-
   public:
-    MatchManager(const list<shared_ptr<TCPClient>> &clients, const uint8_t playersPerMatch, const Coord &size);
+    // TODO: use dependency injection for the match
+    MatchManager(const vector<shared_ptr<TCPClient>> &clients, const uint8_t playersPerMatch, const Coord &size);
 
     void Process();
 
   private:
-    void CreateMatch(list<shared_ptr<TCPClient>> clients, const uint8_t playersPerMatch, const Coord &size);
+    Match CreateMatch(vector<shared_ptr<TCPClient>> clients, const uint8_t playersPerMatch, const Coord &size);
 
-    void ProcessPlayer(Player &player);
+    void ProcessPlayer(shared_ptr<TCPClient> client);
     Networking::Message::Message ProcessPlayerMessage(Player &player,
                                                       shared_ptr<MessageManager::MessageDisassembled> message);
 
-    shared_ptr<TCPClient> GetTCPClient(const Player &player);
+    Player &GetPlayerByClient(const shared_ptr<TCPClient> &client);
 
     shared_ptr<Match> mMatch{};
-    vector<Client> mClients{};
+    vector<shared_ptr<TCPClient>> mClients{};
 };
 } // namespace Server

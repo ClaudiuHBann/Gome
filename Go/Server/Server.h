@@ -15,8 +15,9 @@ class Server : public TCPServer
            const Coord &size = {6, 10});
 
   private:
-    list<shared_ptr<Networking::Client::TCPClient>> mPlayersWaiting{};
-    list<MatchManager> mMatchManagers{};
+    mutex mMutex{};
+    vector<shared_ptr<Networking::Client::TCPClient>> mPlayersWaiting{};
+    vector<MatchManager> mMatchManagers{};
     uint8_t mPlayersPerMatch{};
 };
 

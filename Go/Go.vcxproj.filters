@@ -14,7 +14,7 @@
     <ClCompile Include="Game\Stone.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Table.cpp">
+    <ClCompile Include="Game\Board.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Client\Client.cpp">
@@ -41,7 +41,7 @@
     <ClInclude Include="Game\Stone.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Table.h">
+    <ClInclude Include="Game\Board.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Client\Client.h">

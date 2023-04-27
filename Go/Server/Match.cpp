@@ -5,18 +5,24 @@
 
 namespace Server
 {
-void Match::AddPlayer(const Player &player)
+Match::Match(const vector<Player> &players, const Coord &size)
+    : mPlayers(players), mBoard(size.GetXY().first, size.GetXY().second)
 {
-    mPlayers.push_back(player);
 }
 
-vector<Player> &Match::GetPlayers()
-{
-    return mPlayers;
-}
-
-Player &Match::GetCurrentPlayer()
+Player &Match::GetPlayerCurrent()
 {
     return mPlayers[mPlayerCurrentIndex];
+}
+
+Player &Match::GetPlayerNext()
+{
+    mPlayerCurrentIndex = (mPlayerCurrentIndex + 1) % mPlayers.size();
+    return GetPlayerCurrent();
+}
+
+size_t Match::GetPlayerIndex() const
+{
+    return mPlayerCurrentIndex;
 }
 } // namespace Server

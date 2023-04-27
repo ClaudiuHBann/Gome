@@ -9,11 +9,6 @@ Player::Player(const Color color) : mColor(color)
 {
 }
 
-void Player::StoneAdd(const Stone &stone)
-{
-    mStones.push_back(stone);
-}
-
 Player::Color Player::GetColor() const
 {
     return mColor;
