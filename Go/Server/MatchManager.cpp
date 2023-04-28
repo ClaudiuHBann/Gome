@@ -3,7 +3,6 @@
 #include "Go/Game/Stone.h"
 #include "Gome/Networking/Client/TCPClient.h"
 #include "Gome/Networking/Message/MessageConverter.h"
-#include "Gome/Utility/Random.h"
 #include "Match.h"
 #include "MatchManager.h"
 
@@ -11,42 +10,11 @@ namespace Server
 {
 using namespace Networking;
 using namespace Client;
-using namespace Message;
 using namespace Game;
 
-MatchManager::MatchManager(const vector<shared_ptr<TCPClient>> &clients, const uint8_t playersPerMatch,
-                           const Coord &size)
+MatchManager::MatchManager(const vector<shared_ptr<TCPClient>> &clients, Match &match)
+    : mClients(clients), mMatch(match)
 {
-    mMatch = make_shared<Match>(move(CreateMatch(clients, playersPerMatch, size)));
-}
-
-Match MatchManager::CreateMatch(vector<shared_ptr<TCPClient>> clients, const uint8_t playersPerMatch, const Coord &size)
-{
-    vector<Player> players{};
-    vector<uint8_t> colors{0, 1, 2, 3, 4};
-
-    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    shuffle(colors.begin(), colors.end(), default_random_engine((unsigned int)seed));
-
-    for (size_t i = 0; i < playersPerMatch; i++)
-    {
-        Player player((Player::Color)colors[i]);
-        players.push_back(player);
-    }
-
-    // TODO: not unique stones pos
-    Random random;
-    for (auto &player : players)
-    {
-        auto &&sizeValues = size.GetXY();
-        auto row = (uint8_t)random.Get((uint16_t)1, (uint16_t)sizeValues.first);
-        auto col = (uint8_t)random.Get((uint16_t)1, (uint16_t)sizeValues.second);
-
-        Stone stone(player, {row, col});
-        mMatch->mBoard.AddStone(stone);
-    }
-
-    return Match(players, size);
 }
 
 void MatchManager::Process()
@@ -82,7 +50,7 @@ Player &MatchManager::GetPlayerByClient(const shared_ptr<TCPClient> &client)
         }
     }
 
-    return mMatch->mPlayers[indexOfClient];
+    return mMatch.mPlayers[indexOfClient];
 }
 
 Networking::Message::Message MatchManager::ProcessPlayerMessage(Player & /*player*/,

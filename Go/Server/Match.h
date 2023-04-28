@@ -12,16 +12,19 @@ class Match
     friend class MatchManager;
 
   public:
-    Match(const vector<Player> &players, const Coord &size);
+    Match(const uint8_t playersPerMatch, const Coord &size);
 
     Player &GetPlayerCurrent();
     Player &GetPlayerNext();
     size_t GetPlayerIndex() const;
+    size_t GetPlayerCount() const;
 
   private:
     vector<Player> mPlayers{};
     size_t mPlayerCurrentIndex{};
 
     Board mBoard;
+
+    void CreateMatch(const uint8_t playersPerMatch, const Coord &size);
 };
 } // namespace Server

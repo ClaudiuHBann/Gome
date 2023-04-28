@@ -15,9 +15,3 @@ int main()
 
     return 0;
 }
-
-/*
-    TODO:
-         - a better sending/receiving logic (a sent packet waits a ACK and bis)
-         -
-*/
