@@ -1,6 +1,5 @@
 #include "Go/pch.h"
 
-#include "Go/Game/Stone.h"
 #include "Gome/Networking/Client/TCPClient.h"
 #include "Gome/Networking/Message/MessageConverter.h"
 #include "Match.h"

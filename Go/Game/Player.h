@@ -1,21 +1,21 @@
 #pragma once
 
+#include "Stone.h"
+
 namespace Game
 {
-class Stone;
-class Coord;
-
 class Player
 {
   public:
     enum class Color : uint8_t
     {
         UNKNOWN,
+        NONE = 37,
         BLACK = 30,
         RED = 31,
         GREEN = 32,
         BLUE = 34,
-        WHITE = 37
+        PURPLE = 35
     };
 
     Player(const Color color);
