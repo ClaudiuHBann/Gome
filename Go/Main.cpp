@@ -1,20 +1,10 @@
 #include "pch.h"
 
-#include "Go/Game/Board.h"
-
-using namespace Game;
+#include "Go/Game.h"
 
 int main()
 {
-    SetConsoleOutputCP(437);
-
-    Board board(6, 10);
-
-    while (true)
-    {
-        board.Draw();
-        cin.get();
-    }
+    GameI({6, 10}).Run();
 
     return 0;
 }

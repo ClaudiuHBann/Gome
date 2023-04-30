@@ -23,6 +23,8 @@
     <ClCompile Include="Game\Player.cpp">
       <Filter>Client</Filter>
     </ClCompile>
+    <ClCompile Include="Keylogger.cpp" />
+    <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -50,6 +52,8 @@
     <ClInclude Include="Game\Player.h">
       <Filter>Client</Filter>
     </ClInclude>
+    <ClInclude Include="Keylogger.h" />
+    <ClInclude Include="Game.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Server">
