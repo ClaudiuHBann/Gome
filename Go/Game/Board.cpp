@@ -25,7 +25,7 @@ void Board::AddStone(Player &player, const Stone &stone)
     mGameState[pos.first][pos.second] = player.GetColor();
 }
 
-uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Stone &stone, const Coord &poss) const
+uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Coord &poss) const
 {
     auto &&pos = poss.GetXY();
     auto playerColor = player.GetColor();
@@ -76,9 +76,9 @@ uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Stone &sto
     return count;
 }
 
-bool Board::IsSameStoneNearbyPos(const Player &player, const Stone &stone, const Coord &poss) const
+bool Board::IsSameStoneNearbyPos(const Player &player, const Coord &poss) const
 {
-    return GetSameStoneNearbyPosCount(player, stone, poss);
+    return GetSameStoneNearbyPosCount(player, poss);
 }
 
 bool Board::IsStoneValid(const Player &player, const Stone &stone) const
@@ -89,13 +89,13 @@ bool Board::IsStoneValid(const Player &player, const Stone &stone) const
     switch (joker)
     {
     case Player::Joker::REPLACE:
-        return IsSameStoneNearbyPos(player, stone, stone.GetPosition());
+        return IsSameStoneNearbyPos(player, stone.GetPosition());
     case Player::Joker::FREEDOM:
         return mGameState[pos.first][pos.second] == Player::Color::NONE;
     }
 
     return mGameState[pos.first][pos.second] == Player::Color::NONE &&
-           IsSameStoneNearbyPos(player, stone, stone.GetPosition());
+           IsSameStoneNearbyPos(player, stone.GetPosition());
 }
 
 const vector<vector<Player::Color>> &Board::GetGameState() const
@@ -118,7 +118,7 @@ bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 
             Coord pos{row, column};
             Stone stone(pos);
-            if (GetSameStoneNearbyPosCount(player, stone, pos) < MAX_NEARBY_STONES_COUNT)
+            if (GetSameStoneNearbyPosCount(player, pos) < MAX_NEARBY_STONES_COUNT)
             {
                 return true;
             }

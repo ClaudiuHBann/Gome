@@ -22,10 +22,10 @@ class Board
     vector<vector<Player::Color>> mGameState{};
 
     // gets the numbers of stones (the same color) around a position
-    uint8_t GetSameStoneNearbyPosCount(const Player &player, const Stone &stone, const Coord &pos) const;
+    uint8_t GetSameStoneNearbyPosCount(const Player &player, const Coord &pos) const;
 
     // returns true if there is at least one stone (the same color)
     // around that position else returns false
-    bool IsSameStoneNearbyPos(const Player &player, const Stone &stone, const Coord &pos) const;
+    bool IsSameStoneNearbyPos(const Player &player, const Coord &pos) const;
 };
 }; // namespace Game
