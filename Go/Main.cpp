@@ -32,6 +32,7 @@ int main()
 /*
 
     De la server trebuie sa vina doar game-state-ul si un mesaj informativ
+    (in loc de mesajul informativ la inceput trebuie sa vina culoarea mea)
 
     Clientul trebuie sa trimita o piatra (pozitia) si un joker
 */
