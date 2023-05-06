@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Client
+{
 class Keylogger
 {
     class Accelerator
@@ -33,3 +35,4 @@ class Keylogger
     Accelerator mAccelerator{};
     function<void(const Key)> mCallback{};
 };
+} // namespace Client

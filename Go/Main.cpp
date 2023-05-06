@@ -1,10 +1,10 @@
 #include "pch.h"
 
-#include "Go/Game.h"
+#include "Go/Client/Game.h"
 
 int main()
 {
-    GameI({6, 10}).Run();
+    Client::GameI({6, 10}).Run();
 
     return 0;
 }

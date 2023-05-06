@@ -17,6 +17,8 @@ constexpr uint8_t PIECE_HORIZONTAL_UP = 194;
 
 constexpr uint8_t STONE = 254;
 
+namespace Client
+{
 GameI::GameI(const Coord &size)
     : mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE)), mKeylogger([&](const auto &key) {
           if (key == Keylogger::Key::ENTER)
@@ -203,3 +205,4 @@ void GameI::Move(const Keylogger::Key key)
         SetConsoleCursorPosition(mHandleConsoleOutput, BoardToConsolePosition(mCurrentPositionInBoard));
     }
 }
+} // namespace Client

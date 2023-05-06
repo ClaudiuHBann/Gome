@@ -5,6 +5,8 @@
 
 using namespace Game;
 
+namespace Client
+{
 class GameI
 {
   public:
@@ -40,3 +42,4 @@ class GameI
 
     void Initialize() const;
 };
+} // namespace Client

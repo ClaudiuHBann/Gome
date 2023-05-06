@@ -2,6 +2,8 @@
 
 #include "Keylogger.h"
 
+namespace Client
+{
 void Keylogger::Accelerator::Register(const vector<uint8_t> &keys, const function<void()> &callback)
 {
     mAccelerators.push_back({keys, callback, false});
@@ -31,6 +33,9 @@ void Keylogger::Accelerator::Check()
 
 Keylogger::Keylogger(function<void(const Key)> callback) : mCallback(callback)
 {
+    mAccelerator.Register({(int)Key::F1}, [&]() { mCallback(Key::F1); });
+    mAccelerator.Register({(int)Key::F2}, [&]() { mCallback(Key::F2); });
+    mAccelerator.Register({(int)Key::F3}, [&]() { mCallback(Key::F3); });
     mAccelerator.Register({(int)Key::UP}, [&]() { mCallback(Key::UP); });
     mAccelerator.Register({(int)Key::RIGHT}, [&]() { mCallback(Key::RIGHT); });
     mAccelerator.Register({(int)Key::DOWN}, [&]() { mCallback(Key::DOWN); });
@@ -42,3 +47,4 @@ void Keylogger::Check()
 {
     mAccelerator.Check();
 }
+} // namespace Client
