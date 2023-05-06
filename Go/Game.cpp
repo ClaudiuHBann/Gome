@@ -19,14 +19,35 @@ constexpr uint8_t STONE = 254;
 
 GameI::GameI(const Coord &size)
     : mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE)), mKeylogger([&](const auto &key) {
-          Move(key);
-
           if (key == Keylogger::Key::ENTER)
           {
-              Draw();
+              AddStone();
           }
+          else if (key == Keylogger::Key::F1 || key == Keylogger::Key::F2 || key == Keylogger::Key::F3)
+          {
+              UseJoker(key);
+          }
+          else
+          {
+              Move(key);
+          }
+
+          Draw();
       }),
       mBoard(size)
+{
+    Initialize();
+}
+
+void GameI::UseJoker(const Keylogger::Key /*key*/)
+{
+}
+
+void GameI::AddStone()
+{
+}
+
+void GameI::Initialize() const
 {
     // set console code page to print extended ASCII chars
     SetConsoleOutputCP(437);
@@ -51,21 +72,39 @@ void GameI::Run()
     }
 }
 
-void GameI::Draw()
+void GameI::DrawBoard() const
 {
-    CONSOLE_SCREEN_BUFFER_INFO csbi{};
-    GetConsoleScreenBufferInfo(mHandleConsoleOutput, &csbi);
-
     ResetCursor();
 
     DrawLineBorderTop();
-
     for (uint8_t row = 1; row < mBoard.GetGameState().size() - 1; row++)
     {
         DrawLineDivider(row);
     }
-
     DrawLineBorderBottom();
+}
+
+void GameI::DrawJokersState() const
+{
+    const auto &jokers = mPlayer.GetJokers();
+
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)mBoard.GetGameState().front().size(), 1});
+    cout << format("\t(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED");
+
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)mBoard.GetGameState().front().size(), 2});
+    cout << format("\t(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED");
+
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)mBoard.GetGameState().front().size(), 3});
+    cout << format("\t(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED");
+}
+
+void GameI::Draw() const
+{
+    CONSOLE_SCREEN_BUFFER_INFO csbi{};
+    GetConsoleScreenBufferInfo(mHandleConsoleOutput, &csbi);
+
+    DrawBoard();
+    DrawJokersState();
 
     SetConsoleCursorPosition(mHandleConsoleOutput, csbi.dwCursorPosition);
 }

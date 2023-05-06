@@ -29,6 +29,7 @@ class Player
 
     bool SetActiveJoker(const Joker joker);
     Joker GetActiveJoker() const;
+    const vector<Joker> &GetJokers() const;
     void UseActiveJoker();
 
     Color GetColor() const;

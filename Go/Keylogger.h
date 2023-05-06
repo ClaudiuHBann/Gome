@@ -19,7 +19,10 @@ class Keylogger
         RIGHT = VK_RIGHT,
         DOWN = VK_DOWN,
         LEFT = VK_LEFT,
-        ENTER = VK_RETURN
+        ENTER = VK_RETURN,
+        F1 = VK_F1,
+        F2 = VK_F2,
+        F3 = VK_F3
     };
 
     Keylogger(function<void(const Key)> callback);

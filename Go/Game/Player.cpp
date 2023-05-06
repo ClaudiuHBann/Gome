@@ -33,6 +33,11 @@ bool Player::SetActiveJoker(const Joker joker)
     return true;
 }
 
+const vector<Player::Joker> &Player::GetJokers() const
+{
+    return mJokers;
+}
+
 void Player::UseActiveJoker()
 {
     mJokerActive = Joker::NONE;
