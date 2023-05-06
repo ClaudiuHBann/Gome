@@ -13,8 +13,14 @@ Board::Board(const Coord &size)
 {
 }
 
-void Board::AddStone(const Player &player, const Stone &stone)
+void Board::AddStone(Player &player, const Stone &stone)
 {
+    if (!IsStoneValid(player, stone))
+    {
+        return;
+    }
+    player.UseActiveJoker();
+
     auto &&pos = stone.GetPosition().GetXY();
     mGameState[pos.first][pos.second] = player.GetColor();
 }
@@ -78,6 +84,16 @@ bool Board::IsSameStoneNearbyPos(const Player &player, const Stone &stone, const
 bool Board::IsStoneValid(const Player &player, const Stone &stone) const
 {
     auto &&pos = stone.GetPosition().GetXY();
+
+    auto joker = player.GetActiveJoker();
+    switch (joker)
+    {
+    case Player::Joker::REPLACE:
+        return IsSameStoneNearbyPos(player, stone, stone.GetPosition());
+    case Player::Joker::FREEDOM:
+        return mGameState[pos.first][pos.second] == Player::Color::NONE;
+    }
+
     return mGameState[pos.first][pos.second] == Player::Color::NONE &&
            IsSameStoneNearbyPos(player, stone, stone.GetPosition());
 }
@@ -89,6 +105,8 @@ const vector<vector<Player::Color>> &Board::GetGameState() const
 
 bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 {
+    // TODO: check for jokers moves too
+
     for (uint8_t row = 0; row < mGameState.size(); row++)
     {
         for (uint8_t column = 0; column < mGameState.front().size(); column++)

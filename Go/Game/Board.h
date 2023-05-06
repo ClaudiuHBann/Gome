@@ -9,7 +9,7 @@ class Board
   public:
     Board(const Coord &size);
 
-    void AddStone(const Player &player, const Stone &stone);
+    void AddStone(Player &player, const Stone &stone);
 
     bool IsStoneValid(const Player &player, const Stone &stone) const;
     bool CanPlayerPlaceAnyStone(const Player &player) const;
