@@ -11,6 +11,21 @@ Client::Client(shared_ptr<TCPClient> client) : mClient(client)
 {
 }
 
+void Client::Start(function<void(Player::Color)> callbackInit, function<void(Board, string)> callback)
+{
+    decltype(callback) callbackReceive = [this, callback = move(callback), callbackReceive](const auto &board,
+                                                                                            const auto &message) {
+        callback(board, message);
+        Receive(callbackReceive);
+    };
+
+    GetPlayerColor(
+        [this, callbackInit = move(callbackInit), callbackReceive = move(callbackReceive)](const auto &playerColor) {
+            callbackInit(playerColor);
+            Receive(callbackReceive);
+        });
+}
+
 void Client::GetPlayerColor(function<void(Player::Color)> callback)
 {
     mClient->Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
