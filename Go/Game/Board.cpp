@@ -8,21 +8,21 @@ namespace Game
 {
 constexpr auto MAX_NEARBY_STONES_COUNT = 8ui8;
 
-Board::Board(const uint8_t sizeRows, const uint8_t sizeColumns)
-    : mGameState(sizeRows, vector<Player::Color>(sizeColumns, Player::Color::NONE))
+Board::Board(const Coord &size)
+    : mGameState(size.GetXY().first, vector<Player::Color>(size.GetXY().second, Player::Color::NONE))
 {
 }
 
-void Board::AddStone(Stone &stone)
+void Board::AddStone(const Player &player, const Stone &stone)
 {
     auto &&pos = stone.GetPosition().GetXY();
-    mGameState[pos.first][pos.second] = stone.GetPlayer().GetColor();
+    mGameState[pos.first][pos.second] = player.GetColor();
 }
 
-uint8_t Board::GetSameStoneNearbyPosCount(Stone &stone, const Coord &poss) const
+uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Stone &stone, const Coord &poss) const
 {
     auto &&pos = poss.GetXY();
-    auto playerColor = stone.GetPlayer().GetColor();
+    auto playerColor = player.GetColor();
 
     uint8_t count{};
 
@@ -70,18 +70,24 @@ uint8_t Board::GetSameStoneNearbyPosCount(Stone &stone, const Coord &poss) const
     return count;
 }
 
-bool Board::IsSameStoneNearbyPos(Stone &stone, const Coord &poss) const
+bool Board::IsSameStoneNearbyPos(const Player &player, const Stone &stone, const Coord &poss) const
 {
-    return GetSameStoneNearbyPosCount(stone, poss);
+    return GetSameStoneNearbyPosCount(player, stone, poss);
 }
 
-bool Board::IsStoneValid(Stone &stone) const
+bool Board::IsStoneValid(const Player &player, const Stone &stone) const
 {
     auto &&pos = stone.GetPosition().GetXY();
-    return mGameState[pos.first][pos.second] == Player::Color::NONE && IsSameStoneNearbyPos(stone, stone.GetPosition());
+    return mGameState[pos.first][pos.second] == Player::Color::NONE &&
+           IsSameStoneNearbyPos(player, stone, stone.GetPosition());
 }
 
-bool Board::CanPlayerPlaceAnyStone(Player &player) const
+const vector<vector<Player::Color>> &Board::GetGameState() const
+{
+    return mGameState;
+}
+
+bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 {
     for (uint8_t row = 0; row < mGameState.size(); row++)
     {
@@ -93,8 +99,8 @@ bool Board::CanPlayerPlaceAnyStone(Player &player) const
             }
 
             Coord pos{row, column};
-            Stone stone(player, pos);
-            if (GetSameStoneNearbyPosCount(stone, pos) < MAX_NEARBY_STONES_COUNT)
+            Stone stone(pos);
+            if (GetSameStoneNearbyPosCount(player, stone, pos) < MAX_NEARBY_STONES_COUNT)
             {
                 return true;
             }
@@ -104,7 +110,7 @@ bool Board::CanPlayerPlaceAnyStone(Player &player) const
     return false;
 }
 
-bool Board::IsGameStateTerminal(vector<Player> &players) const
+bool Board::IsGameStateTerminal(const vector<Player> &players) const
 {
     // TODO: if there is only a player who can place stones stop
 
@@ -119,7 +125,7 @@ bool Board::IsGameStateTerminal(vector<Player> &players) const
     return true;
 }
 
-optional<Player::Color> Board::GetWinner(vector<Player> &players) const
+optional<Player::Color> Board::GetWinner(const vector<Player> &players) const
 {
     if (!IsGameStateTerminal(players))
     {

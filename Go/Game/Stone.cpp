@@ -14,22 +14,12 @@ pair<uint8_t, uint8_t> Coord::GetXY() const
     return {mX, mY};
 }
 
-Stone::Stone(Player &player, const Coord &pos) : mPlayer(player), mPosition(pos)
+Stone::Stone(const Coord &pos) : mPosition(pos)
 {
 }
 
 const Coord &Stone::GetPosition() const
 {
     return mPosition;
-}
-
-void Stone::SetPosition(const Coord &pos)
-{
-    mPosition = pos;
-}
-
-Player &Stone::GetPlayer()
-{
-    return mPlayer;
 }
 }; // namespace Game

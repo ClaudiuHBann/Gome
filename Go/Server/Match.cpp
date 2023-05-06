@@ -6,7 +6,7 @@
 
 namespace Server
 {
-Match::Match(const uint8_t playersPerMatch, const Coord &size) : mBoard(size.GetXY().first, size.GetXY().second)
+Match::Match(const uint8_t playersPerMatch, const Coord &size) : mBoard(size)
 {
     CreateMatch(playersPerMatch, size);
 }
@@ -53,8 +53,8 @@ void Match::CreateMatch(const uint8_t playersPerMatch, const Coord &size)
 
     for (size_t i = 0; i < mPlayers.size(); i++)
     {
-        Stone stone(mPlayers[i], stonePoss[i]);
-        mBoard.AddStone(stone);
+        Stone stone(stonePoss[i]);
+        mBoard.AddStone(mPlayers[i], stone);
     }
 
     mPlayerCurrentIndex = random.Get<decltype(mPlayerCurrentIndex)>(0, mPlayers.size() - 1);

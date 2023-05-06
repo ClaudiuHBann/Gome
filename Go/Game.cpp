@@ -26,10 +26,13 @@ GameI::GameI(const Coord &size)
               Draw();
           }
       }),
-      mBoard(size.GetXY().first, size.GetXY().second)
+      mBoard(size)
 {
+    // set console code page to print extended ASCII chars
     SetConsoleOutputCP(437);
 
+    // enable virtual terminal processing for console virtual terminal sequences
+    // which we are going to use for changing the caret
     DWORD dwMode{};
     GetConsoleMode(mHandleConsoleOutput, &dwMode);
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
@@ -57,7 +60,7 @@ void GameI::Draw()
 
     DrawLineBorderTop();
 
-    for (uint8_t row = 1; row < mBoard.mGameState.size() - 1; row++)
+    for (uint8_t row = 1; row < mBoard.GetGameState().size() - 1; row++)
     {
         DrawLineDivider(row);
     }
@@ -69,12 +72,12 @@ void GameI::Draw()
 
 bool GameI::IsStoneOnPos(const Coord &pos) const
 {
-    return mBoard.mGameState[pos.GetXY().first][pos.GetXY().second] != Player::Color::NONE;
+    return mBoard.GetGameState()[pos.GetXY().first][pos.GetXY().second] != Player::Color::NONE;
 }
 
 string GameI::GetStoneColored(const Coord &pos) const
 {
-    return format("\033[1;{}m{}\033[0m", to_string((int)mBoard.mGameState[pos.GetXY().first][pos.GetXY().second]),
+    return format("\033[1;{}m{}\033[0m", to_string((int)mBoard.GetGameState()[pos.GetXY().first][pos.GetXY().second]),
                   (char)STONE);
 }
 
@@ -86,36 +89,37 @@ string GameI::GetStoneColoredOr(const Coord &pos, const uint8_t value) const
 void GameI::DrawLineDivider(const uint8_t row) const
 {
     cout << GetStoneColoredOr({row, 0}, PIECE_VERTICAL_LEFT);
-    for (uint8_t column = 1; column < mBoard.mGameState.front().size() - 1; column++)
+    for (uint8_t column = 1; column < mBoard.GetGameState().front().size() - 1; column++)
     {
         cout << PIECE_HORIZONTAL << GetStoneColoredOr({row, column}, PIECE_MIDDLE);
     }
     cout << PIECE_HORIZONTAL
-         << GetStoneColoredOr({row, uint8_t(mBoard.mGameState.front().size() - 1)}, PIECE_VERTICAL_RIGHT) << endl;
+         << GetStoneColoredOr({row, uint8_t(mBoard.GetGameState().front().size() - 1)}, PIECE_VERTICAL_RIGHT) << endl;
 }
 
 void GameI::DrawLineBorderTop() const
 {
     cout << GetStoneColoredOr({0, 0}, CORNER_LEFT_UP);
-    for (uint8_t column = 1; column < mBoard.mGameState.front().size() - 1; column++)
+    for (uint8_t column = 1; column < mBoard.GetGameState().front().size() - 1; column++)
     {
         cout << PIECE_HORIZONTAL << GetStoneColoredOr({0, column}, PIECE_HORIZONTAL_UP);
     }
-    cout << PIECE_HORIZONTAL << GetStoneColoredOr({0, uint8_t(mBoard.mGameState.front().size() - 1)}, CORNER_RIGHT_UP)
-         << endl;
+    cout << PIECE_HORIZONTAL
+         << GetStoneColoredOr({0, uint8_t(mBoard.GetGameState().front().size() - 1)}, CORNER_RIGHT_UP) << endl;
 }
 
 void GameI::DrawLineBorderBottom() const
 {
-    cout << GetStoneColoredOr({uint8_t(mBoard.mGameState.size() - 1), 0}, CORNER_LEFT_DOWN);
-    for (uint8_t column = 1; column < mBoard.mGameState.front().size() - 1; column++)
+    cout << GetStoneColoredOr({uint8_t(mBoard.GetGameState().size() - 1), 0}, CORNER_LEFT_DOWN);
+    for (uint8_t column = 1; column < mBoard.GetGameState().front().size() - 1; column++)
     {
         cout << PIECE_HORIZONTAL
-             << GetStoneColoredOr({uint8_t(mBoard.mGameState.size() - 1), column}, PIECE_HORIZONTAL_DOWN);
+             << GetStoneColoredOr({uint8_t(mBoard.GetGameState().size() - 1), column}, PIECE_HORIZONTAL_DOWN);
     }
     cout << PIECE_HORIZONTAL
-         << GetStoneColoredOr({uint8_t(mBoard.mGameState.size() - 1), uint8_t(mBoard.mGameState.front().size() - 1)},
-                              CORNER_RIGHT_DOWN)
+         << GetStoneColoredOr(
+                {uint8_t(mBoard.GetGameState().size() - 1), uint8_t(mBoard.GetGameState().front().size() - 1)},
+                CORNER_RIGHT_DOWN)
          << endl;
 }
 
@@ -126,8 +130,8 @@ void GameI::ResetCursor() const
 
 bool GameI::IsPositionInBoardValid(const COORD &position) const
 {
-    return position.X >= 0 && position.X < mBoard.mGameState.front().size() && position.Y >= 0 &&
-           position.Y < mBoard.mGameState.size();
+    return position.X >= 0 && position.X < mBoard.GetGameState().front().size() && position.Y >= 0 &&
+           position.Y < mBoard.GetGameState().size();
 }
 
 COORD GameI::BoardToConsolePosition(const COORD &position) const

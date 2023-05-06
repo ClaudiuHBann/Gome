@@ -2,8 +2,6 @@
 
 namespace Game
 {
-class Player;
-
 class Coord
 {
   public:
@@ -21,17 +19,13 @@ class Coord
 class Stone
 {
   public:
-    Stone(Player &player, const Coord &pos);
+    Stone(const Coord &pos);
 
     const Coord &GetPosition() const;
-    void SetPosition(const Coord &pos);
-
-    Player &GetPlayer();
 
     auto operator<=>(const Stone &) const = default;
 
   private:
-    Player &mPlayer;
     Coord mPosition;
 };
 }; // namespace Game
