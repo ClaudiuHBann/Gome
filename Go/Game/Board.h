@@ -7,6 +7,8 @@ namespace Game
 class Board
 {
   public:
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Board, mGameState)
+
     Board(const Coord &size);
 
     void AddStone(Player &player, const Stone &stone);

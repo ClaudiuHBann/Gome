@@ -151,6 +151,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Keylogger.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="pch.cpp" />
     <ClCompile Include="Server\MatchManager.cpp" />
     <ClCompile Include="Server\Match.cpp" />
     <ClCompile Include="Game\Player.cpp" />

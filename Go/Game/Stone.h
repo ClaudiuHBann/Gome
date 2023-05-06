@@ -5,6 +5,8 @@ namespace Game
 class Coord
 {
   public:
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Coord, mX, mY)
+
     Coord(const uint8_t x, const uint8_t y);
 
     pair<uint8_t, uint8_t> GetXY() const;
@@ -19,6 +21,8 @@ class Coord
 class Stone
 {
   public:
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Stone, mPosition)
+
     Stone(const Coord &pos);
 
     const Coord &GetPosition() const;

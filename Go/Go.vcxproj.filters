@@ -25,6 +25,7 @@
     </ClCompile>
     <ClCompile Include="Keylogger.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
