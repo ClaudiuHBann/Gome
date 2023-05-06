@@ -13,4 +13,28 @@ Player::Color Player::GetColor() const
 {
     return mColor;
 }
+
+Player::Joker Player::GetActiveJoker() const
+{
+    return mJokerActive;
+}
+
+bool Player::SetActiveJoker(const Joker joker)
+{
+    auto itJoker = ranges::find(mJokers, joker);
+    if (itJoker == mJokers.end())
+    {
+        return false;
+    }
+
+    mJokerActive = *itJoker;
+    *itJoker = Joker::NONE;
+
+    return true;
+}
+
+void Player::UseActiveJoker()
+{
+    mJokerActive = Joker::NONE;
+}
 }; // namespace Game

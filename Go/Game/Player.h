@@ -17,12 +17,25 @@ class Player
         PURPLE = 35
     };
 
+    enum class Joker : uint8_t
+    {
+        NONE,
+        DOUBLE_MOVE,
+        REPLACE,
+        FREEDOM
+    };
+
     Player(const Color color);
+
+    bool SetActiveJoker(const Joker joker);
+    Joker GetActiveJoker() const;
+    void UseActiveJoker();
 
     Color GetColor() const;
 
   private:
     Color mColor = Color::NONE;
-    vector<Stone> mStones{};
+    Joker mJokerActive = Joker::NONE;
+    vector<Joker> mJokers{Joker::DOUBLE_MOVE, Joker::REPLACE, Joker::FREEDOM};
 };
 }; // namespace Game
