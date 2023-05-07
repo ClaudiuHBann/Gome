@@ -16,8 +16,6 @@ class Match
 
     Player &GetPlayerCurrent();
     Player &GetPlayerNext();
-    size_t GetPlayerIndex() const;
-    size_t GetPlayerCount() const;
 
   private:
     vector<Player> mPlayers{};

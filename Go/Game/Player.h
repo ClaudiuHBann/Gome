@@ -27,12 +27,16 @@ class Player
 
     Player(const Color color);
 
+    static string GetJokerName(const Joker joker);
+
     bool SetActiveJoker(const Joker joker);
     Joker GetActiveJoker() const;
     const vector<Joker> &GetJokers() const;
     void UseActiveJoker();
 
     Color GetColor() const;
+
+    auto operator<=>(const Player &) const = default;
 
   private:
     Color mColor = Color::NONE;

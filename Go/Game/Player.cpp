@@ -19,6 +19,23 @@ Player::Joker Player::GetActiveJoker() const
     return mJokerActive;
 }
 
+/* static */ string Player::GetJokerName(const Joker joker)
+{
+    switch (joker)
+    {
+    case Joker::NONE:
+        return "NONE"s;
+    case Joker::DOUBLE_MOVE:
+        return "DOUBLE_MOVE"s;
+    case Joker::REPLACE:
+        return "REPLACE"s;
+    case Joker::FREEDOM:
+        return "FREEDOM"s;
+    default:
+        return "UNKNOWN"s;
+    }
+}
+
 bool Player::SetActiveJoker(const Joker joker)
 {
     auto itJoker = ranges::find(mJokers, joker);

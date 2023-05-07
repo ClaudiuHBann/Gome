@@ -18,9 +18,13 @@ MatchManager::MatchManager(const vector<shared_ptr<TCPClient>> &clients, Match &
 
 void MatchManager::Process()
 {
-    for (auto &client : mClients)
+    for (size_t i = 0; i < mClients.size(); i++)
     {
-        ProcessPlayer(client);
+        json j;
+        j[JSON_PLAYER_COLOR] = mMatch.mPlayers[i].GetColor();
+
+        mClients[i]->Send(*reinterpret_cast<TCPClient::bytes *>(j.dump().data()), HeaderMetadata::Type::TEXT,
+                          [this, i = i](const auto &, const auto &) { ProcessPlayer(mClients[i]); });
     }
 }
 
@@ -52,12 +56,43 @@ Player &MatchManager::GetPlayerByClient(const shared_ptr<TCPClient> &client)
     return mMatch.mPlayers[indexOfClient];
 }
 
-Networking::Message::Message MatchManager::ProcessPlayerMessage(Player & /*player*/,
+Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
                                                                 shared_ptr<MessageManager::MessageDisassembled> message)
 {
     auto &[guid, type, bytes] = *message;
-    json bytesAsJSON(bytes);
+    auto &&[stone, joker] = JSONStoneAndJokerFrom(*reinterpret_cast<string *>(bytes.data()));
 
-    return Networking::Message::MessageManager::ToMessage({}, Networking::Message::HeaderMetadata::Type::TEXT);
+    scoped_lock lock(mMutex);
+
+    string jsonMessage;
+    if (player != mMatch.GetPlayerCurrent())
+    {
+        jsonMessage = "Wait your turn!";
+    }
+    else
+    {
+        bool setActiveJoker = true;
+        if (joker != Player::Joker::NONE)
+        {
+            setActiveJoker = player.SetActiveJoker(joker);
+        }
+
+        if (!setActiveJoker)
+        {
+            jsonMessage = format("Joker {} is already used!", Player::GetJokerName(joker));
+        }
+        else
+        {
+            if (!mMatch.mBoard.AddStone(player, stone))
+            {
+                jsonMessage = format("Couldn't add stone!", Player::GetJokerName(joker));
+            }
+        }
+    }
+
+    auto &&json = JSONBoardAndMessageTo(mMatch.mBoard, jsonMessage);
+    return Networking::Message::MessageManager::ToMessage(
+        *reinterpret_cast<MessageManager::bytes *>(json.dump().data()),
+        Networking::Message::HeaderMetadata::Type::TEXT);
 }
 } // namespace Server

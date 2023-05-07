@@ -35,5 +35,6 @@ class MatchManager
 
     Match &mMatch;
     vector<shared_ptr<TCPClient>> mClients{};
+    mutex mMutex;
 };
 } // namespace Server

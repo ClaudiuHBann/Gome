@@ -60,9 +60,9 @@ void Match::CreateMatch(const uint8_t playersPerMatch, const Coord &size)
     mPlayerCurrentIndex = random.Get<decltype(mPlayerCurrentIndex)>(0, mPlayers.size() - 1);
 }
 
-size_t Match::GetPlayerCount() const
+const vector<Player> &Match::GetPlayers() const
 {
-    return mPlayers.size();
+    return mPlayers;
 }
 
 Player &Match::GetPlayerCurrent()
@@ -74,10 +74,5 @@ Player &Match::GetPlayerNext()
 {
     mPlayerCurrentIndex = (mPlayerCurrentIndex + 1) % mPlayers.size();
     return GetPlayerCurrent();
-}
-
-size_t Match::GetPlayerIndex() const
-{
-    return mPlayerCurrentIndex;
 }
 } // namespace Server

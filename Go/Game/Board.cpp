@@ -13,16 +13,17 @@ Board::Board(const Coord &size)
 {
 }
 
-void Board::AddStone(Player &player, const Stone &stone)
+bool Board::AddStone(Player &player, const Stone &stone)
 {
     if (!IsStoneValid(player, stone))
     {
-        return;
+        return false;
     }
     player.UseActiveJoker();
 
     auto &&pos = stone.GetPosition().GetXY();
     mGameState[pos.first][pos.second] = player.GetColor();
+    return true;
 }
 
 uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Coord &poss) const

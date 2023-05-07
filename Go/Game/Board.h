@@ -11,7 +11,7 @@ class Board
 
     Board(const Coord &size);
 
-    void AddStone(Player &player, const Stone &stone);
+    bool AddStone(Player &player, const Stone &stone);
 
     bool IsStoneValid(const Player &player, const Stone &stone) const;
     bool CanPlayerPlaceAnyStone(const Player &player) const;
