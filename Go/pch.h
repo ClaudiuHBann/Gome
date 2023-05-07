@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 // TODO: remove this Gome/pch.h dependency
 #include "Gome/pch.h"
 

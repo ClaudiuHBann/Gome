@@ -18,7 +18,10 @@ class GameI
     COORD mCurrentPositionInBoard{};
     HANDLE mHandleConsoleOutput{};
     Keylogger mKeylogger;
+
     Board mBoard;
+    deque<string> mMessages{"Message: 1"s, "Message: 2"s, "Message: 3"s, "Message: 4"s, "Message: 5"s};
+
     Player mPlayer{Player::Color::NONE};
 
     bool IsStoneOnPos(const Coord &pos) const;
@@ -28,6 +31,7 @@ class GameI
     void Draw() const;
     void DrawBoard() const;
     void DrawJokersState() const;
+    void DrawMessages() const;
     void DrawLineDivider(const uint8_t row) const;
     void DrawLineBorderTop() const;
     void DrawLineBorderBottom() const;

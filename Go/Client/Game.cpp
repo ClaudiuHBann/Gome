@@ -41,8 +41,22 @@ GameI::GameI(const Coord &size)
     Initialize();
 }
 
-void GameI::UseJoker(const Keylogger::Key /*key*/)
+void GameI::UseJoker(const Keylogger::Key key)
 {
+    switch (key)
+    {
+    case Keylogger::Key::F1:
+        mPlayer.SetActiveJoker(Player::Joker::DOUBLE_MOVE);
+        break;
+    case Keylogger::Key::F2:
+        mPlayer.SetActiveJoker(Player::Joker::REPLACE);
+        break;
+    case Keylogger::Key::F3:
+        mPlayer.SetActiveJoker(Player::Joker::FREEDOM);
+        break;
+    }
+
+    mPlayer.UseActiveJoker();
 }
 
 void GameI::AddStone()
@@ -90,14 +104,23 @@ void GameI::DrawJokersState() const
 {
     const auto &jokers = mPlayer.GetJokers();
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)mBoard.GetGameState().front().size(), 1});
-    cout << format("\t(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED");
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 1});
+    cout << format("(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED ");
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)mBoard.GetGameState().front().size(), 2});
-    cout << format("\t(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED");
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 2});
+    cout << format("(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED ");
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)mBoard.GetGameState().front().size(), 3});
-    cout << format("\t(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED");
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 3});
+    cout << format("(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED ");
+}
+
+void GameI::DrawMessages() const
+{
+    SetConsoleCursorPosition(mHandleConsoleOutput, {0, (SHORT)(mBoard.GetGameState().size() + 1)});
+    for (const auto &message : mMessages)
+    {
+        cout << format(" {}", message) << endl;
+    }
 }
 
 void GameI::Draw() const
@@ -107,6 +130,7 @@ void GameI::Draw() const
 
     DrawBoard();
     DrawJokersState();
+    DrawMessages();
 
     SetConsoleCursorPosition(mHandleConsoleOutput, csbi.dwCursorPosition);
 }
