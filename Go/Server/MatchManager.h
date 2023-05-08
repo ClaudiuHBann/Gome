@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Go/Game/Context.h"
 #include "Go/Game/Player.h"
 #include "Go/Server/Match.h"
 #include "Gome/Networking/Client/TCPClient.h"
@@ -18,6 +19,16 @@ class MatchManager
     void Process();
 
   private:
+    enum class Error
+    {
+        NONE,
+        TURN,  // not the turn of the requesting player
+        JOKER, // joker already used
+        STONE  // could not add stone
+    };
+
+    Networking::Message::Message CreateResponse(const ContextClient &contextRequest, const Error error);
+
     void ProcessPlayer(shared_ptr<TCPClient> client);
     Networking::Message::Message ProcessPlayerMessage(Player &player,
                                                       shared_ptr<MessageManager::MessageDisassembled> message);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Board.h"
 #include "Rules.h"
 
 namespace Game
@@ -12,6 +13,8 @@ class ContextClient
 
     Stone stone;
     Player::Joker joker;
+
+    ContextClient(const Stone &stone, const Player::Joker joker);
 };
 
 // Context which will be send to the client when a match starts
@@ -22,6 +25,8 @@ class ContextServerInit
 
     Rules rules;
     Player::Color color;
+
+    ContextServerInit(const Rules &rules, const Player::Color color);
 };
 
 // Context which will be send to the client
@@ -32,5 +37,7 @@ class ContextServer
 
     Board board;
     string message;
+
+    ContextServer(const Board &board, const string &message);
 };
 } // namespace Game

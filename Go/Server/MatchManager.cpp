@@ -1,8 +1,6 @@
 #include "Go/pch.h"
 
-#include "Gome/Networking/Client/TCPClient.h"
 #include "Gome/Networking/Message/MessageConverter.h"
-#include "Match.h"
 #include "MatchManager.h"
 
 namespace Server
@@ -20,11 +18,11 @@ void MatchManager::Process()
 {
     for (size_t i = 0; i < mClients.size(); i++)
     {
-        json j;
-        j[JSON_PLAYER_COLOR] = mMatch.mPlayers[i].GetColor();
-        j[JSON_MATCH_RULES] = mMatch.mRules;
+        ContextServerInit context({0, Coord{0, 0}}, Player::Color::NONE);
+        json contextJSON;
+        context.to_json(contextJSON, context);
 
-        mClients[i]->Send(*reinterpret_cast<TCPClient::bytes *>(j.dump().data()), HeaderMetadata::Type::TEXT,
+        mClients[i]->Send(*reinterpret_cast<TCPClient::bytes *>(contextJSON.dump().data()), HeaderMetadata::Type::TEXT,
                           [this, i = i](const auto &, const auto &) { ProcessPlayer(mClients[i]); });
     }
 }
@@ -61,43 +59,58 @@ Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
                                                                 shared_ptr<MessageManager::MessageDisassembled> message)
 {
     auto &[guid, type, bytes] = *message;
-    auto &&[stone, joker] = JSONStoneAndJokerFrom(*reinterpret_cast<string *>(bytes.data()));
+
+    auto &jsonString = *reinterpret_cast<string *>(bytes.data());
+    ContextClient contextRequest(Coord{0, 0}, Player::Joker::NONE);
+    contextRequest.from_json(jsonString, contextRequest);
 
     scoped_lock lock(*mMutexPlayerCurrent);
 
-    string jsonMessage;
+    // not his turn
     if (player != mMatch.GetPlayerCurrent())
     {
-        jsonMessage = "Wait your turn!";
+        return CreateResponse(contextRequest, Error::TURN);
     }
-    else
+
+    // has a joker active but could not activate on server side (it's already used)
+    if (contextRequest.joker != Player::Joker::NONE && !player.SetActiveJoker(contextRequest.joker))
     {
-        bool setActiveJoker = true;
-        if (joker != Player::Joker::NONE)
-        {
-            setActiveJoker = player.SetActiveJoker(joker);
-        }
-
-        if (!setActiveJoker)
-        {
-            jsonMessage = format("Joker {} is already used!", Player::GetJokerName(joker));
-        }
-        else
-        {
-            if (!mMatch.mBoard.AddStone(player, stone))
-            {
-                jsonMessage = format("Couldn't add stone!", Player::GetJokerName(joker));
-            }
-            else
-            {
-                mMatch.GetPlayerNext();
-            }
-        }
+        return CreateResponse(contextRequest, Error::JOKER);
     }
 
-    auto &&json = JSONBoardAndMessageTo(mMatch.mBoard, jsonMessage);
+    // could not add the stone
+    if (!mMatch.mBoard.AddStone(player, contextRequest.stone))
+    {
+        return CreateResponse(contextRequest, Error::STONE);
+    }
+
+    // cycle player and respond
+    mMatch.GetPlayerNext();
+    return CreateResponse(contextRequest, Error::NONE);
+}
+
+Networking::Message::Message MatchManager::CreateResponse(const ContextClient &contextRequest, const Error error)
+{
+    string message{"All Good!"s};
+    switch (error)
+    {
+    case Error::TURN:
+        message = "Wait your turn!"s;
+        break;
+    case Error::JOKER:
+        message = format("Joker {} is already used!", Player::GetJokerName(contextRequest.joker));
+        break;
+    case Error::STONE:
+        message = format("Couldn't add stone!", Player::GetJokerName(contextRequest.joker));
+        break;
+    }
+
+    ContextServer contextResponse(mMatch.mBoard, message);
+    json contextResponseJSON;
+    contextResponse.to_json(contextResponseJSON, contextResponse);
+
     return Networking::Message::MessageManager::ToMessage(
-        *reinterpret_cast<MessageManager::bytes *>(json.dump().data()),
+        *reinterpret_cast<MessageManager::bytes *>(contextResponseJSON.dump().data()),
         Networking::Message::HeaderMetadata::Type::TEXT);
 }
 } // namespace Server
