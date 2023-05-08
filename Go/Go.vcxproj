@@ -150,8 +150,10 @@
     <ClCompile Include="Client\Client.cpp" />
     <ClCompile Include="Client\Game.cpp" />
     <ClCompile Include="Client\Keylogger.cpp" />
+    <ClCompile Include="Game\Context.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Game\Rules.cpp" />
     <ClCompile Include="Server\MatchManager.cpp" />
     <ClCompile Include="Server\Match.cpp" />
     <ClCompile Include="Game\Player.cpp" />
@@ -162,8 +164,10 @@
   <ItemGroup>
     <ClInclude Include="Client\Client.h" />
     <ClInclude Include="Client\Game.h" />
+    <ClInclude Include="Game\Context.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Client\Keylogger.h" />
+    <ClInclude Include="Game\Rules.h" />
     <ClInclude Include="Server\MatchManager.h" />
     <ClInclude Include="Server\Match.h" />
     <ClInclude Include="pch.h" />

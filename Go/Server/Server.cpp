@@ -6,9 +6,9 @@ namespace Server
 {
 using namespace Game;
 
-Server::Server(IOContext &context, const port_type port, Match::Rules &rules) : TCPServer(context, port), mRules(rules)
+Server::Server(IOContext &context, const port_type port, Rules &rules) : TCPServer(context, port), mRules(rules)
 {
-    TCPServer::Start([&](auto client) {
+    Start([&](auto client) {
         scoped_lock lock(mMutexPlayersWaiting);
 
         mPlayersWaiting.push_back(client);

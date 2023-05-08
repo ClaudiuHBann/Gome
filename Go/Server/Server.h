@@ -12,10 +12,10 @@ using namespace Networking::Server;
 class Server : public TCPServer
 {
   public:
-    Server(IOContext &context, const port_type port, Match::Rules &rules);
+    Server(IOContext &context, const port_type port, Rules &rules);
 
   private:
-    Match::Rules &mRules;
+    Rules &mRules;
     vector<MatchManager> mMatchManagers{};
     vector<Match> mMatches{};
 

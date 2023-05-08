@@ -2,6 +2,7 @@
 
 #include "Go/Game/Board.h"
 #include "Go/Game/Player.h"
+#include "Go/Game/Rules.h"
 
 namespace Server
 {
@@ -12,21 +13,6 @@ class Match
     friend class MatchManager;
 
   public:
-    class Rules
-    {
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Rules, mPlayersPerMatch, mSize)
-
-      public:
-        Rules(const uint8_t playersPerMatch, const Coord &size);
-
-        uint8_t GetPlayersPerMatch() const;
-        const Coord &GetSize() const;
-
-      private:
-        uint8_t mPlayersPerMatch{};
-        Coord mSize;
-    };
-
     Match(Rules &rules);
 
     Player &GetPlayerCurrent();

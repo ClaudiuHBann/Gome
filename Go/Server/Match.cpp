@@ -6,20 +6,6 @@
 
 namespace Server
 {
-Match::Rules::Rules(const uint8_t playersPerMatch, const Coord &size) : mPlayersPerMatch(playersPerMatch), mSize(size)
-{
-}
-
-uint8_t Match::Rules::GetPlayersPerMatch() const
-{
-    return mPlayersPerMatch;
-}
-
-const Coord &Match::Rules::GetSize() const
-{
-    return mSize;
-}
-
 Match::Match(Rules &rules) : mRules(rules), mBoard(mRules.GetSize())
 {
     CreateMatch(rules);
