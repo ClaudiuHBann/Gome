@@ -18,7 +18,7 @@ void MatchManager::Process()
 {
     for (size_t i = 0; i < mClients.size(); i++)
     {
-        ContextServerInit context({0, Coord{0, 0}}, Player::Color::NONE);
+        ContextServerInit context(mMatch.mRules, GetPlayerByClient(mClients[i]).GetColor());
         json contextJSON;
         context.to_json(contextJSON, context);
 

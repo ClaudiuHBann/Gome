@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Client.h"
 #include "Go/Game/Board.h"
+#include "Gome/Networking/IOContext.h"
 #include "Keylogger.h"
 
 using namespace Game;
@@ -10,18 +12,21 @@ namespace Client
 class GameI
 {
   public:
-    GameI();
+    GameI(Networking::IOContext &context);
 
     void Run();
 
   private:
+    atomic<bool> mReady{};
+
     COORD mCurrentPositionInBoard{};
     HANDLE mHandleConsoleOutput{};
     Keylogger mKeylogger;
 
     Board mBoard{Coord{0, 0}};
-    deque<string> mMessages{"Message: 1"s, "Message: 2"s, "Message: 3"s, "Message: 4"s, "Message: 5"s};
+    deque<string> mMessages{};
 
+    Client mClient;
     Player mPlayer{Player::Color::NONE};
 
     bool IsStoneOnPos(const Coord &pos) const;
@@ -42,8 +47,11 @@ class GameI
 
     void UseJoker(const Keylogger::Key key);
     void AddStone();
+    void OnKeyPress(const Keylogger::Key key);
     void Move(const Keylogger::Key key);
 
-    void Initialize() const;
+    void InitializeCLI() const;
+    void OnInitialize(const ContextServerInit &contextInit);
+    void OnUpdate(const ContextServer &context);
 };
 } // namespace Client

@@ -23,8 +23,8 @@ int main()
 
     Networking::IOContext context;
 
-    ::Server::Match::Rules rules(2, {6, 10});
-    ::Server::Server server(context, 32406, rules);
+    Game::Rules rules(2, {6, 10});
+    ::Server::Server server(context, SERVER_PORT, rules);
 
     context.Run();
 

@@ -19,25 +19,29 @@ constexpr uint8_t STONE = 254;
 
 namespace Client
 {
-GameI::GameI()
-    : mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE)), mKeylogger([&](const auto &key) {
-          if (key == Keylogger::Key::ENTER)
-          {
-              AddStone();
-          }
-          else if (key == Keylogger::Key::F1 || key == Keylogger::Key::F2 || key == Keylogger::Key::F3)
-          {
-              UseJoker(key);
-          }
-          else
-          {
-              Move(key);
-          }
-
-          Draw();
-      })
+GameI::GameI(Networking::IOContext &context)
+    : mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE)),
+      mKeylogger(bind(&GameI::OnKeyPress, this, std::placeholders::_1)), mClient(context)
 {
-    Initialize();
+    InitializeCLI();
+}
+
+void GameI::OnKeyPress(const Keylogger::Key key)
+{
+    if (key == Keylogger::Key::ENTER)
+    {
+        AddStone();
+    }
+    else if (key == Keylogger::Key::F1 || key == Keylogger::Key::F2 || key == Keylogger::Key::F3)
+    {
+        UseJoker(key);
+    }
+    else
+    {
+        Move(key);
+    }
+
+    Draw();
 }
 
 void GameI::UseJoker(const Keylogger::Key key)
@@ -62,7 +66,7 @@ void GameI::AddStone()
 {
 }
 
-void GameI::Initialize() const
+void GameI::InitializeCLI() const
 {
     // set console code page to print extended ASCII chars
     SetConsoleOutputCP(437);
@@ -77,8 +81,33 @@ void GameI::Initialize() const
     cout << "\x1b[1\x20q";
 }
 
+void GameI::OnInitialize(const ContextServerInit &contextInit)
+{
+    mReady = true;
+
+    mPlayer = Player(contextInit.color);
+    mBoard = Board(contextInit.rules.GetSize());
+}
+
+void GameI::OnUpdate(const ContextServer &context)
+{
+    mBoard = context.board;
+
+    mMessages.push_front(context.message);
+    if (mMessages.size() > 5)
+    {
+        mMessages.pop_back();
+    }
+}
+
 void GameI::Run()
 {
+    mClient.Start(SERVER_IP, SERVER_PORT, bind(&GameI::OnInitialize, this, std::placeholders::_1),
+                  bind(&GameI::OnUpdate, this, std::placeholders::_1));
+
+    while (!mReady)
+        ;
+
     Draw();
 
     while (true)

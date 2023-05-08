@@ -13,25 +13,25 @@ Client::Client(IOContext &context) : mContext(context), mClient(mContext.CreateS
 void Client::Start(const string &ip, const port_type port, function<void(ContextServerInit)> callbackInit,
                    function<void(ContextServer)> callback)
 {
-    /*auto &&resolver = mContext.CreateResolver();
-    resolver.async_resolve({make_address(ip), port}, [=, this](const auto &ec, const auto &xxx) {
-        mClient.Connect(xxx, [=, this](const auto &ec, const auto &) {
-            if (ec)
-            {
-                return;
-            }
+    auto &&resolver = mContext.CreateResolver();
+    auto endpoints = resolver.resolve({make_address(ip), port});
 
-            decltype(callback) callbackReceive = [=, this](const auto &context) {
-                callback(context);
-                Receive(callbackReceive);
-            };
+    mClient.Connect(endpoints, [=, this](const auto &ec, const auto &) {
+        if (ec)
+        {
+            return;
+        }
 
-            Init([=, this](const auto &playerColor) {
-                callbackInit(playerColor);
-                Receive(callbackReceive);
-            });
+        decltype(callback) callbackReceive = [=, this](const auto &context) {
+            callback(context);
+            Receive(callbackReceive);
+        };
+
+        Init([=, this](const auto &playerColor) {
+            callbackInit(playerColor);
+            Receive(callbackReceive);
         });
-    });*/
+    });
 }
 
 void Client::Init(function<void(ContextServerInit)> callback)

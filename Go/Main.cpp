@@ -4,7 +4,10 @@
 
 int main()
 {
-    Client::GameI().Run();
+    Networking::IOContext context;
+    Client::GameI(context).Run();
+
+    context.Run();
 
     return 0;
 }

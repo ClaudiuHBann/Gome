@@ -8,18 +8,21 @@
 namespace Client
 {
 using namespace Game;
+using namespace Networking;
 using namespace Networking::Client;
 
 class Client
 {
   public:
-    Client(shared_ptr<TCPClient> client);
+    Client(IOContext &context);
 
-    void Start(function<void(ContextServerInit)> callbackInit, function<void(ContextServer)> callback);
+    void Start(const string &ip, const port_type port, function<void(ContextServerInit)> callbackInit,
+               function<void(ContextServer)> callback);
     void Send(ContextClient &context);
 
   private:
-    shared_ptr<TCPClient> mClient;
+    IOContext &mContext;
+    TCPClient mClient;
 
     void Init(function<void(ContextServerInit)> callback);
     void Receive(function<void(ContextServer)> callback);
