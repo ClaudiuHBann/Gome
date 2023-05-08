@@ -6,26 +6,37 @@ namespace Client
 {
 using namespace Networking::Client;
 
-Client::Client(shared_ptr<TCPClient> client) : mClient(client)
+Client::Client(IOContext &context) : mContext(context), mClient(mContext.CreateSocket())
 {
 }
 
-void Client::Start(function<void(ContextServerInit)> callbackInit, function<void(ContextServer)> callback)
+void Client::Start(const string &ip, const port_type port, function<void(ContextServerInit)> callbackInit,
+                   function<void(ContextServer)> callback)
 {
-    decltype(callback) callbackReceive = [=, this](const auto &context) {
-        callback(context);
-        Receive(callbackReceive);
-    };
+    /*auto &&resolver = mContext.CreateResolver();
+    resolver.async_resolve({make_address(ip), port}, [=, this](const auto &ec, const auto &xxx) {
+        mClient.Connect(xxx, [=, this](const auto &ec, const auto &) {
+            if (ec)
+            {
+                return;
+            }
 
-    Init([=, this](const auto &playerColor) {
-        callbackInit(playerColor);
-        Receive(callbackReceive);
-    });
+            decltype(callback) callbackReceive = [=, this](const auto &context) {
+                callback(context);
+                Receive(callbackReceive);
+            };
+
+            Init([=, this](const auto &playerColor) {
+                callbackInit(playerColor);
+                Receive(callbackReceive);
+            });
+        });
+    });*/
 }
 
 void Client::Init(function<void(ContextServerInit)> callback)
 {
-    mClient->Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
+    mClient.Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
         auto &jsonString = *reinterpret_cast<string *>(get<2>(*messageDisassembled).data());
 
         ContextServerInit context({0, Coord{0, 0}}, Player::Color::NONE);
@@ -39,13 +50,13 @@ void Client::Send(ContextClient &context)
     json contextJSON;
     context.to_json(contextJSON, context);
 
-    mClient->Send(*reinterpret_cast<TCPClient::bytes *>(contextJSON.dump().data()), HeaderMetadata::Type::TEXT,
-                  [](const auto &, const auto &) {});
+    mClient.Send(*reinterpret_cast<TCPClient::bytes *>(contextJSON.dump().data()), HeaderMetadata::Type::TEXT,
+                 [](const auto &, const auto &) {});
 }
 
 void Client::Receive(function<void(ContextServer)> callback)
 {
-    mClient->Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
+    mClient.Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
         auto &jsonString = *reinterpret_cast<string *>(get<2>(*messageDisassembled).data());
 
         ContextServer context(Coord{0, 0}, {});
