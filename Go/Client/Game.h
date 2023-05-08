@@ -10,7 +10,7 @@ namespace Client
 class GameI
 {
   public:
-    GameI(const Coord &size);
+    GameI();
 
     void Run();
 
@@ -19,7 +19,7 @@ class GameI
     HANDLE mHandleConsoleOutput{};
     Keylogger mKeylogger;
 
-    Board mBoard;
+    Board mBoard{Coord{0, 0}};
     deque<string> mMessages{"Message: 1"s, "Message: 2"s, "Message: 3"s, "Message: 4"s, "Message: 5"s};
 
     Player mPlayer{Player::Color::NONE};

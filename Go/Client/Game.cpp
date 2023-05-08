@@ -19,7 +19,7 @@ constexpr uint8_t STONE = 254;
 
 namespace Client
 {
-GameI::GameI(const Coord &size)
+GameI::GameI()
     : mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE)), mKeylogger([&](const auto &key) {
           if (key == Keylogger::Key::ENTER)
           {
@@ -35,8 +35,7 @@ GameI::GameI(const Coord &size)
           }
 
           Draw();
-      }),
-      mBoard(size)
+      })
 {
     Initialize();
 }

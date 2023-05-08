@@ -4,7 +4,7 @@
 
 int main()
 {
-    Client::GameI({6, 10}).Run();
+    Client::GameI().Run();
 
     return 0;
 }
@@ -36,3 +36,5 @@ int main()
 
     Clientul trebuie sa trimita o piatra (pozitia) si un joker
 */
+
+// TODO: make a context for client and server (a POD class with objects for sending)

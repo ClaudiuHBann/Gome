@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Go/Game/Stone.h"
+#include "Go/Server/Match.h"
+#include "Go/Server/MatchManager.h"
 #include "Gome/Networking/Server/TCPServer.h"
 
 namespace Server
@@ -11,12 +12,16 @@ using namespace Networking::Server;
 class Server : public TCPServer
 {
   public:
-    Server(const IOContext &context, const port_type port, Match &match);
+    Server(IOContext &context, const port_type port, Match::Rules &rules);
 
   private:
-    mutex mMutex{};
-    vector<shared_ptr<Networking::Client::TCPClient>> mPlayersWaiting{};
+    Match::Rules &mRules;
     vector<MatchManager> mMatchManagers{};
-};
+    vector<Match> mMatches{};
 
+    mutex mMutexPlayersWaiting{};
+    vector<shared_ptr<TCPClient>> mPlayersWaiting{};
+
+    void HandlePlayersWaiting();
+};
 } // namespace Server

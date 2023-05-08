@@ -1,18 +1,9 @@
 #pragma once
 
+#include "Go/Game/Player.h"
+#include "Go/Server/Match.h"
+#include "Gome/Networking/Client/TCPClient.h"
 #include "Gome/Networking/Message/MessageManager.h"
-
-namespace Networking::Client
-{
-class TCPClient;
-}
-
-namespace Game
-{
-class Player;
-}
-
-class Match;
 
 namespace Server
 {

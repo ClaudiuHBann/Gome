@@ -12,6 +12,7 @@ using namespace nlohmann;
 #include "Game/Player.h"
 
 constexpr auto JSON_PLAYER_COLOR = "playerColor";
+constexpr auto JSON_MATCH_RULES = "matchRules";
 
 json JSONBoardAndMessageTo(const Game::Board &board, const string &message);
 pair<Game::Board, string> JSONBoardAndMessageFrom(const string &jsonString);

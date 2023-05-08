@@ -22,6 +22,7 @@ void MatchManager::Process()
     {
         json j;
         j[JSON_PLAYER_COLOR] = mMatch.mPlayers[i].GetColor();
+        j[JSON_MATCH_RULES] = mMatch.mRules;
 
         mClients[i]->Send(*reinterpret_cast<TCPClient::bytes *>(j.dump().data()), HeaderMetadata::Type::TEXT,
                           [this, i = i](const auto &, const auto &) { ProcessPlayer(mClients[i]); });
@@ -86,6 +87,10 @@ Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
             if (!mMatch.mBoard.AddStone(player, stone))
             {
                 jsonMessage = format("Couldn't add stone!", Player::GetJokerName(joker));
+            }
+            else
+            {
+                mMatch.GetPlayerNext();
             }
         }
     }

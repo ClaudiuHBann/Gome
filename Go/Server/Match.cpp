@@ -6,19 +6,33 @@
 
 namespace Server
 {
-Match::Match(const uint8_t playersPerMatch, const Coord &size) : mBoard(size)
+Match::Rules::Rules(const uint8_t playersPerMatch, const Coord &size) : mPlayersPerMatch(playersPerMatch), mSize(size)
 {
-    CreateMatch(playersPerMatch, size);
 }
 
-void Match::CreateMatch(const uint8_t playersPerMatch, const Coord &size)
+uint8_t Match::Rules::GetPlayersPerMatch() const
+{
+    return mPlayersPerMatch;
+}
+
+const Coord &Match::Rules::GetSize() const
+{
+    return mSize;
+}
+
+Match::Match(Rules &rules) : mRules(rules), mBoard(mRules.GetSize())
+{
+    CreateMatch(rules);
+}
+
+void Match::CreateMatch(const Rules &rules)
 {
     vector<uint8_t> colors{0, 1, 2, 3, 4};
 
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     shuffle(colors.begin(), colors.end(), default_random_engine((uint32_t)seed));
 
-    for (size_t i = 0; i < playersPerMatch; i++)
+    for (size_t i = 0; i < rules.GetPlayersPerMatch(); i++)
     {
         Player player((Player::Color)colors[i]);
         mPlayers.push_back(player);
@@ -26,7 +40,7 @@ void Match::CreateMatch(const uint8_t playersPerMatch, const Coord &size)
 
     Random random;
     vector<Coord> stonePoss{};
-    auto &&sizeValues = size.GetXY();
+    auto &&sizeValues = rules.GetSize().GetXY();
     for (size_t i = 0; i < mPlayers.size(); i++)
     {
         while (true)
@@ -58,11 +72,6 @@ void Match::CreateMatch(const uint8_t playersPerMatch, const Coord &size)
     }
 
     mPlayerCurrentIndex = random.Get<decltype(mPlayerCurrentIndex)>(0, mPlayers.size() - 1);
-}
-
-const vector<Player> &Match::GetPlayers() const
-{
-    return mPlayers;
 }
 
 Player &Match::GetPlayerCurrent()
