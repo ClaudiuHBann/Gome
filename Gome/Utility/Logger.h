@@ -50,7 +50,10 @@ static inline void OutputDebugStringForced(const ::TCHAR *str)
 #endif // defined(_UNICODE) || defined(UNICODE)
     }
 
-    // TO DO: add a log file
+    static auto &&currentZoneTime = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
+    static String fileName(format(TEXT("{:%Y-%m-%d--%H-%M-%OS}.log"), currentZoneTime));
+    static FileOutStream file(fileName);
+    file << str << flush;
 }
 
 template <typename Object, typename Iterable>
