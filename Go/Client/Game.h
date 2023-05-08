@@ -45,7 +45,7 @@ class GameI
     bool IsPositionInBoardValid(const COORD &position) const;
     COORD BoardToConsolePosition(const COORD &position) const;
 
-    void UseJoker(const Keylogger::Key key);
+    void SetJoker(const Keylogger::Key key);
     void AddStone();
     void OnKeyPress(const Keylogger::Key key);
     void Move(const Keylogger::Key key);

@@ -22,6 +22,8 @@ void Client::Start(const string &ip, const port_type port, function<void(Context
             return;
         }
 
+        TRACE(format("Connected succeesfully to {}:{}.", SERVER_IP, SERVER_PORT).c_str());
+
         decltype(callback) callbackReceive = [=, this](const auto &context) {
             callback(context);
             Receive(callbackReceive);

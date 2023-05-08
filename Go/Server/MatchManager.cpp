@@ -16,6 +16,7 @@ MatchManager::MatchManager(const vector<shared_ptr<TCPClient>> &clients, Match &
 
 void MatchManager::Process()
 {
+    TRACE("Send to every player it's color and the match rules...");
     for (size_t i = 0; i < mClients.size(); i++)
     {
         ContextServerInit context(mMatch.mRules, GetPlayerByClient(mClients[i]).GetColor());
@@ -69,18 +70,28 @@ Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
     // not his turn
     if (player != mMatch.GetPlayerCurrent())
     {
+        TRACE(format("\033[1;{}mPlayer\033[0m tried to make a move when it wasn't his turn...",
+                     to_string((int)player.GetColor()))
+                  .c_str());
         return CreateResponse(contextRequest, Error::TURN);
     }
 
     // has a joker active but could not activate on server side (it's already used)
     if (contextRequest.joker != Player::Joker::NONE && !player.SetActiveJoker(contextRequest.joker))
     {
+        TRACE(format("\033[1;{}mPlayer\033[0m tried to use Joker::{} twice...", to_string((int)player.GetColor()),
+                     Player::GetJokerName(contextRequest.joker))
+                  .c_str());
         return CreateResponse(contextRequest, Error::JOKER);
     }
 
     // could not add the stone
     if (!mMatch.mBoard.AddStone(player, contextRequest.stone))
     {
+        TRACE(vformat("\033[1;{}mPlayer\033[0m could not place stone({{ {}, {} }})...",
+                      make_format_args((int)contextRequest.stone.GetPosition().GetXY().first,
+                                       (int)contextRequest.stone.GetPosition().GetXY().second))
+                  .c_str());
         return CreateResponse(contextRequest, Error::STONE);
     }
 

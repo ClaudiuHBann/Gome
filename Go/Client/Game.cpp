@@ -34,7 +34,7 @@ void GameI::OnKeyPress(const Keylogger::Key key)
     }
     else if (key == Keylogger::Key::F1 || key == Keylogger::Key::F2 || key == Keylogger::Key::F3)
     {
-        UseJoker(key);
+        SetJoker(key);
     }
     else
     {
@@ -44,7 +44,7 @@ void GameI::OnKeyPress(const Keylogger::Key key)
     Draw();
 }
 
-void GameI::UseJoker(const Keylogger::Key key)
+void GameI::SetJoker(const Keylogger::Key key)
 {
     switch (key)
     {
@@ -58,16 +58,20 @@ void GameI::UseJoker(const Keylogger::Key key)
         mPlayer.SetActiveJoker(Player::Joker::FREEDOM);
         break;
     }
-
-    mPlayer.UseActiveJoker();
 }
 
 void GameI::AddStone()
 {
+    TRACE("Adding stone...");
+
+    ContextClient context(Coord{0, 0}, mPlayer.GetActiveJoker());
+    mClient.Send(context);
 }
 
 void GameI::InitializeCLI() const
 {
+    TRACE("Initializing CLI...");
+
     // set console code page to print extended ASCII chars
     SetConsoleOutputCP(437);
 
@@ -83,6 +87,8 @@ void GameI::InitializeCLI() const
 
 void GameI::OnInitialize(const ContextServerInit &contextInit)
 {
+    TRACE("Initializing match...");
+
     mReady = true;
 
     mPlayer = Player(contextInit.color);
@@ -91,6 +97,17 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
 
 void GameI::OnUpdate(const ContextServer &context)
 {
+    TRACE("Updating board and messages...");
+
+    // update jokers
+    if (mPlayer.GetActiveJoker() != Player::Joker::NONE)
+    {
+        if (mBoard != context.board)
+        {
+            mPlayer.UseActiveJoker();
+        }
+    }
+
     mBoard = context.board;
 
     mMessages.push_front(context.message);
@@ -98,15 +115,21 @@ void GameI::OnUpdate(const ContextServer &context)
     {
         mMessages.pop_back();
     }
+
+    Draw();
 }
 
 void GameI::Run()
 {
+    TRACE("Starting game...");
     mClient.Start(SERVER_IP, SERVER_PORT, bind(&GameI::OnInitialize, this, std::placeholders::_1),
                   bind(&GameI::OnUpdate, this, std::placeholders::_1));
 
     while (!mReady)
-        ;
+    {
+    }
+
+    TRACE("Have fun!");
 
     Draw();
 

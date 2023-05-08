@@ -14,9 +14,11 @@ namespace Utility
 #if defined(_UNICODE) || defined(UNICODE)
 using String = wstring;
 using StringStream = wstringstream;
+using FileOutStream = wofstream;
 #else
 using String = string;
 using StringStream = stringstream;
+using FileOutStream = ofstream;
 #endif // defined(_UNICODE) || defined(UNICODE)
 
 template <typename T> static inline String ToString(const T &t)

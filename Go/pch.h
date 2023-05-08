@@ -4,6 +4,8 @@
 
 // TODO: remove this Gome/pch.h dependency
 #include "Gome/pch.h"
+//
+#include "Gome/Utility/Logger.h"
 
 #include "Go/json.hpp"
 using namespace nlohmann;

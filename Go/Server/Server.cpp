@@ -12,6 +12,7 @@ Server::Server(IOContext &context, const port_type port, Rules &rules) : TCPServ
         scoped_lock lock(mMutexPlayersWaiting);
 
         mPlayersWaiting.push_back(client);
+        TRACE(format("Player no {} has connected...", mPlayersWaiting.size()).c_str());
         if (rules.GetPlayersPerMatch() == mPlayersWaiting.size())
         {
             HandlePlayersWaiting();
@@ -21,6 +22,7 @@ Server::Server(IOContext &context, const port_type port, Rules &rules) : TCPServ
 
 void Server::HandlePlayersWaiting()
 {
+    TRACE("Creating match and it's manager...");
     Match match(mRules);
     MatchManager matchManager(mPlayersWaiting, match);
 

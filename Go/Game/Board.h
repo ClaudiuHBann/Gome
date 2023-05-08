@@ -20,6 +20,8 @@ class Board
     optional<Player::Color> GetWinner(const vector<Player> &players) const;
     const vector<vector<Player::Color>> &GetGameState() const;
 
+    auto operator<=>(const Board &) const = default;
+
   private:
     vector<vector<Player::Color>> mGameState{};
 
