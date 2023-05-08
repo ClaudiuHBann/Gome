@@ -21,11 +21,11 @@ Server::Server(IOContext &context, const port_type port, Match::Rules &rules) : 
 
 void Server::HandlePlayersWaiting()
 {
-    /*Match match(mRules);
+    Match match(mRules);
     MatchManager matchManager(mPlayersWaiting, match);
 
-    mMatches.emplace_back(move(match));
-    mMatchManagers.emplace_back(matchManager).Process();*/
+    mMatches.emplace_back(match);
+    mMatchManagers.emplace_back(matchManager).Process();
 
     mPlayersWaiting.clear();
 }

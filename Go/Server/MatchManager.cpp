@@ -12,7 +12,7 @@ using namespace Client;
 using namespace Game;
 
 MatchManager::MatchManager(const vector<shared_ptr<TCPClient>> &clients, Match &match)
-    : mClients(clients), mMatch(match)
+    : mClients(clients), mMatch(match), mMutexPlayerCurrent(make_shared<mutex>())
 {
 }
 
@@ -63,7 +63,7 @@ Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
     auto &[guid, type, bytes] = *message;
     auto &&[stone, joker] = JSONStoneAndJokerFrom(*reinterpret_cast<string *>(bytes.data()));
 
-    scoped_lock lock(mMutex);
+    scoped_lock lock(*mMutexPlayerCurrent);
 
     string jsonMessage;
     if (player != mMatch.GetPlayerCurrent())
