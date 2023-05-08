@@ -5,7 +5,7 @@
 
 namespace Networking
 {
-IOContext::IOContext() : mIOContext(make_shared<io_context>())
+IOContext::IOContext() : mIOContext(make_unique<io_context>())
 {
 }
 

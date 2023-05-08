@@ -7,15 +7,9 @@ namespace Networking::Server
 {
 using namespace Client;
 
-TCPServerRaw::TCPServerRaw(const IOContext &context, const port_type port)
+TCPServerRaw::TCPServerRaw(IOContext &context, const port_type port)
     : mContext(context), mAcceptor(make_unique<tcp::acceptor>(*mContext, tcp::endpoint(tcp::v4(), port)))
 {
-}
-
-TCPServerRaw::~TCPServerRaw()
-{
-    mAcceptor->cancel();
-    mAcceptor->close();
 }
 
 void TCPServerRaw::Start(CallbackAccept callback)

@@ -17,6 +17,6 @@ class IOContext
     io_context &operator*();
 
   private:
-    shared_ptr<io_context> mIOContext{};
+    unique_ptr<io_context> mIOContext{};
 };
 } // namespace Networking

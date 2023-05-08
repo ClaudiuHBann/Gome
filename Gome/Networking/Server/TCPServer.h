@@ -2,20 +2,28 @@
 
 #include "Gome/Networking/Server/TCPServerRaw.h"
 
+namespace Networking::TCP
+{
+class TCPTests;
+}
+
 namespace Networking::Server
 {
+using namespace Networking::TCP;
 using namespace Client;
 
 class TCPServer
 {
+    friend class TCPTests;
+
   public:
     using CallbackAccept = function<void(shared_ptr<TCPClient>)>;
 
-    TCPServer(const IOContext &context, const port_type port);
-
-    void Start(CallbackAccept callback);
+    TCPServer(IOContext &context, const port_type port);
 
   protected:
     shared_ptr<TCPServerRaw> mServer;
+
+    void Start(CallbackAccept callback);
 };
 } // namespace Networking::Server
