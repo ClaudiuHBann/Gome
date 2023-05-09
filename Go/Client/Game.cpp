@@ -65,9 +65,12 @@ void GameI::SetJoker(const Keylogger::Key key)
 
 void GameI::AddStone()
 {
+    cout.setstate(ios_base::failbit);
     TRACE("Adding stone...");
+    cout.clear();
 
-    ContextClient context(Coord{0, 0}, mPlayer.GetActiveJoker());
+    ContextClient context(Coord{(uint8_t)mCurrentPositionInBoard.X, (uint8_t)mCurrentPositionInBoard.Y},
+                          mPlayer.GetActiveJoker());
     mClient.Send(context);
 }
 
@@ -100,7 +103,9 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
 
 void GameI::OnUpdate(const ContextServer &context)
 {
+    cout.setstate(ios_base::failbit);
     TRACE("Updating board and messages...");
+    cout.clear();
 
     // update jokers
     if (mPlayer.GetActiveJoker() != Player::Joker::NONE)
@@ -131,7 +136,6 @@ void GameI::Run()
 
     TRACE("Have fun!");
 
-    cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
     Draw();
 
     while (true)
@@ -157,13 +161,13 @@ void GameI::DrawJokersState() const
     const auto &jokers = mPlayer.GetJokers();
 
     SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 1});
-    cout << format("(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED ");
+    cout << format("(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED");
 
     SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 2});
-    cout << format("(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED ");
+    cout << format("(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED");
 
     SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 3});
-    cout << format("(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED ");
+    cout << format("(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED");
 }
 
 void GameI::DrawMessages() const
@@ -179,6 +183,8 @@ void GameI::Draw() const
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi{};
     GetConsoleScreenBufferInfo(mHandleConsoleOutput, &csbi);
+
+    cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
 
     DrawBoard();
     DrawJokersState();
