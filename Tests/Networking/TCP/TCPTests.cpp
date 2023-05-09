@@ -1,7 +1,6 @@
 #include "Tests/pch.h"
-//
+
 #include "TCPTests.h"
-//
 
 namespace Networking::TCP
 {

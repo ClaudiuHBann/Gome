@@ -1,9 +1,8 @@
 #include "Tests/pch.h"
-//
-#include "MessageTests.h"
-//
+
 #include "Gome/Networking/Message/MessageConverter.h"
 #include "Gome/Networking/Message/MessageManager.h"
+#include "MessageTests.h"
 
 namespace Networking::Message
 {
