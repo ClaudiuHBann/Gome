@@ -64,8 +64,10 @@ Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
     auto &[guid, type, bytes] = *message;
 
     string jsonString((char *)bytes.data(), (char *)bytes.data() + bytes.size());
+    auto &&json = json::parse(jsonString);
+
     ContextClient contextRequest(Coord{0, 0}, Player::Joker::NONE);
-    contextRequest.from_json(jsonString, contextRequest);
+    contextRequest.from_json(json, contextRequest);
 
     scoped_lock lock(*mMutexPlayerCurrent);
 

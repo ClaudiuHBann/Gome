@@ -24,8 +24,6 @@ int main()
     /*TEST_CLASS(MessageTests);
     TEST_CLASS(TCPTests);*/
 
-    return 0;
-
     Networking::IOContext context;
 
     TRACE("Creating server and it's rules...");

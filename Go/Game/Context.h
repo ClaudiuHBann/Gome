@@ -5,7 +5,9 @@
 
 namespace Game
 {
-// Context which will be send to the server
+/**
+ * @brief Context which will be send to the server
+ */
 class ContextClient
 {
   public:
@@ -17,7 +19,9 @@ class ContextClient
     ContextClient(const Stone &stone, const Player::Joker joker);
 };
 
-// Context which will be send to the client when a match starts
+/**
+ * @brief Context which will be send to the client when a match starts
+ */
 class ContextServerInit
 {
   public:
@@ -29,7 +33,9 @@ class ContextServerInit
     ContextServerInit(const Rules &rules, const Player::Color color);
 };
 
-// Context which will be send to the client
+/**
+ * @brief Context which will be send to the client
+ */
 class ContextServer
 {
   public:

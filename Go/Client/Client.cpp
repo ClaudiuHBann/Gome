@@ -42,9 +42,10 @@ void Client::Init(function<void(ContextServerInit)> callback)
     mClient.Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
         string jsonString((char *)get<2>(*messageDisassembled).data(),
                           (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
+        auto &&json = json::parse(jsonString);
 
         ContextServerInit context({0, Coord{0, 0}}, Player::Color::NONE);
-        context.from_json(json::parse(jsonString), context);
+        context.from_json(json, context);
         callback(context);
     });
 }
@@ -64,9 +65,10 @@ void Client::Receive(function<void(ContextServer)> callback)
     mClient.Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
         string jsonString((char *)get<2>(*messageDisassembled).data(),
                           (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
+        auto &&json = json::parse(jsonString);
 
         ContextServer context(Coord{0, 0}, {});
-        context.from_json(json::parse(jsonString), context);
+        context.from_json(json, context);
         callback(context);
     });
 }
