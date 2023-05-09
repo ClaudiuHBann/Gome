@@ -129,22 +129,42 @@ const vector<vector<Player::Color>> &Board::GetGameState() const
 
 bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 {
-    // TODO: check for jokers moves too
-
     for (uint8_t row = 0; row < mGameState.size(); row++)
     {
         for (uint8_t column = 0; column < mGameState.front().size(); column++)
         {
-            if (mGameState[row][column] != player.GetColor())
+            for (const auto &joker : player.GetJokers())
             {
-                continue;
-            }
+                switch (joker)
+                {
+                // we can place on a free spot without nearby allies
+                case Player::Joker::FREEDOM: {
+                    if (mGameState[row][column] == Player::Color::NONE)
+                    {
+                        return true;
+                    }
+                }
+                break;
 
-            Coord pos{row, column};
-            Stone stone(pos);
-            if (GetSameStoneNearbyPosCount(player, pos) < MAX_NEARBY_STONES_COUNT)
-            {
-                return true;
+                // we can place anywhere but need to have nearby allies
+                case Player::Joker::REPLACE: {
+                    if (GetSameStoneNearbyPosCount(player, {row, column}) < MAX_NEARBY_STONES_COUNT)
+                    {
+                        return true;
+                    }
+                }
+                break;
+
+                // DOUBLE_MOVE is the same as a joker free move and
+                default: {
+                    if (mGameState[row][column] == Player::Color::NONE &&
+                        GetSameStoneNearbyPosCount(player, {row, column}) < MAX_NEARBY_STONES_COUNT)
+                    {
+                        return true;
+                    }
+                }
+                break;
+                }
             }
         }
     }
@@ -154,8 +174,6 @@ bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 
 bool Board::IsGameStateTerminal(const vector<Player> &players) const
 {
-    // TODO: if there is only a player who can place stones stop
-
     for (auto &player : players)
     {
         if (CanPlayerPlaceAnyStone(player))

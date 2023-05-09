@@ -176,6 +176,7 @@ void GameI::DrawMessages() const
     SetConsoleCursorPosition(mHandleConsoleOutput, {0, (SHORT)(mBoard.GetGameState().size() + 1)});
     for (const auto &message : mMessages)
     {
+        cout << "\33[2K\r"; // clear line before writing the message
         cout << format(" {}", message) << endl;
     }
 }
