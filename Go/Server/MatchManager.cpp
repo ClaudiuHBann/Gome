@@ -34,9 +34,9 @@ void MatchManager::ProcessPlayer(shared_ptr<TCPClient> client)
     client->Receive([&, client](auto ec, shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
         if (!ec)
         {
-            auto &&message = ProcessPlayerMessage(GetPlayerByClient(client), messageDisassembled);
-            auto &&messageBytes = Networking::Message::MessageConverter::MessageToBytes(message);
-            client->Send(messageBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+            auto &&json = ProcessPlayerMessage(GetPlayerByClient(client), messageDisassembled);
+            bytes jsonAsBytes((byte *)json.data(), (byte *)json.data() + json.size());
+            client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
         }
 
         ProcessPlayer(client);
@@ -57,8 +57,7 @@ Player &MatchManager::GetPlayerByClient(const shared_ptr<TCPClient> &client)
     return mMatch.mPlayers[indexOfClient];
 }
 
-Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
-                                                                shared_ptr<MessageManager::MessageDisassembled> message)
+string MatchManager::ProcessPlayerMessage(Player &player, shared_ptr<MessageManager::MessageDisassembled> message)
 {
     auto &[guid, type, bytes] = *message;
 
@@ -104,7 +103,7 @@ Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
     return CreateResponse(contextRequest, Error::NONE);
 }
 
-Networking::Message::Message MatchManager::CreateResponse(const ContextClient &contextRequest, const Error error)
+string MatchManager::CreateResponse(const ContextClient &contextRequest, const Error error)
 {
     string message{"All Good!"s};
     switch (error)
@@ -123,10 +122,7 @@ Networking::Message::Message MatchManager::CreateResponse(const ContextClient &c
     ContextServer contextResponse(mMatch.mBoard, message);
     json contextResponseJSON;
     contextResponse.to_json(contextResponseJSON, contextResponse);
-    auto &&contextResponseJSONString = contextResponseJSON.dump();
 
-    bytes data((byte *)contextResponseJSONString.data(),
-               (byte *)contextResponseJSONString.data() + contextResponseJSONString.size());
-    return Networking::Message::MessageManager::ToMessage(data, Networking::Message::HeaderMetadata::Type::TEXT);
+    return contextResponseJSON.dump();
 }
 } // namespace Server

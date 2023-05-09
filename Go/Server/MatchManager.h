@@ -27,11 +27,10 @@ class MatchManager
         STONE  // could not add stone
     };
 
-    Networking::Message::Message CreateResponse(const ContextClient &contextRequest, const Error error);
+    string CreateResponse(const ContextClient &contextRequest, const Error error);
 
     void ProcessPlayer(shared_ptr<TCPClient> client);
-    Networking::Message::Message ProcessPlayerMessage(Player &player,
-                                                      shared_ptr<MessageManager::MessageDisassembled> message);
+    string ProcessPlayerMessage(Player &player, shared_ptr<MessageManager::MessageDisassembled> message);
 
     Player &GetPlayerByClient(const shared_ptr<TCPClient> &client);
 
