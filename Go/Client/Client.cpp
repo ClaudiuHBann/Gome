@@ -14,7 +14,7 @@ void Client::Start(const string &ip, const port_type port, function<void(Context
                    function<void(ContextServer)> callback)
 {
     auto &&resolver = mContext.CreateResolver();
-    auto endpoints = resolver.resolve({make_address(ip), port});
+    auto &&endpoints = resolver.resolve(ip, to_string(port));
 
     mClient.Connect(endpoints, [=, this](const auto &ec, const auto &) {
         if (ec)
@@ -24,7 +24,8 @@ void Client::Start(const string &ip, const port_type port, function<void(Context
 
         TRACE(format("Connected succeesfully to {}:{}.", SERVER_IP, SERVER_PORT).c_str());
 
-        decltype(callback) callbackReceive = [=, this](const auto &context) {
+        decltype(callback) callbackReceive;
+        callbackReceive = [=, this](const auto &context) {
             callback(context);
             Receive(callbackReceive);
         };

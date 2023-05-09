@@ -31,8 +31,8 @@ void Match::CreateMatch(const Rules &rules)
     {
         while (true)
         {
-            auto row = (uint8_t)random.Get(1ui16, (uint16_t)sizeValues.first);
-            auto col = (uint8_t)random.Get(1ui16, (uint16_t)sizeValues.second);
+            auto row = (uint8_t)random.Get(0ui16, (uint16_t)(sizeValues.first - 1));
+            auto col = (uint8_t)random.Get(0ui16, (uint16_t)(sizeValues.second - 1));
 
             bool same = false;
             for (const auto &stonePos : stonePoss)
@@ -46,6 +46,7 @@ void Match::CreateMatch(const Rules &rules)
 
             if (!same)
             {
+                stonePoss.emplace_back(row, col);
                 break;
             }
         }

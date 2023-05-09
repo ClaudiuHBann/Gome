@@ -16,6 +16,7 @@ class Board
     bool IsStoneValid(const Player &player, const Stone &stone) const;
     bool CanPlayerPlaceAnyStone(const Player &player) const;
     bool IsGameStateTerminal(const vector<Player> &players) const;
+    bool IsPositionValid(const Coord &pos) const;
 
     optional<Player::Color> GetWinner(const vector<Player> &players) const;
     const vector<vector<Player::Color>> &GetGameState() const;

@@ -5,7 +5,8 @@
 int main()
 {
     Networking::IOContext context;
-    Client::GameI(context).Run();
+    Client::GameI game(context);
+    std::thread([&]() { game.Run(); }).detach();
 
     context.Run();
 
@@ -14,11 +15,11 @@ int main()
 
 /*
     TODO:
+            - add comments
+            - bug: make writing to file atomic
             - Joker Double Move - 2 mutari consecutive
             - daca un jucator nu poate face nici o mutare inclusiv cu un joker se trece mai departe
             - meciul se termina cand nimeni nu poate sa mai faca vreo miscare
             - castigatorul meciului este cel cu cele mai multe pietre pe tabla, iar daca sunt 2 sau mai multi cu acelasi
    numar de piese pe tabla se va alege ultimul care a facut miscarea dintre ei
 */
-
-// TODO: add comments

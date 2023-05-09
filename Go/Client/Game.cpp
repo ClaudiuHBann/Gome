@@ -24,6 +24,9 @@ GameI::GameI(Networking::IOContext &context)
       mKeylogger(bind(&GameI::OnKeyPress, this, std::placeholders::_1)), mClient(context)
 {
     InitializeCLI();
+
+    mClient.Start(SERVER_IP, SERVER_PORT, bind(&GameI::OnInitialize, this, std::placeholders::_1),
+                  bind(&GameI::OnUpdate, this, std::placeholders::_1));
 }
 
 void GameI::OnKeyPress(const Keylogger::Key key)
@@ -121,16 +124,14 @@ void GameI::OnUpdate(const ContextServer &context)
 
 void GameI::Run()
 {
-    TRACE("Starting game...");
-    mClient.Start(SERVER_IP, SERVER_PORT, bind(&GameI::OnInitialize, this, std::placeholders::_1),
-                  bind(&GameI::OnUpdate, this, std::placeholders::_1));
-
+    TRACE("Waiting players to connect...");
     while (!mReady)
     {
     }
 
     TRACE("Have fun!");
 
+    cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
     Draw();
 
     while (true)
@@ -274,7 +275,7 @@ void GameI::Move(const Keylogger::Key key)
         break;
     }
 
-    if (IsPositionInBoardValid(newPositionInBoard))
+    if (mBoard.IsPositionValid({(uint8_t)newPositionInBoard.X, (uint8_t)newPositionInBoard.Y}))
     {
         mCurrentPositionInBoard = move(newPositionInBoard);
         SetConsoleCursorPosition(mHandleConsoleOutput, BoardToConsolePosition(mCurrentPositionInBoard));
