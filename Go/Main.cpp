@@ -15,6 +15,7 @@ int main()
 
 /*
     TODO:
+            - is there a way to use the bytes as string and vice versa without creating new containers?
             - add comments
             - bug: make writing to file atomic
             - Joker Double Move - 2 mutari consecutive

@@ -40,7 +40,8 @@ void Client::Start(const string &ip, const port_type port, function<void(Context
 void Client::Init(function<void(ContextServerInit)> callback)
 {
     mClient.Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
-        auto &jsonString = *reinterpret_cast<string *>(get<2>(*messageDisassembled).data());
+        string jsonString((char *)get<2>(*messageDisassembled).data(),
+                          (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
 
         ContextServerInit context({0, Coord{0, 0}}, Player::Color::NONE);
         context.from_json(json::parse(jsonString), context);
@@ -52,15 +53,18 @@ void Client::Send(ContextClient &context)
 {
     json contextJSON;
     context.to_json(contextJSON, context);
+    auto &&contextJSONString = contextJSON.dump();
 
-    mClient.Send(*reinterpret_cast<TCPClient::bytes *>(contextJSON.dump().data()), HeaderMetadata::Type::TEXT,
-                 [](const auto &, const auto &) {});
+    TCPClient::bytes data((byte *)contextJSONString.data(),
+                          (byte *)contextJSONString.data() + contextJSONString.size());
+    mClient.Send(data, HeaderMetadata::Type::TEXT, [](const auto &, const auto &) {});
 }
 
 void Client::Receive(function<void(ContextServer)> callback)
 {
     mClient.Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
-        auto &jsonString = *reinterpret_cast<string *>(get<2>(*messageDisassembled).data());
+        string jsonString((char *)get<2>(*messageDisassembled).data(),
+                          (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
 
         ContextServer context(Coord{0, 0}, {});
         context.from_json(json::parse(jsonString), context);

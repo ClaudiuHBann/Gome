@@ -22,15 +22,18 @@ void MatchManager::Process()
         ContextServerInit context(mMatch.mRules, GetPlayerByClient(mClients[i]).GetColor());
         json contextJSON;
         context.to_json(contextJSON, context);
+        auto &&contextJSONString = contextJSON.dump();
 
-        mClients[i]->Send(*reinterpret_cast<TCPClient::bytes *>(contextJSON.dump().data()), HeaderMetadata::Type::TEXT,
+        TCPClient::bytes data((byte *)contextJSONString.data(),
+                              (byte *)contextJSONString.data() + contextJSONString.size());
+        mClients[i]->Send(data, HeaderMetadata::Type::TEXT,
                           [this, i = i](const auto &, const auto &) { ProcessPlayer(mClients[i]); });
     }
 }
 
 void MatchManager::ProcessPlayer(shared_ptr<TCPClient> client)
 {
-    client->Receive([&, match = mMatch](auto ec, shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
+    client->Receive([&](auto ec, shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
         if (!ec)
         {
             auto &&message = ProcessPlayerMessage(GetPlayerByClient(client), messageDisassembled);
@@ -61,7 +64,7 @@ Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
 {
     auto &[guid, type, bytes] = *message;
 
-    auto &jsonString = *reinterpret_cast<string *>(bytes.data());
+    string jsonString((char *)bytes.data(), (char *)bytes.data() + bytes.size());
     ContextClient contextRequest(Coord{0, 0}, Player::Joker::NONE);
     contextRequest.from_json(jsonString, contextRequest);
 
@@ -119,9 +122,10 @@ Networking::Message::Message MatchManager::CreateResponse(const ContextClient &c
     ContextServer contextResponse(mMatch.mBoard, message);
     json contextResponseJSON;
     contextResponse.to_json(contextResponseJSON, contextResponse);
+    auto &&contextResponseJSONString = contextResponseJSON.dump();
 
-    return Networking::Message::MessageManager::ToMessage(
-        *reinterpret_cast<MessageManager::bytes *>(contextResponseJSON.dump().data()),
-        Networking::Message::HeaderMetadata::Type::TEXT);
+    TCPClient::bytes data((byte *)contextResponseJSONString.data(),
+                          (byte *)contextResponseJSONString.data() + contextResponseJSONString.size());
+    return Networking::Message::MessageManager::ToMessage(data, Networking::Message::HeaderMetadata::Type::TEXT);
 }
 } // namespace Server
