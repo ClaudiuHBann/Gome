@@ -19,7 +19,11 @@ bool Board::AddStone(Player &player, const Stone &stone)
     {
         return false;
     }
-    player.UseActiveJoker();
+
+    if (player.GetActiveJoker() != Player::Joker::DOUBLE_MOVE)
+    {
+        player.UseActiveJoker();
+    }
 
     auto &&pos = stone.GetPosition().GetXY();
     mGameState[pos.first][pos.second] = player.GetColor();

@@ -99,7 +99,15 @@ string MatchManager::ProcessPlayerMessage(Player &player, shared_ptr<MessageMana
     }
 
     // cycle player and respond
-    mMatch.GetPlayerNext();
+    if (contextRequest.joker == Player::Joker::DOUBLE_MOVE)
+    {
+        player.UseActiveJoker();
+    }
+    else
+    {
+        mMatch.GetPlayerNext();
+    }
+
     return CreateResponse(contextRequest, Error::NONE);
 }
 

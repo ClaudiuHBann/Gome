@@ -136,6 +136,7 @@ void GameI::Run()
 
     TRACE("Have fun!");
 
+    cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
     Draw();
 
     while (true)
@@ -183,8 +184,6 @@ void GameI::Draw() const
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi{};
     GetConsoleScreenBufferInfo(mHandleConsoleOutput, &csbi);
-
-    cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
 
     DrawBoard();
     DrawJokersState();
