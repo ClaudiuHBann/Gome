@@ -11,7 +11,19 @@ namespace Game
 class ContextClient
 {
   public:
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextClient, stone, joker)
+    inline void to_json(nlohmann::json &j, const ContextClient &context)
+    {
+        j["stone"] = context.stone;
+        j["joker"] = (uint16_t)context.joker;
+    }
+
+    inline void from_json(const nlohmann::json &j, ContextClient &context)
+    {
+        uint16_t jokerr{};
+        j.at("stone").get_to(context.stone);
+        j.at("joker").get_to(jokerr);
+        context.joker = (Player::Joker)jokerr;
+    }
 
     Stone stone;
     Player::Joker joker;
