@@ -1,9 +1,7 @@
 #include "Gome/pch.h"
-//
-#include "TCPClient.h"
-//
+
 #include "Gome/Networking/Message/MessageConverter.h"
-#include "Gome/Networking/Message/MessageManager.h"
+#include "TCPClient.h"
 
 namespace Networking::Client
 {
@@ -29,39 +27,39 @@ void TCPClient::Send(const bytes &data, const HeaderMetadata::Type type, Callbac
     auto &&bytes = MessageConverter::MessageToBytes(message);
     auto bytesShared = make_shared<TCPClient::bytes>(move(bytes));
 
-    mTCPClientRaw->SendAllAsync(
-        bytesShared, [bytesShared, callbackInst1 = move(callback)](auto ec, auto size) { callbackInst1(ec, size); });
+    mTCPClientRaw->SendAllAsync(bytesShared,
+                                [bytesShared, callback = move(callback)](auto ec, auto size) { callback(ec, size); });
 }
 
 void TCPClient::Receive(CallbackRead callback)
 {
     auto metadata = make_shared<bytes>(HeaderMetadata::SIZE);
     mTCPClientRaw->ReceiveAllAsync(
-        metadata, [selfTCPClientRaw = mTCPClientRaw, metadata, callbackInst1 = move(callback)](auto ec, auto bytes) {
+        metadata, [selfTCPClientRaw = mTCPClientRaw, metadata, callback = move(callback)](auto ec, auto bytes) {
             if (ec)
             {
-                callbackInst1(ec, {});
+                callback(ec, {});
             }
             else
             {
                 auto &&packetMetadata = MessageConverter::BytesToPacketMetadata(*bytes);
                 auto data = make_shared<TCPClient::bytes>(packetMetadata.GetHeaderMetadata().GetSize());
-                selfTCPClientRaw->ReceiveAllAsync(data, [data, bytesMetadata = bytes,
-                                                         callbackInst2 = move(callbackInst1)](auto ec, auto bytes) {
-                    if (ec)
-                    {
-                        callbackInst2(ec, {});
-                    }
-                    else
-                    {
-                        bytesMetadata->append_range(move(*bytes));
+                selfTCPClientRaw->ReceiveAllAsync(
+                    data, [data, bytesMetadata = bytes, callback = move(callback)](auto ec, auto bytes) {
+                        if (ec)
+                        {
+                            callback(ec, {});
+                        }
+                        else
+                        {
+                            bytesMetadata->append_range(move(*bytes));
 
-                        auto &&messageBytes = MessageConverter::BytesToMessage(*bytesMetadata);
-                        auto &&messageDisassembled = MessageManager::FromMessage(messageBytes);
+                            auto &&messageBytes = MessageConverter::BytesToMessage(*bytesMetadata);
+                            auto &&messageDisassembled = MessageManager::FromMessage(messageBytes);
 
-                        callbackInst2(ec, make_shared<MessageManager::MessageDisassembled>(move(messageDisassembled)));
-                    }
-                });
+                            callback(ec, make_shared<MessageManager::MessageDisassembled>(move(messageDisassembled)));
+                        }
+                    });
             }
         });
 }

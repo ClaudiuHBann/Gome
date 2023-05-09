@@ -8,7 +8,7 @@ namespace Networking::Server
 using namespace Client;
 
 /**
- * @brief Base class for tcp servers
+ * @brief Base class for async tcp servers
  */
 class TCPServerRaw : public enable_shared_from_this<TCPServerRaw>
 {

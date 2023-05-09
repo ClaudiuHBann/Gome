@@ -23,11 +23,9 @@ class PacketMetadata
     const HeaderMetadata &GetHeaderMetadata() const;
 
     /**
-     * @brief == operator overload
-     * @param right the object to check for equality
-     * @return true if objets are equal or false otherwise
+     * @brief C++20 Magic for the comparison boilerplate
      */
-    bool operator==(const PacketMetadata &right);
+    auto operator<=>(const PacketMetadata &) const = default;
 
   private:
     HeaderMetadata mHeaderMetadata;
@@ -58,12 +56,24 @@ class PacketData
      */
     PacketData(const HeaderData &headerData, const bytes &content);
 
+    /**
+     * @brief Gets the header of the data
+     * @return the data's header
+     */
     const HeaderData &GetHeaderData() const;
+
+    /**
+     * @brief Gets the content of the data
+     * @return the data's content
+     */
     const bytes &GetContent() const;
 
     const size_t GetSize() const;
 
-    bool operator==(const PacketData &right);
+    /**
+     * @brief C++20 Magic for the comparison boilerplate
+     */
+    auto operator<=>(const PacketData &) const = default;
 
   private:
     HeaderData mHeaderData;

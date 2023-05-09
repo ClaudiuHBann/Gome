@@ -21,6 +21,9 @@ class Board
     optional<Player::Color> GetWinner(const vector<Player> &players) const;
     const vector<vector<Player::Color>> &GetGameState() const;
 
+    /**
+     * @brief C++20 Magic for the comparison boilerplate
+     */
     auto operator<=>(const Board &) const = default;
 
   private:

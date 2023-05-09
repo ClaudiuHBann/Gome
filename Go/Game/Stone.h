@@ -11,6 +11,9 @@ class Coord
 
     pair<uint8_t, uint8_t> GetXY() const;
 
+    /**
+     * @brief C++20 Magic for the comparison boilerplate
+     */
     auto operator<=>(const Coord &) const = default;
 
   private:
@@ -27,6 +30,9 @@ class Stone
 
     const Coord &GetPosition() const;
 
+    /**
+     * @brief C++20 Magic for the comparison boilerplate
+     */
     auto operator<=>(const Stone &) const = default;
 
   private:

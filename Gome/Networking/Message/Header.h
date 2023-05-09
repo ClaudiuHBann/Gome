@@ -30,11 +30,10 @@ class HeaderMetadata
 
     String ToString();
 
-    bool operator==(const auto &right)
-    {
-        return this->mGUID.GetUUID() == right.mGUID.GetUUID() && this->mType == right.mType &&
-               this->mSize == right.mSize;
-    }
+    /**
+     * @brief C++20 Magic for the comparison boilerplate
+     */
+    auto operator<=>(const HeaderMetadata &) const = default;
 
   private:
     Utility::GUID mGUID{};
@@ -58,10 +57,10 @@ class HeaderData
 
     String ToString();
 
-    bool operator==(const auto &right)
-    {
-        return this->mGUID.GetUUID() == right.mGUID.GetUUID() && this->mIndex == right.mIndex;
-    }
+    /**
+     * @brief C++20 Magic for the comparison boilerplate
+     */
+    auto operator<=>(const HeaderData &) const = default;
 
   private:
     Utility::GUID mGUID{};

@@ -36,6 +36,9 @@ class Player
 
     Color GetColor() const;
 
+    /**
+     * @brief C++20 Magic for the comparison boilerplate
+     */
     auto operator<=>(const Player &) const = default;
 
   private:
