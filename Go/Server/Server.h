@@ -12,7 +12,7 @@ using namespace Networking::Server;
 class Server : public TCPServer
 {
   public:
-    Server(IOContext &context, const port_type port, Rules &rules);
+    Server(IOContext &context, const uint16_t port, Rules &rules);
 
   private:
     Rules &mRules;

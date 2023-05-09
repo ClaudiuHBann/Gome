@@ -10,7 +10,7 @@ Client::Client(IOContext &context) : mContext(context), mClient(mContext.CreateS
 {
 }
 
-void Client::Start(const string &ip, const port_type port, function<void(ContextServerInit)> callbackInit,
+void Client::Start(const string &ip, const uint16_t port, function<void(ContextServerInit)> callbackInit,
                    function<void(ContextServer)> callback)
 {
     auto &&resolver = mContext.CreateResolver();

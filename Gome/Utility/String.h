@@ -21,6 +21,12 @@ using StringStream = stringstream;
 using FileOutStream = ofstream;
 #endif // defined(_UNICODE) || defined(UNICODE)
 
+/**
+ * @brief Converts built-in types and c style strings to the c++ strings
+ * @tparam T the type of the object to be converted to string
+ * @param t the object to be converted to string
+ * @return the object as a string
+ */
 template <typename T> static inline String ToString(const T &t)
 {
     if constexpr (is_same_v<remove_const_t<remove_pointer_t<decay_t<T>>>, ::TCHAR> ||
@@ -38,6 +44,14 @@ template <typename T> static inline String ToString(const T &t)
     }
 }
 
+/**
+ * @brief Converts a string of units to another string of units
+ * @note Suppresses narrowing conversion
+ * @tparam StringType the string's unit to be converted to
+ * @tparam StringFrom the string's unit to be converted from
+ * @param strTo the string
+ * @return the converted string
+ */
 template <typename StringType, typename StringFrom> static inline auto ToStringType(const StringFrom &strTo)
 {
     static_assert(is_basic_string_v<StringFrom>, "The StringFrom is not a basic_string!");

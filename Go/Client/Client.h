@@ -16,7 +16,7 @@ class Client
   public:
     Client(IOContext &context);
 
-    void Start(const string &ip, const port_type port, function<void(ContextServerInit)> callbackInit,
+    void Start(const string &ip, const uint16_t port, function<void(ContextServerInit)> callbackInit,
                function<void(ContextServer)> callback);
     void Send(ContextClient &context);
 

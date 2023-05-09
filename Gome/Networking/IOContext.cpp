@@ -1,7 +1,6 @@
 #include "Gome/pch.h"
-//
+
 #include "IOContext.h"
-//
 
 namespace Networking
 {

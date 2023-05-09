@@ -19,7 +19,7 @@ class TCPServer
   public:
     using CallbackAccept = function<void(shared_ptr<TCPClient>)>;
 
-    TCPServer(IOContext &context, const port_type port);
+    TCPServer(IOContext &context, const uint16_t port);
 
   protected:
     shared_ptr<TCPServerRaw> mServer;

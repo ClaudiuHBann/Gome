@@ -1,13 +1,12 @@
 #include "Gome/pch.h"
-//
+
 #include "TCPServerRaw.h"
-//
 
 namespace Networking::Server
 {
 using namespace Client;
 
-TCPServerRaw::TCPServerRaw(IOContext &context, const port_type port)
+TCPServerRaw::TCPServerRaw(IOContext &context, const uint16_t port)
     : mContext(context), mAcceptor(make_unique<tcp::acceptor>(*mContext, tcp::endpoint(tcp::v4(), port)))
 {
 }
@@ -22,13 +21,13 @@ void TCPServerRaw::Accept(CallbackAccept callback)
     auto self(shared_from_this());
 
     auto socket = make_shared<tcp::socket>(mContext.CreateSocket());
-    mAcceptor->async_accept(*socket, [self, socket, callbackInst1 = move(callback)](auto ec) {
+    mAcceptor->async_accept(*socket, [self, socket, callback = move(callback)](const auto ec) {
         if (!ec)
         {
-            callbackInst1(make_shared<TCPClient>(move(*socket)));
+            callback(make_shared<TCPClient>(move(*socket)));
         }
 
-        self->Accept(move(callbackInst1));
+        self->Accept(move(callback));
     });
 }
 } // namespace Networking::Server

@@ -12,6 +12,15 @@
 
 namespace Utility
 {
+/**
+ * @brief Cuts the beginning the file name if it's length is bigger than the clamp value
+ * @param file the file name
+ * @param line the line number
+ * @param lengthMaxFileName clamp value for the file name
+ * @param lengthMaxLine clamp value for the line number
+ * @param padding the front padding if the file name was cut
+ * @return the new file name
+ */
 static inline String ClampFileNameLength(String file, String line, const size_t lengthMaxFileName = 69,
                                          const size_t lengthMaxLine = 4, const String &padding = TEXT("..."))
 {
@@ -34,6 +43,10 @@ static inline String ClampFileNameLength(String file, String line, const size_t 
     return file;
 }
 
+/**
+ * @brief Prints a string in the windows's console and VS' debug console and a file with the name of current DateTime
+ * @param str the string to be printed
+ */
 static inline void OutputDebugStringForced(const ::TCHAR *str)
 {
     if (::IsDebuggerPresent())
@@ -56,6 +69,15 @@ static inline void OutputDebugStringForced(const ::TCHAR *str)
     file << str << flush;
 }
 
+/**
+ * @brief Prints any object or n dimensions containers of built-in types and (c style) strings by default but can print
+ * any object if a callback is passed for that object
+ * @tparam Object the object type
+ * @tparam Iterable the iterable type
+ * @param iterable the iterable object to print
+ * @param separatorDimensions char for separating dimensions between the iterable
+ * @param funcPrintElem the callback for printing an object
+ */
 template <typename Object, typename Iterable>
 static void Print(
     const Iterable &iterable, const String &separatorDimensions = TEXT("\n"),
