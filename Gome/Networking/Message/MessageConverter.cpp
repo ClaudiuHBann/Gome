@@ -1,11 +1,10 @@
 #include "Gome/pch.h"
-//
+
 #include "MessageConverter.h"
-//
 
 namespace Networking::Message
 {
-/* static */ MessageConverter::bytes MessageConverter::MessageToBytes(const Message &message)
+/* static */ bytes MessageConverter::MessageToBytes(const Message &message)
 {
     auto &&bytes = PacketMetadataToBytes(message.mPacketMetadata);
     auto &&bytesPacketDatas = PacketDatasToBytes(message.mPacketDatas);
@@ -14,25 +13,25 @@ namespace Networking::Message
     return bytes;
 }
 
-/* static */ Message MessageConverter::BytesToMessage(const bytes &bytes)
+/* static */ Message MessageConverter::BytesToMessage(const bytes &bytess)
 {
-    MessageConverter::bytes packetMetadataAsBytes(bytes.begin(), bytes.begin() + HeaderMetadata::SIZE);
+    bytes packetMetadataAsBytes(bytess.begin(), bytess.begin() + HeaderMetadata::SIZE);
 
     auto &&packetMetadata = BytesToPacketMetadata(packetMetadataAsBytes);
     Message message(packetMetadata);
 
-    MessageConverter::bytes packetDatasAsBytes(bytes.begin() + HeaderMetadata::SIZE, bytes.end());
+    bytes packetDatasAsBytes(bytess.begin() + HeaderMetadata::SIZE, bytess.end());
     message.mPacketDatas = move(BytesToPacketDatas(packetDatasAsBytes));
 
     return message;
 }
 
-/* static */ MessageConverter::bytes MessageConverter::PacketMetadataToBytes(const PacketMetadata &packetMetadata)
+/* static */ bytes MessageConverter::PacketMetadataToBytes(const PacketMetadata &packetMetadata)
 {
     return HeaderMetadataToBytes(packetMetadata.GetHeaderMetadata());
 }
 
-/* static */ MessageConverter::bytes MessageConverter::PacketDataToBytes(const PacketData &packetData)
+/* static */ bytes MessageConverter::PacketDataToBytes(const PacketData &packetData)
 {
     auto &&bytes(HeaderDataToBytes(packetData.GetHeaderData()));
     bytes.append_range(packetData.GetContent());
@@ -40,36 +39,36 @@ namespace Networking::Message
     return bytes;
 }
 
-/* static */ PacketData MessageConverter::BytesToPacketData(const bytes &bytes)
+/* static */ PacketData MessageConverter::BytesToPacketData(const bytes &bytess)
 {
-    assert(bytes.size() <= PacketData::SIZE);
+    THROW_INVALID_ARG_IF(bytess.size() > PacketData::SIZE);
 
-    MessageConverter::bytes headerAsBytes(bytes.begin(), bytes.begin() + HeaderData::SIZE);
+    bytes headerAsBytes(bytess.begin(), bytess.begin() + HeaderData::SIZE);
     auto &&header = BytesToHeaderData(headerAsBytes);
 
-    MessageConverter::bytes contentAsBytes(bytes.begin() + HeaderData::SIZE, bytes.end());
+    bytes contentAsBytes(bytess.begin() + HeaderData::SIZE, bytess.end());
 
     return PacketData(header, contentAsBytes);
 }
 
-/* static */ vector<PacketData> MessageConverter::BytesToPacketDatas(const bytes &bytes)
+/* static */ vector<PacketData> MessageConverter::BytesToPacketDatas(const bytes &bytess)
 {
     vector<PacketData> packetDatas;
 
-    auto packetDatasCount = bytes.size() / PacketData::SIZE;
+    // create the last packets of data
+    auto packetDatasCount = bytess.size() / PacketData::SIZE;
     for (size_t i = 0; i < packetDatasCount; i++)
     {
-        MessageConverter::bytes packetDataAsBytes(bytes.begin() + i * PacketData::SIZE,
-                                                  bytes.begin() + (i + 1) * PacketData::SIZE);
+        bytes packetDataAsBytes(bytess.begin() + i * PacketData::SIZE, bytess.begin() + (i + 1) * PacketData::SIZE);
         packetDatas.push_back(BytesToPacketData(packetDataAsBytes));
     }
 
-    auto packetDatasLastSize = bytes.size() % PacketData::SIZE;
+    // create the last packet data if exists
+    auto packetDatasLastSize = bytess.size() % PacketData::SIZE;
     if (packetDatasLastSize)
     {
-        MessageConverter::bytes packetDataAsBytes(bytes.begin() + packetDatasCount * PacketData::SIZE,
-                                                  bytes.begin() + packetDatasCount * PacketData::SIZE +
-                                                      packetDatasLastSize);
+        bytes packetDataAsBytes(bytess.begin() + packetDatasCount * PacketData::SIZE,
+                                bytess.begin() + packetDatasCount * PacketData::SIZE + packetDatasLastSize);
         packetDatas.push_back(BytesToPacketData(packetDataAsBytes));
     }
 
@@ -81,7 +80,7 @@ namespace Networking::Message
     return BytesToHeaderMetadata(bytes);
 }
 
-/* static */ MessageConverter::bytes MessageConverter::PacketDatasToBytes(const vector<PacketData> &packetDatas)
+/* static */ bytes MessageConverter::PacketDatasToBytes(const vector<PacketData> &packetDatas)
 {
     bytes bytes;
 
@@ -93,7 +92,7 @@ namespace Networking::Message
     return bytes;
 }
 
-/* static */ MessageConverter::bytes MessageConverter::HeaderMetadataToBytes(const HeaderMetadata &headerMetadata)
+/* static */ bytes MessageConverter::HeaderMetadataToBytes(const HeaderMetadata &headerMetadata)
 {
     bytes headerAsBytes;
 
@@ -110,26 +109,26 @@ namespace Networking::Message
     return headerAsBytes;
 }
 
-/* static */ HeaderMetadata MessageConverter::BytesToHeaderMetadata(const bytes &bytes)
+/* static */ HeaderMetadata MessageConverter::BytesToHeaderMetadata(const bytes &bytess)
 {
-    assert(bytes.size() == HeaderMetadata::SIZE);
+    THROW_INVALID_ARG_IF(bytess.size() != HeaderMetadata::SIZE);
 
-    MessageConverter::bytes guidAsBytes(bytes.begin(), bytes.begin() + Utility::GUID::GUID_SIZE);
+    bytes guidAsBytes(bytess.begin(), bytess.begin() + Utility::GUID::GUID_SIZE);
     Utility::GUID guid;
     guid.SetUUID(*reinterpret_cast<UUID *>(guidAsBytes.data()));
-    assert(guid.GetStr());
+    THROW_INVALID_ARG_IF(!guid.GetStr());
 
-    auto type = (HeaderMetadata::Type)bytes[Utility::GUID::GUID_SIZE];
-    assert(HeaderMetadata::Type::NONE < type && type < HeaderMetadata::Type::COUNT);
+    auto type = (HeaderMetadata::Type)bytess[Utility::GUID::GUID_SIZE];
+    THROW_INVALID_ARG_IF(HeaderMetadata::Type::NONE > type || type > HeaderMetadata::Type::COUNT);
 
-    HeaderMetadata::bytes sizeAsBytes(bytes.begin() + Utility::GUID::GUID_SIZE + sizeof(HeaderMetadata::Type),
-                                      bytes.begin() + HeaderMetadata::SIZE);
+    bytes sizeAsBytes(bytess.begin() + Utility::GUID::GUID_SIZE + sizeof(HeaderMetadata::Type),
+                      bytess.begin() + HeaderMetadata::SIZE);
     auto size = *reinterpret_cast<size_t *>(sizeAsBytes.data());
 
     return HeaderMetadata(guid, type, size);
 }
 
-/* static */ MessageConverter::bytes MessageConverter::HeaderDataToBytes(const HeaderData &headerData)
+/* static */ bytes MessageConverter::HeaderDataToBytes(const HeaderData &headerData)
 {
     bytes headerAsBytes;
 
@@ -144,16 +143,16 @@ namespace Networking::Message
     return headerAsBytes;
 }
 
-/* static */ HeaderData MessageConverter::BytesToHeaderData(const bytes &bytes)
+/* static */ HeaderData MessageConverter::BytesToHeaderData(const bytes &bytess)
 {
-    assert(bytes.size() == HeaderData::SIZE);
+    THROW_INVALID_ARG_IF(bytess.size() != HeaderData::SIZE);
 
-    MessageConverter::bytes guidAsBytes(bytes.begin(), bytes.begin() + Utility::GUID::GUID_SIZE);
+    bytes guidAsBytes(bytess.begin(), bytess.begin() + Utility::GUID::GUID_SIZE);
     Utility::GUID guid;
     guid.SetUUID(*reinterpret_cast<UUID *>(guidAsBytes.data()));
-    assert(guid.GetStr());
+    THROW_INVALID_ARG_IF(!guid.GetStr());
 
-    HeaderMetadata::bytes indexAsBytes(bytes.begin() + Utility::GUID::GUID_SIZE, bytes.begin() + HeaderData::SIZE);
+    bytes indexAsBytes(bytess.begin() + Utility::GUID::GUID_SIZE, bytess.begin() + HeaderData::SIZE);
     auto index = *reinterpret_cast<size_t *>(indexAsBytes.data());
 
     return HeaderData(guid, index);

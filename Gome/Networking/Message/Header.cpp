@@ -1,7 +1,6 @@
 #include "Gome/pch.h"
-//
+
 #include "Header.h"
-//
 #include "Packet.h"
 
 namespace Networking::Message
@@ -9,12 +8,12 @@ namespace Networking::Message
 using namespace Utility;
 
 constexpr auto HEADER_METADATA_TYPE_STRING_PING = TEXT("PING");
-
 constexpr auto HEADER_STRING_DELIMITATOR = TEXT("|");
 
 HeaderMetadata::HeaderMetadata(const Utility::GUID &guid, const Type type, const size_t size) : mGUID(guid), mSize(size)
 {
-    assert(Type::NONE < type && type < Type::COUNT);
+    THROW_INVALID_ARG_IF(Type::NONE > type || type > Type::COUNT);
+
     mType = type;
 }
 

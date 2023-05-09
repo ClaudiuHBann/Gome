@@ -24,8 +24,8 @@ void TCPClient::Disconnect(CallbackDisconnect callback /* = [] (auto, auto) {} *
 void TCPClient::Send(const bytes &data, const HeaderMetadata::Type type, CallbackSend callback)
 {
     auto &&message = MessageManager::ToMessage(data, type);
-    auto &&bytes = MessageConverter::MessageToBytes(message);
-    auto bytesShared = make_shared<TCPClient::bytes>(move(bytes));
+    auto &&bytess = MessageConverter::MessageToBytes(message);
+    auto bytesShared = make_shared<bytes>(move(bytess));
 
     mTCPClientRaw->SendAllAsync(bytesShared,
                                 [bytesShared, callback = move(callback)](auto ec, auto size) { callback(ec, size); });
@@ -35,17 +35,17 @@ void TCPClient::Receive(CallbackRead callback)
 {
     auto metadata = make_shared<bytes>(HeaderMetadata::SIZE);
     mTCPClientRaw->ReceiveAllAsync(
-        metadata, [selfTCPClientRaw = mTCPClientRaw, metadata, callback = move(callback)](auto ec, auto bytes) {
+        metadata, [selfTCPClientRaw = mTCPClientRaw, metadata, callback = move(callback)](auto ec, auto bytess) {
             if (ec)
             {
                 callback(ec, {});
             }
             else
             {
-                auto &&packetMetadata = MessageConverter::BytesToPacketMetadata(*bytes);
-                auto data = make_shared<TCPClient::bytes>(packetMetadata.GetHeaderMetadata().GetSize());
+                auto &&packetMetadata = MessageConverter::BytesToPacketMetadata(*bytess);
+                auto data = make_shared<bytes>(packetMetadata.GetHeaderMetadata().GetSize());
                 selfTCPClientRaw->ReceiveAllAsync(
-                    data, [data, bytesMetadata = bytes, callback = move(callback)](auto ec, auto bytes) {
+                    data, [data, bytesMetadata = bytess, callback = move(callback)](auto ec, auto bytes) {
                         if (ec)
                         {
                             callback(ec, {});

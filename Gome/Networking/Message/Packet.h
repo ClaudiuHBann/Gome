@@ -37,8 +37,6 @@ class PacketMetadata
 class PacketData
 {
   public:
-    using bytes = vector<byte>;
-
     /**
      * @brief The maximum size of a packet of data
      */
@@ -68,6 +66,10 @@ class PacketData
      */
     const bytes &GetContent() const;
 
+    /**
+     * @brief Gets the size of packet data
+     * @return the size of the packet data
+     */
     const size_t GetSize() const;
 
     /**

@@ -55,8 +55,7 @@ void Client::Send(ContextClient &context)
     context.to_json(contextJSON, context);
     auto &&contextJSONString = contextJSON.dump();
 
-    TCPClient::bytes data((byte *)contextJSONString.data(),
-                          (byte *)contextJSONString.data() + contextJSONString.size());
+    bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
     mClient.Send(data, HeaderMetadata::Type::TEXT, [](const auto &, const auto &) {});
 }
 

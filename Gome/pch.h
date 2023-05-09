@@ -28,3 +28,11 @@ using namespace ip;
 #include <string>
 
 using namespace std;
+
+using bytes = vector<byte>;
+
+#define THROW_INVALID_ARG_IF(cond)                                                                                     \
+    if (cond)                                                                                                          \
+    {                                                                                                                  \
+        throw invalid_argument(#cond);                                                                                 \
+    }

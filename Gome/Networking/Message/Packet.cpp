@@ -15,7 +15,8 @@ const HeaderMetadata &PacketMetadata::GetHeaderMetadata() const
 
 PacketData::PacketData(const HeaderData &headerData, const bytes &content) : mHeaderData(headerData)
 {
-    assert(content.size() <= CONTENT_SIZE_MAX);
+    THROW_INVALID_ARG_IF(content.size() > CONTENT_SIZE_MAX);
+
     mContent = content;
 }
 
@@ -24,7 +25,7 @@ const HeaderData &PacketData::GetHeaderData() const
     return mHeaderData;
 }
 
-const PacketData::bytes &PacketData::GetContent() const
+const bytes &PacketData::GetContent() const
 {
     return mContent;
 }

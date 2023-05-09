@@ -1,7 +1,6 @@
 #include "Gome/pch.h"
-//
+
 #include "Message.h"
-//
 
 namespace Networking::Message
 {

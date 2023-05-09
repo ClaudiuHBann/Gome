@@ -65,4 +65,14 @@ void GUID::Uninitialize()
         mUUIDString = nullptr;
     }
 }
+
+bool GUID::operator==(const GUID &right) const
+{
+    return mUUID == right.mUUID;
+}
+
+bool GUID::operator!=(const GUID &right) const
+{
+    return !(*this == right);
+}
 } // namespace Utility

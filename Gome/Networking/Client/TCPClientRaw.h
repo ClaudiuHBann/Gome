@@ -13,8 +13,6 @@ using namespace Utility;
 class TCPClientRaw : public enable_shared_from_this<TCPClientRaw>
 {
   public:
-    using bytes = vector<byte>;
-
     using CallbackConnect = function<void(error_code, shared_ptr<tcp::endpoint>)>;
     using CallbackSend = function<void(error_code, size_t)>;
     using CallbackRead = function<void(error_code, shared_ptr<bytes>)>;

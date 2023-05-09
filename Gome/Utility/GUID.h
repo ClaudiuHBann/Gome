@@ -68,6 +68,20 @@ class GUID
      */
     auto operator<=>(const GUID &) const = default;
 
+    /**
+     * @brief Specialization for <=>
+     * @param right the GUID copmaring to
+     * @return checks if the guids are the same
+     */
+    bool operator==(const GUID &right) const;
+
+    /**
+     * @brief Specialization for <=>
+     * @param right the GUID copmaring to
+     * @return checks if the guids are the same
+     */
+    bool operator!=(const GUID &right) const;
+
   private:
     /**
      * @brief Frees the GUID internally lazy initialized string

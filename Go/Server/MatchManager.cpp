@@ -24,8 +24,7 @@ void MatchManager::Process()
         context.to_json(contextJSON, context);
         auto &&contextJSONString = contextJSON.dump();
 
-        TCPClient::bytes data((byte *)contextJSONString.data(),
-                              (byte *)contextJSONString.data() + contextJSONString.size());
+        bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
         mClients[i]->Send(data, HeaderMetadata::Type::TEXT,
                           [this, i = i](const auto &, const auto &) { ProcessPlayer(mClients[i]); });
     }
@@ -124,8 +123,8 @@ Networking::Message::Message MatchManager::CreateResponse(const ContextClient &c
     contextResponse.to_json(contextResponseJSON, contextResponse);
     auto &&contextResponseJSONString = contextResponseJSON.dump();
 
-    TCPClient::bytes data((byte *)contextResponseJSONString.data(),
-                          (byte *)contextResponseJSONString.data() + contextResponseJSONString.size());
+    bytes data((byte *)contextResponseJSONString.data(),
+               (byte *)contextResponseJSONString.data() + contextResponseJSONString.size());
     return Networking::Message::MessageManager::ToMessage(data, Networking::Message::HeaderMetadata::Type::TEXT);
 }
 } // namespace Server
