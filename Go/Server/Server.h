@@ -17,7 +17,7 @@ class Server : public TCPServer
   private:
     Rules &mRules;
     vector<MatchManager> mMatchManagers{};
-    vector<Match> mMatches{};
+    list<Match> mMatches{}; // list doesn't reallocate and invalidate references
 
     mutex mMutexPlayersWaiting{};
     vector<shared_ptr<TCPClient>> mPlayersWaiting{};

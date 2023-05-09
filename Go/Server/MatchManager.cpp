@@ -32,7 +32,7 @@ void MatchManager::Process()
 
 void MatchManager::ProcessPlayer(shared_ptr<TCPClient> client)
 {
-    client->Receive([&](auto ec, shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
+    client->Receive([&, client](auto ec, shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
         if (!ec)
         {
             auto &&message = ProcessPlayerMessage(GetPlayerByClient(client), messageDisassembled);
@@ -93,7 +93,8 @@ Networking::Message::Message MatchManager::ProcessPlayerMessage(Player &player,
     if (!mMatch.mBoard.AddStone(player, contextRequest.stone))
     {
         TRACE(vformat("\033[1;{}mPlayer\033[0m could not place stone({{ {}, {} }})...",
-                      make_format_args((int)contextRequest.stone.GetPosition().GetXY().first,
+                      make_format_args(to_string((int)player.GetColor()),
+                                       (int)contextRequest.stone.GetPosition().GetXY().first,
                                        (int)contextRequest.stone.GetPosition().GetXY().second))
                   .c_str());
         return CreateResponse(contextRequest, Error::STONE);

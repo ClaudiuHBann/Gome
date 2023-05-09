@@ -23,10 +23,11 @@ Server::Server(IOContext &context, const uint16_t port, Rules &rules) : TCPServe
 void Server::HandlePlayersWaiting()
 {
     TRACE("Creating match and it's manager...");
-    Match match(mRules);
-    MatchManager matchManager(mPlayersWaiting, match);
 
+    Match match(mRules);
     mMatches.emplace_back(match);
+
+    MatchManager matchManager(mPlayersWaiting, mMatches.back());
     mMatchManagers.emplace_back(matchManager).Process();
 
     mPlayersWaiting.clear();
