@@ -13,7 +13,7 @@ Match::Match(Rules &rules) : mRules(rules), mBoard(mRules.GetSize())
 
 void Match::CreateMatch(const Rules &rules)
 {
-    vector<uint8_t> colors{0, 1, 2, 3, 4};
+    vector<uint8_t> colors{30, 31, 32, 34, 35};
 
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     shuffle(colors.begin(), colors.end(), default_random_engine((uint32_t)seed));

@@ -25,8 +25,7 @@ void MatchManager::Process()
         auto &&contextJSONString = contextJSON.dump();
 
         bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
-        mClients[i]->Send(data, HeaderMetadata::Type::TEXT,
-                          [this, i = i](const auto &, const auto &) { ProcessPlayer(mClients[i]); });
+        mClients[i]->Send(data, HeaderMetadata::Type::TEXT, [this, i = i](auto, auto) { ProcessPlayer(mClients[i]); });
     }
 }
 

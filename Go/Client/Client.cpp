@@ -16,7 +16,7 @@ void Client::Start(const string &ip, const uint16_t port, function<void(ContextS
     auto &&resolver = mContext.CreateResolver();
     auto &&endpoints = resolver.resolve(ip, to_string(port));
 
-    mClient.Connect(endpoints, [=, this](const auto &ec, const auto &) {
+    mClient.Connect(endpoints, [=, this](const auto &ec, auto) {
         if (ec)
         {
             return;
@@ -39,7 +39,7 @@ void Client::Start(const string &ip, const uint16_t port, function<void(ContextS
 
 void Client::Init(function<void(ContextServerInit)> callback)
 {
-    mClient.Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
+    mClient.Receive([callback = move(callback)](const auto &, auto messageDisassembled) {
         string jsonString((char *)get<2>(*messageDisassembled).data(),
                           (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
         auto &&json = json::parse(jsonString);
@@ -57,12 +57,12 @@ void Client::Send(ContextClient &context)
     auto &&contextJSONString = contextJSON.dump();
 
     bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
-    mClient.Send(data, HeaderMetadata::Type::TEXT, [](const auto &, const auto &) {});
+    mClient.Send(data, HeaderMetadata::Type::TEXT, [](auto, auto) {});
 }
 
 void Client::Receive(function<void(ContextServer)> callback)
 {
-    mClient.Receive([callback = move(callback)](const auto &, const auto &messageDisassembled) {
+    mClient.Receive([callback = move(callback)](auto, auto messageDisassembled) {
         string jsonString((char *)get<2>(*messageDisassembled).data(),
                           (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
         auto &&json = json::parse(jsonString);
