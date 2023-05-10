@@ -9,9 +9,18 @@ namespace Server
 using namespace Networking;
 using namespace Networking::Server;
 
+/**
+ * @brief Accepts clients and sends them for further processing
+ */
 class Server : public TCPServer
 {
   public:
+    /**
+     * @brief Constructor
+     * @param context the context
+     * @param port the port that we bind to
+     * @param rules the rules of the match
+     */
     Server(IOContext &context, const uint16_t port, Rules &rules);
 
   private:
@@ -22,6 +31,9 @@ class Server : public TCPServer
     mutex mMutexPlayersWaiting{};
     vector<shared_ptr<TCPClient>> mPlayersWaiting{};
 
+    /**
+     * @brief Handler for when enough players connects to the server
+     */
     void HandlePlayersWaiting();
 };
 } // namespace Server

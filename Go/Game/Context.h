@@ -11,6 +11,8 @@ namespace Game
 class ContextClient
 {
   public:
+    // we need to add those by our own because the values can be the binary 0 and we cannot serialze those values
+
     inline void to_json(nlohmann::json &j, const ContextClient &context)
     {
         j["stone"] = context.stone;
@@ -28,6 +30,11 @@ class ContextClient
     Stone stone;
     Player::Joker joker;
 
+    /**
+     * @brief Constructor
+     * @param stone the stone that tries to be placed
+     * @param joker the joker that the player is using
+     */
     ContextClient(const Stone &stone, const Player::Joker joker);
 };
 
@@ -42,6 +49,11 @@ class ContextServerInit
     Rules rules;
     Player::Color color;
 
+    /**
+     * @brief Constructor
+     * @param rules the rules of the match
+     * @param color the color of the player that receives this context
+     */
     ContextServerInit(const Rules &rules, const Player::Color color);
 };
 
@@ -56,6 +68,11 @@ class ContextServer
     Board board;
     string message;
 
+    /**
+     * @brief Construcotr
+     * @param board the game state
+     * @param message an informative message
+     */
     ContextServer(const Board &board, const string &message);
 };
 } // namespace Game

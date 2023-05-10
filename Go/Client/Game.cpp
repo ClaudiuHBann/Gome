@@ -95,10 +95,10 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
 {
     TRACE("Initializing match...");
 
-    mReady = true;
-
     mPlayer = Player(contextInit.color);
     mBoard = Board(contextInit.rules.GetSize());
+
+    mReady = true;
 }
 
 void GameI::OnUpdate(const ContextServer &context)

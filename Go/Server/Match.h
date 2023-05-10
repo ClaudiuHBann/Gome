@@ -8,14 +8,30 @@ namespace Server
 {
 using namespace Game;
 
+/**
+ * @brief Match context
+ */
 class Match
 {
     friend class MatchManager;
 
   public:
+    /**
+     * @brief Constructor
+     * @param rules the rules of the match
+     */
     Match(Rules &rules);
 
+    /**
+     * @brief Gets the current player
+     * @return the current player
+     */
     Player &GetPlayerCurrent();
+
+    /**
+     * @brief Cycles the players
+     * @return the next player
+     */
     Player &GetPlayerNext();
 
   private:
@@ -25,6 +41,10 @@ class Match
 
     Board mBoard;
 
+    /**
+     * @brief Creates a match with the specified rules
+     * @param rules the rules of the match
+     */
     void CreateMatch(const Rules &rules);
 };
 } // namespace Server

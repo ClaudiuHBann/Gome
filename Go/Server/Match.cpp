@@ -13,6 +13,7 @@ Match::Match(Rules &rules) : mRules(rules), mBoard(mRules.GetSize())
 
 void Match::CreateMatch(const Rules &rules)
 {
+    // create players
     vector<uint8_t> colors{30, 31, 32, 34, 35};
 
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -24,6 +25,7 @@ void Match::CreateMatch(const Rules &rules)
         mPlayers.push_back(player);
     }
 
+    // find one unique stone pos for every player
     Random random;
     vector<Coord> stonePoss{};
     auto &&sizeValues = rules.GetSize().GetXY();
@@ -52,13 +54,12 @@ void Match::CreateMatch(const Rules &rules)
         }
     }
 
+    // add a stone for every player
     for (size_t i = 0; i < mPlayers.size(); i++)
     {
         Stone stone(stonePoss[i]);
         mBoard.AddStone(mPlayers[i], stone);
     }
-
-    mPlayerCurrentIndex = random.Get<decltype(mPlayerCurrentIndex)>(0, mPlayers.size() - 1);
 }
 
 Player &Match::GetPlayerCurrent()
