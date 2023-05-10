@@ -29,6 +29,28 @@ void MatchManager::Process()
     }
 }
 
+void MatchManager::Finish(shared_ptr<TCPClient> client)
+{
+    auto winner = mMatch.mBoard.GetWinner(mMatch.mPlayers);
+    if (!winner.has_value())
+    {
+        return;
+    }
+
+    // create a response to send the winner through the message
+    ContextServer contextResponse(
+        mMatch.mBoard, format("The match has finished and the winner is {}.", Player::GetColorName(winner.value())));
+    json contextResponseJSON;
+    contextResponse.to_json(contextResponseJSON, contextResponse);
+
+    // send it
+    auto &&json = contextResponseJSON.dump();
+    bytes jsonAsBytes((byte *)json.data(), (byte *)json.data() + json.size());
+    client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+
+    client->Disconnect();
+}
+
 void MatchManager::ProcessPlayer(shared_ptr<TCPClient> client)
 {
     client->Receive([&, client](auto ec, shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
@@ -39,7 +61,23 @@ void MatchManager::ProcessPlayer(shared_ptr<TCPClient> client)
             client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
         }
 
-        ProcessPlayer(client);
+        if (!mMatch.mBoard.IsGameStateTerminal(mMatch.mPlayers))
+        {
+            ProcessPlayer(client);
+        }
+        else
+        {
+            // if we place this just in the finish method it will be invoked multiple times
+            auto winner = mMatch.mBoard.GetWinner(mMatch.mPlayers);
+            if (winner.has_value())
+            {
+                TRACE(
+                    format("A match has finished and the winner is {}.", Player::GetColorName(winner.value())).c_str());
+                TRACE("Disconnecting clients...");
+            }
+
+            Finish(client);
+        }
     });
 }
 

@@ -15,7 +15,6 @@ int main()
 
 /*
     TODO:
-            - meciul se termina cand nimeni nu poate sa mai faca vreo miscare
-            - castigatorul meciului este cel cu cele mai multe pietre pe tabla, iar daca sunt 2 sau mai multi cu acelasi
-   numar de piese pe tabla se va alege ultimul care a facut miscarea dintre ei
+            - add comments for the Go project
+            - add command line for the server and client
 */

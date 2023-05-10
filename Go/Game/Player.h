@@ -28,6 +28,7 @@ class Player
     Player(const Color color);
 
     static string GetJokerName(const Joker joker);
+    static string GetColorName(const Player::Color playerColor);
 
     bool SetActiveJoker(const Joker joker);
     Joker GetActiveJoker() const;

@@ -27,15 +27,17 @@ class MatchManager
         STONE  // could not add stone
     };
 
+    Match &mMatch;
+    vector<shared_ptr<TCPClient>> mClients{};
+    shared_ptr<mutex> mMutexPlayerCurrent;
+
+    void Finish(shared_ptr<TCPClient> client);
+
     string CreateResponse(const ContextClient &contextRequest, const Error error);
 
     void ProcessPlayer(shared_ptr<TCPClient> client);
     string ProcessPlayerMessage(Player &player, shared_ptr<MessageManager::MessageDisassembled> message);
 
     Player &GetPlayerByClient(const shared_ptr<TCPClient> &client);
-
-    Match &mMatch;
-    vector<shared_ptr<TCPClient>> mClients{};
-    shared_ptr<mutex> mMutexPlayerCurrent;
 };
 } // namespace Server

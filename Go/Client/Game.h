@@ -18,6 +18,7 @@ class GameI
 
   private:
     atomic<bool> mReady{};
+    atomic<bool> mFinished{};
 
     COORD mCurrentPositionInBoard{};
     HANDLE mHandleConsoleOutput{};

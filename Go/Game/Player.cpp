@@ -14,6 +14,27 @@ Player::Color Player::GetColor() const
     return mColor;
 }
 
+/* static */ string Player::GetColorName(const Player::Color playerColor)
+{
+    switch (playerColor)
+    {
+    case Color::NONE:
+        return "NONE"s;
+    case Color::BLACK:
+        return "BLACK"s;
+    case Color::RED:
+        return "RED"s;
+    case Color::GREEN:
+        return "GREEN"s;
+    case Color::BLUE:
+        return "BLUE"s;
+    case Color::PURPLE:
+        return "PURPLE"s;
+    default:
+        return "UNKNOWN"s;
+    }
+}
+
 Player::Joker Player::GetActiveJoker() const
 {
     return mJokerActive;

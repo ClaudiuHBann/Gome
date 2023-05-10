@@ -125,6 +125,12 @@ void GameI::OnUpdate(const ContextServer &context)
     }
 
     Draw();
+
+    if (mBoard.IsGameStateTerminal({mPlayer}))
+    {
+        mClient.Disconnect();
+        mFinished = true;
+    }
 }
 
 void GameI::Run()
@@ -139,7 +145,7 @@ void GameI::Run()
     cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
     Draw();
 
-    while (true)
+    while (!mFinished)
     {
         mKeylogger.Check();
     }

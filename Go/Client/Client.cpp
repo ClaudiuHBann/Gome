@@ -50,6 +50,11 @@ void Client::Init(function<void(ContextServerInit)> callback)
     });
 }
 
+void Client::Disconnect()
+{
+    mClient.Disconnect();
+}
+
 void Client::Send(ContextClient &context)
 {
     json contextJSON;
