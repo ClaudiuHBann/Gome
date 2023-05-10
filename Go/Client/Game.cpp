@@ -104,7 +104,7 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
 void GameI::OnUpdate(const ContextServer &context)
 {
     cout.setstate(ios_base::failbit);
-    TRACE("Updating board and messages...");
+    // TRACE("Updating board and messages...");
     cout.clear();
 
     // update jokers
@@ -187,8 +187,10 @@ void GameI::DrawMessages() const
     }
 }
 
-void GameI::Draw() const
+void GameI::Draw()
 {
+    scoped_lock lock(mMutexConsole);
+
     CONSOLE_SCREEN_BUFFER_INFO csbi{};
     GetConsoleScreenBufferInfo(mHandleConsoleOutput, &csbi);
 

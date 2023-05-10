@@ -17,6 +17,7 @@ class GameI
     void Run();
 
   private:
+    mutex mMutexConsole;
     atomic<bool> mReady{};
     atomic<bool> mFinished{};
 
@@ -34,7 +35,7 @@ class GameI
     string GetStoneColored(const Coord &pos) const;
     string GetStoneColoredOr(const Coord &pos, const uint8_t value) const;
 
-    void Draw() const;
+    void Draw();
     void DrawBoard() const;
     void DrawJokersState() const;
     void DrawMessages() const;

@@ -27,7 +27,7 @@ int main()
     Networking::IOContext context;
 
     TRACE("Creating server and it's rules...");
-    Game::Rules rules(2, {6, 10});
+    Game::Rules rules(1, {6, 10});
     ::Server::Server server(context, SERVER_PORT, rules);
     TRACE(vformat("Server is running with rules({}, {{ {}, {} }}) on {}:{}...",
                   make_format_args((int)rules.GetPlayersPerMatch(), (int)rules.GetSize().GetXY().first,

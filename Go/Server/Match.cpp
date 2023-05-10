@@ -57,8 +57,8 @@ void Match::CreateMatch(const Rules &rules)
     // add a stone for every player
     for (size_t i = 0; i < mPlayers.size(); i++)
     {
-        Stone stone(stonePoss[i]);
-        mBoard.AddStone(mPlayers[i], stone);
+        auto &&pos = stonePoss[i].GetXY();
+        mBoard.mGameState[pos.first][pos.second] = mPlayers[i].GetColor();
     }
 }
 

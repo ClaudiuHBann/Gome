@@ -2,6 +2,11 @@
 
 #include "Player.h"
 
+namespace Server
+{
+class Match;
+}
+
 namespace Game
 {
 /**
@@ -9,6 +14,8 @@ namespace Game
  */
 class Board
 {
+    friend class ::Server::Match;
+
   public:
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(Board, mGameState)
 

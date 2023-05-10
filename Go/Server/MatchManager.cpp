@@ -19,13 +19,24 @@ void MatchManager::Process()
     TRACE("Send to every player it's color and the match rules...");
     for (size_t i = 0; i < mClients.size(); i++)
     {
+        // send the init context
         ContextServerInit context(mMatch.mRules, GetPlayerByClient(mClients[i]).GetColor());
         json contextJSON;
         context.to_json(contextJSON, context);
         auto &&contextJSONString = contextJSON.dump();
 
         bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
-        mClients[i]->Send(data, HeaderMetadata::Type::TEXT, [this, i = i](auto, auto) { ProcessPlayer(mClients[i]); });
+        mClients[i]->Send(data, HeaderMetadata::Type::TEXT, [this, i = i](auto, auto) {
+            // send the updated context
+            ContextServer context(mMatch.mBoard, "Have fun!");
+            json contextJSON;
+            context.to_json(contextJSON, context);
+            auto &&contextJSONString = contextJSON.dump();
+
+            bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
+            mClients[i]->Send(data, HeaderMetadata::Type::TEXT,
+                              [this, i = i](auto, auto) { ProcessPlayer(mClients[i]); });
+        });
     }
 }
 
