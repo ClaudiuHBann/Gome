@@ -1,11 +1,11 @@
 #pragma once
 
-#ifndef UNICODE
-#define UNICODE
+#ifdef UNICODE
+#undef UNICODE
 #endif // !UNICODE
 
-#ifndef _UNICODE
-#define _UNICODE
+#ifdef _UNICODE
+#undef _UNICODE
 #endif // !_UNICODE
 
 #ifdef _WIN32

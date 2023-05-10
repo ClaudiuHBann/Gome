@@ -24,10 +24,17 @@ int main()
     /*TEST_CLASS(MessageTests);
     TEST_CLASS(TCPTests);*/
 
+    TRACE("Loading rules and creating server...");
+
     Networking::IOContext context;
 
-    TRACE("Creating server and it's rules...");
-    Game::Rules rules(1, {6, 10});
+    Game::Rules rules;
+    if (!rules.LoadFromFile("rules.cfg"))
+    {
+        TRACE("Config file doesn't exist!");
+        return 0;
+    }
+
     ::Server::Server server(context, SERVER_PORT, rules);
     TRACE(vformat("Server is running with rules({}, {{ {}, {} }}) on {}:{}...",
                   make_format_args((int)rules.GetPlayersPerMatch(), (int)rules.GetSize().GetXY().first,

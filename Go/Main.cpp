@@ -15,13 +15,11 @@ int main()
 
 /*
     TODO:
-            - fisier de configurare pentru server
+            - ContextUninit
             - cati clienti s-au conenctat pentru server
             - mesaj pentru cine trebuie sa mute pentru client
-            - callback bug
             - dupa o miscare corecta pe la un client sa se tremita la toata lumea state-ul jocului
+
             - add comments for the Go project
             - documentatie despre arhitectura si cum functioneaza
-
-            magic draw
 */
