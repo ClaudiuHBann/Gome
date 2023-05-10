@@ -17,21 +17,26 @@ using namespace Networking::Client;
 class Client
 {
   public:
+    using CallbackContextServerInit = function<void(ContextServerInit)>;
+    using CallbackContextServer = function<void(ContextServer)>;
+    using CallbackContextServerUninit = function<void(ContextServerUninit)>;
+
     /**
      * @brief Constructor
      * @param context the context
+     * @param callbackInit the callback to be invoked when match starts
+     * @param callback the callback to be invoked when match in progress
+     * @param callbackUninit the callback to be invoked when match ends
      */
-    Client(IOContext &context);
+    Client(IOContext &context, CallbackContextServerInit callbackInit, CallbackContextServer callback,
+           CallbackContextServerUninit callbackUninit);
 
     /**
-     * @brief Connects to the host and invokes the init callback and starts to continously receiving contexts
+     * @brief Connects to the host
      * @param ip the ip of the host
      * @param port the port of the host
-     * @param callbackInit the callback to be invoked when initializing
-     * @param callback the callback to be invoked when receiving a context
      */
-    void Start(const string &ip, const uint16_t port, function<void(ContextServerInit)> callbackInit,
-               function<void(ContextServer)> callback);
+    void Connect(const string &ip, const uint16_t port);
 
     /**
      * @brief Sends the context to the connected host
@@ -48,23 +53,19 @@ class Client
     IOContext &mContext;
     TCPClient mClient;
 
-    /**
-     * @brief Receives the initialize context
-     * @param callback the callback to be invoked when the operation completes
-     */
-    void Init(function<void(ContextServerInit)> callback);
+    CallbackContextServerInit mCallbackInit;
+    CallbackContextServer mCallback;
+    CallbackContextServerUninit mCallbackUninit;
 
     /**
      * @brief Receives contexts
-     * @param callback the callback to be invoked when the operation completes
      */
-    void Receive(function<void(ContextServer)> callback);
+    void Receive();
 
     /**
-     * @brief The receive callback that calls itself
-     * @param callback the callback from user
-     * @param context the context from server
+     * @brief Process the json and invokes the callback
+     * @param jsonString the json string
      */
-    void ReceiveCallback(function<void(ContextServer)> callback, const ContextServer &context);
+    void ReceiveProcess(const string &jsonString);
 };
 } // namespace Client

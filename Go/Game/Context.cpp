@@ -14,22 +14,22 @@ string IContext::ToJSONString() const
 
     switch (mType)
     {
-    case IContext::Type::CLIENT: {
+    case Type::CLIENT: {
         ContextClient &context = *(ContextClient *)this;
         context.to_json(contextJSON, context);
     }
     break;
-    case IContext::Type::SERVER_INIT: {
+    case Type::SERVER_INIT: {
         ContextServerInit &context = *(ContextServerInit *)this;
         context.to_json(contextJSON, context);
     }
     break;
-    case IContext::Type::SERVER: {
+    case Type::SERVER: {
         ContextServer &context = *(ContextServer *)this;
         context.to_json(contextJSON, context);
     }
     break;
-    case IContext::Type::SERVER_UNINIT: {
+    case Type::SERVER_UNINIT: {
         ContextServerUninit &context = *(ContextServerUninit *)this;
         context.to_json(contextJSON, context);
     }
@@ -45,22 +45,22 @@ void IContext::FromJSONString(const string &jsonString)
 
     switch (mType)
     {
-    case IContext::Type::CLIENT: {
+    case Type::CLIENT: {
         ContextClient &context = *(ContextClient *)this;
         context.from_json(json, context);
     }
     break;
-    case IContext::Type::SERVER_INIT: {
+    case Type::SERVER_INIT: {
         ContextServerInit &context = *(ContextServerInit *)this;
         context.from_json(json, context);
     }
     break;
-    case IContext::Type::SERVER: {
+    case Type::SERVER: {
         ContextServer &context = *(ContextServer *)this;
         context.from_json(json, context);
     }
     break;
-    case IContext::Type::SERVER_UNINIT: {
+    case Type::SERVER_UNINIT: {
         ContextServerUninit &context = *(ContextServerUninit *)this;
         context.from_json(json, context);
     }
@@ -76,20 +76,6 @@ IContext::Type IContext::GetType() const
 ContextClient::ContextClient(const Stone &stone, const Player::Joker joker)
     : IContext(IContext::Type::CLIENT), stone(stone), joker(joker)
 {
-}
-
-void ContextClient::to_json(nlohmann::json &j, const ContextClient &context)
-{
-    j["stone"] = context.stone;
-    j["joker"] = (uint16_t)context.joker;
-}
-
-void ContextClient::from_json(const nlohmann::json &j, ContextClient &context)
-{
-    uint16_t jokerr{};
-    j.at("stone").get_to(context.stone);
-    j.at("joker").get_to(jokerr);
-    context.joker = (Player::Joker)jokerr;
 }
 
 ContextServerInit::ContextServerInit(const Rules &rules, const Player::Color color)

@@ -55,5 +55,6 @@ class GameI
     void InitializeCLI() const;
     void OnInitialize(const ContextServerInit &contextInit);
     void OnUpdate(const ContextServer &context);
+    void OnUninitialize(const ContextServerUninit &contextUninit);
 };
 } // namespace Client

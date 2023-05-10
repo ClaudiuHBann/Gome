@@ -21,12 +21,14 @@ namespace Client
 {
 GameI::GameI(Networking::IOContext &context)
     : mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE)),
-      mKeylogger(bind(&GameI::OnKeyPress, this, std::placeholders::_1)), mClient(context)
+      mKeylogger(bind(&GameI::OnKeyPress, this, std::placeholders::_1)),
+      mClient(context, bind(&GameI::OnInitialize, this, std::placeholders::_1),
+              bind(&GameI::OnUpdate, this, std::placeholders::_1),
+              bind(&GameI::OnUninitialize, this, std::placeholders::_1))
 {
     InitializeCLI();
 
-    mClient.Start(SERVER_IP, SERVER_PORT, bind(&GameI::OnInitialize, this, std::placeholders::_1),
-                  bind(&GameI::OnUpdate, this, std::placeholders::_1));
+    mClient.Connect(SERVER_IP, SERVER_PORT);
 }
 
 void GameI::OnKeyPress(const Keylogger::Key key)
@@ -99,6 +101,16 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
     mReady = true;
 }
 
+void GameI::OnUninitialize(const ContextServerUninit &contextUninit)
+{
+    cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
+    ResetCursor();           // reset caret to the first pos
+    TRACE(format("The game ended and the winner is player {}!", Player::GetColorName(contextUninit.winner)).c_str());
+
+    mClient.Disconnect();
+    mFinished = true;
+}
+
 void GameI::OnUpdate(const ContextServer &context)
 {
     TRACE_NO_STDOUT("Updating board and messages...");
@@ -121,12 +133,6 @@ void GameI::OnUpdate(const ContextServer &context)
     }
 
     Draw();
-
-    if (mBoard.IsGameStateTerminal({mPlayer}))
-    {
-        mClient.Disconnect();
-        mFinished = true;
-    }
 }
 
 void GameI::Run()

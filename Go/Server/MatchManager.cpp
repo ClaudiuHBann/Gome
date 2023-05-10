@@ -45,8 +45,7 @@ void MatchManager::Finish(shared_ptr<TCPClient> client)
     }
 
     // create a response to send the winner through the message
-    ContextServer contextResponse(
-        mMatch.mBoard, format("The match has finished and the winner is {}.", Player::GetColorName(winner.value())));
+    ContextServerUninit contextResponse(winner.value());
 
     // send it
     auto &&json = contextResponse.ToJSONString();

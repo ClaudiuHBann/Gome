@@ -28,7 +28,7 @@ class Player
      */
     enum class Joker : uint8_t
     {
-        NONE,
+        NONE = 1, // if this is 0 then we need to change the json (de)serializing methods
         DOUBLE_MOVE,
         REPLACE,
         FREEDOM

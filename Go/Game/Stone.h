@@ -8,9 +8,7 @@ namespace Game
 class Coord
 {
   public:
-    // we need to add those by our own because the values can be the binary 0 and we cannot serialze those values
-    friend void to_json(nlohmann::json &j, const Coord &pos);
-    friend void from_json(const nlohmann::json &j, Coord &pos);
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Coord, mX, mY)
 
     /**
      * @brief Constructor

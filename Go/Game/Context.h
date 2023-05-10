@@ -18,7 +18,7 @@ class IContext
      */
     enum class Type
     {
-        NONE,
+        NONE = 1, // if this is 0 then we need to change the json (de)serializing methods
         CLIENT,
         SERVER_INIT,
         SERVER,
@@ -60,9 +60,7 @@ class IContext
 class ContextClient : public IContext
 {
   public:
-    // we need to add those by our own because the values can be the binary 0 and we cannot serialze those values
-    void to_json(nlohmann::json &j, const ContextClient &context);
-    void from_json(const nlohmann::json &j, ContextClient &context);
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextClient, stone, joker)
 
     Stone stone;
     Player::Joker joker;

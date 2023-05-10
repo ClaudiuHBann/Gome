@@ -6,18 +6,43 @@ namespace Client
 {
 using namespace Networking::Client;
 
-Client::Client(IOContext &context) : mContext(context), mClient(mContext.CreateSocket())
+Client::Client(IOContext &context, CallbackContextServerInit callbackInit, CallbackContextServer callback,
+               CallbackContextServerUninit callbackUninit)
+    : mContext(context), mClient(mContext.CreateSocket()), mCallbackInit(move(callbackInit)), mCallback(move(callback)),
+      mCallbackUninit(move(callbackUninit))
 {
 }
 
-void Client::ReceiveCallback(function<void(ContextServer)> callback, const ContextServer &context)
+void Client::ReceiveProcess(const string &jsonString)
 {
-    callback(context);
-    Receive([this, callback](auto context) { ReceiveCallback(callback, context); });
+    auto contextType = IContext::Type::NONE;
+    auto &&json = json::parse(jsonString);
+    json.at("mType").get_to(contextType);
+
+    switch (contextType)
+    {
+    case IContext::Type::SERVER_INIT: {
+        ContextServerInit context({0, Coord{0, 0}}, Player::Color::NONE);
+        context.FromJSONString(jsonString);
+        mCallbackInit(context);
+    }
+    break;
+    case IContext::Type::SERVER: {
+        ContextServer context(Coord{0, 0}, {});
+        context.FromJSONString(jsonString);
+        mCallback(context);
+    }
+    break;
+    case IContext::Type::SERVER_UNINIT: {
+        ContextServerUninit context(Player::Color::NONE);
+        context.FromJSONString(jsonString);
+        mCallbackUninit(context);
+    }
+    break;
+    }
 }
 
-void Client::Start(const string &ip, const uint16_t port, function<void(ContextServerInit)> callbackInit,
-                   function<void(ContextServer)> callback)
+void Client::Connect(const string &ip, const uint16_t port)
 {
     auto &&resolver = mContext.CreateResolver();
     auto &&endpoints = resolver.resolve(ip, to_string(port));
@@ -30,23 +55,7 @@ void Client::Start(const string &ip, const uint16_t port, function<void(ContextS
 
         TRACE(format("Connected succeesfully to {}:{}.", SERVER_IP, SERVER_PORT).c_str());
 
-        Init([this, callbackInit, callback](const auto &playerColor) {
-            callbackInit(playerColor);
-            Receive([this, callback](auto context) { ReceiveCallback(callback, context); });
-        });
-    });
-}
-
-void Client::Init(function<void(ContextServerInit)> callback)
-{
-    mClient.Receive([callback = move(callback)](const auto &, auto messageDisassembled) {
-        string jsonString((char *)get<2>(*messageDisassembled).data(),
-                          (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
-        auto &&json = json::parse(jsonString);
-
-        ContextServerInit context({0, Coord{0, 0}}, Player::Color::NONE);
-        context.from_json(json, context);
-        callback(context);
+        Receive();
     });
 }
 
@@ -57,24 +66,23 @@ void Client::Disconnect()
 
 void Client::Send(ContextClient &context)
 {
-    json contextJSON;
-    context.to_json(contextJSON, context);
-    auto &&contextJSONString = contextJSON.dump();
+    auto &&contextJSONString = context.ToJSONString();
 
     bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
     mClient.Send(data, HeaderMetadata::Type::TEXT, [](auto, auto) {});
 }
 
-void Client::Receive(function<void(ContextServer)> callback)
+void Client::Receive()
 {
-    mClient.Receive([callback = move(callback)](auto, auto messageDisassembled) {
-        string jsonString((char *)get<2>(*messageDisassembled).data(),
-                          (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
-        auto &&json = json::parse(jsonString);
+    mClient.Receive([this](auto ec, auto messageDisassembled) {
+        if (!ec)
+        {
+            string jsonString((char *)get<2>(*messageDisassembled).data(),
+                              (char *)get<2>(*messageDisassembled).data() + get<2>(*messageDisassembled).size());
+            ReceiveProcess(jsonString);
+        }
 
-        ContextServer context(Coord{0, 0}, {});
-        context.from_json(json, context);
-        callback(context);
+        Receive();
     });
 }
 } // namespace Client
