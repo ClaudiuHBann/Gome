@@ -143,6 +143,7 @@ void GameI::Run()
     TRACE("Have fun!");
 
     cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
+    ResetCursor();           // reset caret to the first pos
     Draw();
 
     while (!mFinished)
@@ -257,12 +258,6 @@ void GameI::DrawLineBorderBottom() const
 void GameI::ResetCursor() const
 {
     SetConsoleCursorPosition(mHandleConsoleOutput, {});
-}
-
-bool GameI::IsPositionInBoardValid(const COORD &position) const
-{
-    return position.X >= 0 && position.X < mBoard.GetGameState().front().size() && position.Y >= 0 &&
-           position.Y < mBoard.GetGameState().size();
 }
 
 COORD GameI::BoardToConsolePosition(const COORD &position) const

@@ -98,7 +98,7 @@ bool Board::IsSameStoneNearbyPos(const Player &player, const Coord &poss) const
 bool Board::IsPositionValid(const Coord &poss) const
 {
     auto &&pos = poss.GetXY();
-    return pos.first >= 0 && pos.first < mGameState.size() && pos.second >= 0 && pos.second < mGameState.front().size();
+    return pos.first >= 0 && pos.first < mGameState.front().size() && pos.second >= 0 && pos.second < mGameState.size();
 }
 
 bool Board::IsStoneValid(const Player &player, const Stone &stone) const
