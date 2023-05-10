@@ -92,8 +92,6 @@ ContextClient::ContextClient(const Stone &stone, const Player::Joker joker)
 {
 }
 
-// nlohmann json cpp macros don't work with inheritance so we create them
-
 void ContextServerInit::to_json(nlohmann::json &nlohmann_json_j, const ContextServerInit &nlohmann_json_t)
 {
     nlohmann::to_json(nlohmann_json_j, static_cast<const IContext &>(nlohmann_json_t));
@@ -113,8 +111,6 @@ ContextServerInit::ContextServerInit(const Rules &rules, const Player::Color col
 {
 }
 
-// nlohmann json cpp macros don't work with inheritance so we create them
-
 void ContextServerUninit::to_json(nlohmann::json &nlohmann_json_j, const ContextServerUninit &nlohmann_json_t)
 {
     nlohmann::to_json(nlohmann_json_j, static_cast<const IContext &>(nlohmann_json_t));
@@ -131,8 +127,6 @@ ContextServerUninit::ContextServerUninit(const Player::Color winner)
     : IContext(IContext::Type::SERVER_UNINIT), winner(winner)
 {
 }
-
-// nlohmann json cpp macros don't work with inheritance so we create them
 
 void ContextServer::to_json(nlohmann::json &nlohmann_json_j, const ContextServer &nlohmann_json_t)
 {
