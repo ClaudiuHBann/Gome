@@ -10,6 +10,12 @@ Client::Client(IOContext &context) : mContext(context), mClient(mContext.CreateS
 {
 }
 
+void Client::ReceiveCallback(function<void(ContextServer)> callback, const ContextServer &context)
+{
+    callback(context);
+    Receive([this, callback](auto context) { ReceiveCallback(callback, context); });
+}
+
 void Client::Start(const string &ip, const uint16_t port, function<void(ContextServerInit)> callbackInit,
                    function<void(ContextServer)> callback)
 {
@@ -24,15 +30,9 @@ void Client::Start(const string &ip, const uint16_t port, function<void(ContextS
 
         TRACE(format("Connected succeesfully to {}:{}.", SERVER_IP, SERVER_PORT).c_str());
 
-        decltype(callback) callbackReceive;
-        callbackReceive = [=, this](const auto &context) {
-            callback(context);
-            Receive(callbackReceive);
-        };
-
-        Init([=, this](const auto &playerColor) {
+        Init([this, callbackInit, callback](const auto &playerColor) {
             callbackInit(playerColor);
-            Receive(callbackReceive);
+            Receive([this, callback](auto context) { ReceiveCallback(callback, context); });
         });
     });
 }

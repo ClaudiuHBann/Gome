@@ -59,5 +59,7 @@ class Client
      * @param callback the callback to be invoked when the operation completes
      */
     void Receive(function<void(ContextServer)> callback);
+
+    void ReceiveCallback(function<void(ContextServer)> callback, const ContextServer &context);
 };
 } // namespace Client
