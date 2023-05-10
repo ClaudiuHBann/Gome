@@ -60,7 +60,9 @@ class IContext
 class ContextClient : public IContext
 {
   public:
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextClient, stone, joker)
+    // nlohmann json cpp macros doesn't work with inheritance so we create them
+    void to_json(nlohmann::json &nlohmann_json_j, const ContextClient &nlohmann_json_t);
+    void from_json(const nlohmann::json &nlohmann_json_j, ContextClient &nlohmann_json_t);
 
     Stone stone;
     Player::Joker joker;
@@ -79,7 +81,9 @@ class ContextClient : public IContext
 class ContextServerInit : public IContext
 {
   public:
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextServerInit, rules, color)
+    // nlohmann json cpp macros don't work with inheritance so we create them
+    void to_json(nlohmann::json &nlohmann_json_j, const ContextServerInit &nlohmann_json_t);
+    void from_json(const nlohmann::json &nlohmann_json_j, ContextServerInit &nlohmann_json_t);
 
     Rules rules;
     Player::Color color;
@@ -92,10 +96,15 @@ class ContextServerInit : public IContext
     ContextServerInit(const Rules &rules, const Player::Color color);
 };
 
+/**
+ * @brief Context which will be send to the client whe match ends
+ */
 class ContextServerUninit : public IContext
 {
   public:
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextServerUninit, winner)
+    // nlohmann json cpp macros don't work with inheritance so we create them
+    void to_json(nlohmann::json &nlohmann_json_j, const ContextServerUninit &nlohmann_json_t);
+    void from_json(const nlohmann::json &nlohmann_json_j, ContextServerUninit &nlohmann_json_t);
 
     Player::Color winner;
 
@@ -112,7 +121,9 @@ class ContextServerUninit : public IContext
 class ContextServer : public IContext
 {
   public:
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextServer, board, message)
+    // nlohmann json cpp macros don't work with inheritance so we create them
+    void to_json(nlohmann::json &nlohmann_json_j, const ContextServer &nlohmann_json_t);
+    void from_json(const nlohmann::json &nlohmann_json_j, ContextServer &nlohmann_json_t);
 
     Board board;
     string message;
