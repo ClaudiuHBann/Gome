@@ -9,20 +9,8 @@ class Coord
 {
   public:
     // we need to add those by our own because the values can be the binary 0 and we cannot serialze those values
-
-    friend void to_json(nlohmann::json &j, const Coord &pos)
-    {
-        j["mX"] = (uint16_t)pos.mX;
-        j["mY"] = (uint16_t)pos.mY;
-    }
-
-    friend void from_json(const nlohmann::json &j, Coord &pos)
-    {
-        uint16_t x{}, y{};
-        j.at("mX").get_to(x);
-        j.at("mY").get_to(y);
-        pos.mX = (uint8_t)x, pos.mY = (uint8_t)y;
-    }
+    friend void to_json(nlohmann::json &j, const Coord &pos);
+    friend void from_json(const nlohmann::json &j, Coord &pos);
 
     /**
      * @brief Constructor

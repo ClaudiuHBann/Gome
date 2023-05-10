@@ -21,17 +21,13 @@ void MatchManager::Process()
     {
         // send the init context
         ContextServerInit context(mMatch.mRules, GetPlayerByClient(mClients[i]).GetColor());
-        json contextJSON;
-        context.to_json(contextJSON, context);
-        auto &&contextJSONString = contextJSON.dump();
+        auto &&contextJSONString = context.ToJSONString();
 
         bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
         mClients[i]->Send(data, HeaderMetadata::Type::TEXT, [this, i = i](auto, auto) {
             // send the updated context
             ContextServer context(mMatch.mBoard, "Have fun!");
-            json contextJSON;
-            context.to_json(contextJSON, context);
-            auto &&contextJSONString = contextJSON.dump();
+            auto &&contextJSONString = context.ToJSONString();
 
             bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
             mClients[i]->Send(data, HeaderMetadata::Type::TEXT,
@@ -51,11 +47,9 @@ void MatchManager::Finish(shared_ptr<TCPClient> client)
     // create a response to send the winner through the message
     ContextServer contextResponse(
         mMatch.mBoard, format("The match has finished and the winner is {}.", Player::GetColorName(winner.value())));
-    json contextResponseJSON;
-    contextResponse.to_json(contextResponseJSON, contextResponse);
 
     // send it
-    auto &&json = contextResponseJSON.dump();
+    auto &&json = contextResponse.ToJSONString();
     bytes jsonAsBytes((byte *)json.data(), (byte *)json.data() + json.size());
     client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
 
@@ -111,10 +105,9 @@ string MatchManager::ProcessPlayerMessage(Player &player, shared_ptr<MessageMana
     auto &[guid, type, bytes] = *message;
 
     string jsonString((char *)bytes.data(), (char *)bytes.data() + bytes.size());
-    auto &&json = json::parse(jsonString);
 
     ContextClient contextRequest(Coord{0, 0}, Player::Joker::NONE);
-    contextRequest.from_json(json, contextRequest);
+    contextRequest.FromJSONString(jsonString);
 
     scoped_lock lock(*mMutexPlayerCurrent);
 
@@ -177,9 +170,6 @@ string MatchManager::CreateResponse(const ContextClient &contextRequest, const E
     }
 
     ContextServer contextResponse(mMatch.mBoard, message);
-    json contextResponseJSON;
-    contextResponse.to_json(contextResponseJSON, contextResponse);
-
-    return contextResponseJSON.dump();
+    return contextResponse.ToJSONString();
 }
 } // namespace Server

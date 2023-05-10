@@ -6,26 +6,63 @@
 namespace Game
 {
 /**
+ * @brief Interface for contexts
+ */
+class IContext
+{
+  public:
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(IContext, mType)
+
+    /**
+     * @brief Types of context
+     */
+    enum class Type
+    {
+        NONE,
+        CLIENT,
+        SERVER_INIT,
+        SERVER,
+        SERVER_UNINIT
+    };
+
+    /**
+     * @brief Gets the type of the context
+     * @return the type of the context
+     */
+    Type GetType() const;
+
+    /**
+     * @brief Creates the json from the derived context
+     * @return the json from the derived context
+     */
+    string ToJSONString() const;
+
+    /**
+     * @brief Creates the derived context from the json
+     * @param json the context json
+     */
+    void FromJSONString(const string &jsonString);
+
+  protected:
+    /**
+     * @brief Constructor
+     * @param type the type of context
+     */
+    IContext(const Type type);
+
+  private:
+    Type mType = Type::NONE;
+};
+
+/**
  * @brief Context which will be send to the server
  */
-class ContextClient
+class ContextClient : public IContext
 {
   public:
     // we need to add those by our own because the values can be the binary 0 and we cannot serialze those values
-
-    inline void to_json(nlohmann::json &j, const ContextClient &context)
-    {
-        j["stone"] = context.stone;
-        j["joker"] = (uint16_t)context.joker;
-    }
-
-    inline void from_json(const nlohmann::json &j, ContextClient &context)
-    {
-        uint16_t jokerr{};
-        j.at("stone").get_to(context.stone);
-        j.at("joker").get_to(jokerr);
-        context.joker = (Player::Joker)jokerr;
-    }
+    void to_json(nlohmann::json &j, const ContextClient &context);
+    void from_json(const nlohmann::json &j, ContextClient &context);
 
     Stone stone;
     Player::Joker joker;
@@ -41,7 +78,7 @@ class ContextClient
 /**
  * @brief Context which will be send to the client when a match starts
  */
-class ContextServerInit
+class ContextServerInit : public IContext
 {
   public:
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextServerInit, rules, color)
@@ -57,10 +94,24 @@ class ContextServerInit
     ContextServerInit(const Rules &rules, const Player::Color color);
 };
 
+class ContextServerUninit : public IContext
+{
+  public:
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextServerUninit, winner)
+
+    Player::Color winner;
+
+    /**
+     * @brief Constructor
+     * @param winner the winner of the game
+     */
+    ContextServerUninit(const Player::Color winner);
+};
+
 /**
  * @brief Context which will be send to the client
  */
-class ContextServer
+class ContextServer : public IContext
 {
   public:
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ContextServer, board, message)
