@@ -60,6 +60,11 @@ class Client
      */
     void Receive(function<void(ContextServer)> callback);
 
+    /**
+     * @brief The receive callback that calls itself
+     * @param callback the callback from user
+     * @param context the context from server
+     */
     void ReceiveCallback(function<void(ContextServer)> callback, const ContextServer &context);
 };
 } // namespace Client

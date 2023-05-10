@@ -9,6 +9,8 @@
 #define TRACE_LOCATION                                                                                                 \
     Utility::String(TRACE_LOCATION_PROCESS_THREAD_ID + TEXT(" ") + TRACE_LOCATION_FILE_LINE + TEXT("\t"))
 #define TRACE(strn) Utility::Print<const ::TCHAR *>((TRACE_LOCATION + (Utility::StringStream() << strn).str()).c_str())
+#define TRACE_NO_STDOUT(strn)                                                                                          \
+    Utility::Print<const ::TCHAR *>((TRACE_LOCATION + (Utility::StringStream() << strn).str()).c_str(), false)
 
 namespace Utility
 {
@@ -47,14 +49,14 @@ static inline String ClampFileNameLength(String file, String line, const size_t 
  * @brief Prints a string in the windows's console and VS' debug console and a file with the name of current DateTime
  * @param str the string to be printed
  */
-static inline void OutputDebugStringForced(const ::TCHAR *str)
+static inline void OutputDebugStringForced(const ::TCHAR *str, const bool useStdOut = true)
 {
     if (::IsDebuggerPresent())
     {
         ::OutputDebugString(str);
     }
 
-    if (::GetConsoleWindow())
+    if (useStdOut && ::GetConsoleWindow())
     {
 #if defined(_UNICODE) || defined(UNICODE)
         wcout << str;
@@ -80,19 +82,19 @@ static inline void OutputDebugStringForced(const ::TCHAR *str)
  */
 template <typename Object, typename Iterable>
 static void Print(
-    const Iterable &iterable, const String &separatorDimensions = TEXT("\n"),
+    const Iterable &iterable, const bool useStdOut = true, const String &separatorDimensions = TEXT("\n"),
     const function<void(const Object &)> &funcPrintElem = [](const auto &obj) {
         if constexpr (is_arithmetic_v<decay_t<Object>>)
         {
-            OutputDebugStringForced(ToString(obj).c_str());
+            OutputDebugStringForced(ToString(obj).c_str(), useStdOut);
         }
         else if constexpr (is_same_v<remove_const_t<remove_reference_t<decay_t<Object>>>, String>)
         {
-            OutputDebugStringForced(obj.c_str());
+            OutputDebugStringForced(obj.c_str(), useStdOut);
         }
         else if constexpr (is_same_v<remove_const_t<remove_pointer_t<decay_t<Object>>>, ::TCHAR>)
         {
-            OutputDebugStringForced(obj);
+            OutputDebugStringForced(obj, useStdOut);
         }
         else
         {
@@ -101,18 +103,18 @@ static void Print(
                 R"(The object from the innermost range is not a built-in/(c)string type, please provide a valid print element function.)");
         }
 
-        OutputDebugStringForced(TEXT(" "));
+        OutputDebugStringForced(TEXT(" "), useStdOut);
     })
 {
     if constexpr (ranges::range<Iterable>)
     {
-        OutputDebugStringForced(separatorDimensions.c_str());
+        OutputDebugStringForced(separatorDimensions.c_str(), useStdOut);
         ranges::for_each(iterable, [&](const auto &it) { Print(it, separatorDimensions, funcPrintElem); });
     }
     else
     {
         funcPrintElem(iterable);
-        OutputDebugStringForced(separatorDimensions.c_str());
+        OutputDebugStringForced(separatorDimensions.c_str(), useStdOut);
     }
 }
 } // namespace Utility

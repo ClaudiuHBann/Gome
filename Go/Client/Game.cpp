@@ -65,9 +65,7 @@ void GameI::SetJoker(const Keylogger::Key key)
 
 void GameI::AddStone()
 {
-    cout.setstate(ios_base::failbit);
-    TRACE("Adding stone...");
-    cout.clear();
+    TRACE_NO_STDOUT("Adding stone...");
 
     ContextClient context(Coord{(uint8_t)mCurrentPositionInBoard.X, (uint8_t)mCurrentPositionInBoard.Y},
                           mPlayer.GetActiveJoker());
@@ -103,9 +101,7 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
 
 void GameI::OnUpdate(const ContextServer &context)
 {
-    cout.setstate(ios_base::failbit);
-    // TRACE("Updating board and messages...");
-    cout.clear();
+    TRACE_NO_STDOUT("Updating board and messages...");
 
     // update jokers
     if (mPlayer.GetActiveJoker() != Player::Joker::NONE)
