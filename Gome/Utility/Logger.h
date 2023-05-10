@@ -10,7 +10,7 @@
     Utility::String(TRACE_LOCATION_PROCESS_THREAD_ID + TEXT(" ") + TRACE_LOCATION_FILE_LINE + TEXT("\t"))
 #define TRACE(strn) Utility::Print<const ::TCHAR *>((TRACE_LOCATION + (Utility::StringStream() << strn).str()).c_str())
 #define TRACE_NO_STDOUT(strn)                                                                                          \
-    Utility::Print<const ::TCHAR *>((TRACE_LOCATION + (Utility::StringStream() << strn).str()).c_str(), false)
+    Utility::Print<const ::TCHAR *, false>((TRACE_LOCATION + (Utility::StringStream() << strn).str()).c_str())
 
 namespace Utility
 {
@@ -48,6 +48,7 @@ static inline String ClampFileNameLength(String file, String line, const size_t 
 /**
  * @brief Prints a string in the windows's console and VS' debug console and a file with the name of current DateTime
  * @param str the string to be printed
+ * @param useStdOut should print in console
  */
 static inline void OutputDebugStringForced(const ::TCHAR *str, const bool useStdOut = true)
 {
@@ -75,14 +76,15 @@ static inline void OutputDebugStringForced(const ::TCHAR *str, const bool useStd
  * @brief Prints any object or n dimensions containers of built-in types and (c style) strings by default but can print
  * any object if a callback is passed for that object
  * @tparam Object the object type
+ * @tparam useStdOut should print to console
  * @tparam Iterable the iterable type
  * @param iterable the iterable object to print
  * @param separatorDimensions char for separating dimensions between the iterable
  * @param funcPrintElem the callback for printing an object
  */
-template <typename Object, typename Iterable>
+template <typename Object, bool useStdOut = true, typename Iterable>
 static void Print(
-    const Iterable &iterable, const bool useStdOut = true, const String &separatorDimensions = TEXT("\n"),
+    const Iterable &iterable, const String &separatorDimensions = TEXT("\n"),
     const function<void(const Object &)> &funcPrintElem = [](const auto &obj) {
         if constexpr (is_arithmetic_v<decay_t<Object>>)
         {
