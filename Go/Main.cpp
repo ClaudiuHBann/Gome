@@ -15,8 +15,6 @@ int main()
 
 /*
     TODO:
-            - cati clienti s-au conenctat pentru server
-
             - add comments for the Go project
             - documentatie despre arhitectura si cum functioneaza
 */

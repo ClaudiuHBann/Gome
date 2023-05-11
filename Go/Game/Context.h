@@ -131,6 +131,7 @@ class ContextServer : public IContext
     enum class Error : uint8_t
     {
         NONE = 1, // if this is 0 then we need to change the json (de)serializing methods
+        WAIT,     // not all the players connected to the server
         TURN,     // not the turn of the requesting player
         JOKER,    // joker already used
         STONE     // could not add stone

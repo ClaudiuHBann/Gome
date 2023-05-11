@@ -132,6 +132,7 @@ void ContextServer::to_json(nlohmann::json &nlohmann_json_j, const ContextServer
 {
     nlohmann::to_json(nlohmann_json_j, static_cast<const IContext &>(nlohmann_json_t));
     nlohmann_json_j["board"] = nlohmann_json_t.board;
+    nlohmann_json_j["error"] = nlohmann_json_t.error;
     nlohmann_json_j["message"] = nlohmann_json_t.message;
 }
 
@@ -139,6 +140,7 @@ void ContextServer::from_json(const nlohmann::json &nlohmann_json_j, ContextServ
 {
     nlohmann::from_json(nlohmann_json_j, static_cast<IContext &>(nlohmann_json_t));
     nlohmann_json_j.at("board").get_to(nlohmann_json_t.board);
+    nlohmann_json_j.at("error").get_to(nlohmann_json_t.error);
     nlohmann_json_j.at("message").get_to(nlohmann_json_t.message);
 }
 

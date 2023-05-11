@@ -22,7 +22,6 @@ class GameI
     atomic<bool> mFinished{};
 
     COORD mCurrentPositionInBoard{};
-    HANDLE mHandleConsoleOutput{};
     Keylogger mKeylogger;
 
     Board mBoard{Coord{0, 0}};
@@ -33,7 +32,7 @@ class GameI
 
     void Draw();
     void DrawBoard() const;
-    void DrawJokersState() const;
+    void DrawJokersStateAndPlayerColor() const;
     void DrawMessages() const;
     void DrawLineDivider(const uint8_t row) const;
     void DrawLineBorderTop() const;

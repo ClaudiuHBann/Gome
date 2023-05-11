@@ -23,7 +23,9 @@ void MatchManager::SendContextStarting(shared_ptr<TCPClient> client, function<vo
     bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
     client->Send(data, HeaderMetadata::Type::TEXT, [this, client, callback = move(callback)](auto, auto) {
         // send the updated context
-        ContextServer context(mMatch.mBoard, ContextServer::Error::NONE, "Have fun!");
+        ContextServer context(
+            mMatch.mBoard, ContextServer::Error::NONE,
+            format("\033[1;{}mPlayer\033[0m is first...", to_string((int)mMatch.GetPlayerCurrent().GetColor())));
         auto &&contextJSONString = context.ToJSONString();
 
         bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
@@ -34,9 +36,9 @@ void MatchManager::SendContextStarting(shared_ptr<TCPClient> client, function<vo
 void MatchManager::Process()
 {
     TRACE("Send to every player it's color, the match rules and the board...");
-    for (size_t i = 0; i < mClients.size(); i++)
+    for (const auto &client : mClients)
     {
-        SendContextStarting(mClients[i], [this, i]() { ProcessPlayer(mClients[i]); });
+        SendContextStarting(client, [this, client]() { ProcessPlayer(client); });
     }
 }
 

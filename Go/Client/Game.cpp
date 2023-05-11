@@ -18,8 +18,7 @@ constexpr uint8_t PIECE_HORIZONTAL_UP = 194;
 namespace Client
 {
 GameI::GameI(Networking::IOContext &context)
-    : mHandleConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE)),
-      mKeylogger(bind(&GameI::OnKeyPress, this, std::placeholders::_1)),
+    : mKeylogger(bind(&GameI::OnKeyPress, this, std::placeholders::_1)),
       mClient(context, bind(&GameI::OnInitialize, this, std::placeholders::_1),
               bind(&GameI::OnUpdate, this, std::placeholders::_1),
               bind(&GameI::OnUninitialize, this, std::placeholders::_1))
@@ -65,6 +64,7 @@ void GameI::SetJoker(const Keylogger::Key key)
 
 void GameI::AddStone()
 {
+    scoped_lock lock(mMutexConsole);
     TRACE_NO_STDOUT("Adding stone...");
 
     ContextClient context(Coord{(uint8_t)mCurrentPositionInBoard.X, (uint8_t)mCurrentPositionInBoard.Y},
@@ -82,9 +82,9 @@ void GameI::InitializeCLI() const
     // enable virtual terminal processing for console virtual terminal sequences
     // which we are going to use for changing the caret
     DWORD dwMode{};
-    GetConsoleMode(mHandleConsoleOutput, &dwMode);
+    GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), &dwMode);
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-    SetConsoleMode(mHandleConsoleOutput, dwMode);
+    SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), dwMode);
 
     cout << "\x1b[1\x20q";
 }
@@ -110,6 +110,13 @@ void GameI::OnUninitialize(const ContextServerUninit &contextUninit)
 
 void GameI::OnUpdate(const ContextServer &context)
 {
+    if (!mReady && context.error == ContextServer::Error::WAIT)
+    {
+        TRACE(context.message);
+        return;
+    }
+
+    scoped_lock lock(mMutexConsole);
     TRACE_NO_STDOUT("Updating board and messages...");
 
     // update jokers
@@ -134,12 +141,9 @@ void GameI::OnUpdate(const ContextServer &context)
 
 void GameI::Run()
 {
-    TRACE("Waiting players to connect...");
     while (!mReady)
     {
     }
-
-    TRACE("Have fun!");
 
     ResetCursor();
     Draw();
@@ -162,23 +166,26 @@ void GameI::DrawBoard() const
     DrawLineBorderBottom();
 }
 
-void GameI::DrawJokersState() const
+void GameI::DrawJokersStateAndPlayerColor() const
 {
     const auto &jokers = mPlayer.GetJokers();
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetSize().GetXY().second * 2), 1});
+    SetCaretPos(mBoard.GetSize().GetXY().second * 2, 1);
+    cout << format("Your color is {}", Player::GetColorName(mPlayer.GetColor()));
+
+    SetCaretPos(mBoard.GetSize().GetXY().second * 2, 2);
     cout << format("(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED ");
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetSize().GetXY().second * 2), 2});
+    SetCaretPos(mBoard.GetSize().GetXY().second * 2, 3);
     cout << format("(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED ");
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetSize().GetXY().second * 2), 3});
+    SetCaretPos(mBoard.GetSize().GetXY().second * 2, 4);
     cout << format("(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED ");
 }
 
 void GameI::DrawMessages() const
 {
-    SetConsoleCursorPosition(mHandleConsoleOutput, {0, (SHORT)(mBoard.GetSize().GetXY().first + 1)});
+    SetCaretPos(0, mBoard.GetSize().GetXY().first + 1);
     for (const auto &message : mMessages)
     {
         cout << "\33[2K\r"; // clear line before writing the message
@@ -190,14 +197,14 @@ void GameI::Draw()
 {
     scoped_lock lock(mMutexConsole);
 
-    CONSOLE_SCREEN_BUFFER_INFO csbi{};
-    GetConsoleScreenBufferInfo(mHandleConsoleOutput, &csbi);
+    POINT caretPosStart{};
+    GetCaretPos(&caretPosStart);
 
     DrawBoard();
-    DrawJokersState();
+    DrawJokersStateAndPlayerColor();
     DrawMessages();
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, csbi.dwCursorPosition);
+    SetCaretPos(caretPosStart.x, caretPosStart.y);
 }
 
 void GameI::DrawLineDivider(const uint8_t row) const
@@ -246,7 +253,7 @@ void GameI::ResetCursor(const bool clearConsoleBefore /* = true */) const
         cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
     }
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {});
+    SetCaretPos(0, 0);
 }
 
 COORD GameI::BoardToConsolePosition(const COORD &position) const
@@ -276,7 +283,8 @@ void GameI::Move(const Keylogger::Key key)
     if (mBoard.IsPositionValid({(uint8_t)newPositionInBoard.X, (uint8_t)newPositionInBoard.Y}))
     {
         mCurrentPositionInBoard = move(newPositionInBoard);
-        SetConsoleCursorPosition(mHandleConsoleOutput, BoardToConsolePosition(mCurrentPositionInBoard));
+        auto &&caretPosNew = BoardToConsolePosition(mCurrentPositionInBoard);
+        SetCaretPos(caretPosNew.X, caretPosNew.Y);
     }
 }
 } // namespace Client
