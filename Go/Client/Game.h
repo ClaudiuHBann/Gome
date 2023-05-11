@@ -31,10 +31,6 @@ class GameI
     Client mClient;
     Player mPlayer{Player::Color::NONE};
 
-    bool IsStoneOnPos(const Coord &pos) const;
-    string GetStoneColored(const Coord &pos) const;
-    string GetStoneColoredOr(const Coord &pos, const uint8_t value) const;
-
     void Draw();
     void DrawBoard() const;
     void DrawJokersState() const;
@@ -43,8 +39,7 @@ class GameI
     void DrawLineBorderTop() const;
     void DrawLineBorderBottom() const;
 
-    void ResetCursor() const;
-    bool IsPositionInBoardValid(const COORD &position) const;
+    void ResetCursor(const bool clearConsoleBefore = true) const;
     COORD BoardToConsolePosition(const COORD &position) const;
 
     void SetJoker(const Keylogger::Key key);

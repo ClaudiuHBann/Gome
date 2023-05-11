@@ -7,15 +7,16 @@
 namespace Game
 {
 constexpr auto MAX_NEARBY_STONES_COUNT = 8ui8;
+constexpr auto STONE = 254ui8;
 
 Board::Board(const Coord &size)
     : mGameState(size.GetXY().first, vector<Player::Color>(size.GetXY().second, Player::Color::NONE))
 {
 }
 
-bool Board::AddStone(Player &player, const Stone &stone)
+bool Board::AddStone(Player &player, const Stone &stone, const bool validate /* = true */)
 {
-    if (!IsStoneValid(player, stone))
+    if (validate && !IsStoneValid(player, stone))
     {
         return false;
     }
@@ -30,9 +31,9 @@ bool Board::AddStone(Player &player, const Stone &stone)
     return true;
 }
 
-uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Coord &poss) const
+uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Coord &pos) const
 {
-    auto &&pos = poss.GetXY();
+    auto &&posXY = pos.GetXY();
     auto playerColor = player.GetColor();
 
     uint8_t count{};
@@ -43,46 +44,46 @@ uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Coord &pos
             return Player::Color::NONE;
         }
 
-        return mGameState[pos.GetXY().first][pos.GetXY().second];
+        return GetGameStatePos(pos);
     };
 
     // TODO: is there a better solution for doing this?
-    if (GetPlayerColorFromStonePos({uint8_t(pos.first - 1), pos.second}) == playerColor)
+    if (GetPlayerColorFromStonePos({uint8_t(posXY.first - 1), posXY.second}) == playerColor)
     {
         count++;
     }
 
-    if (GetPlayerColorFromStonePos({uint8_t(pos.first - 1), uint8_t(pos.second + 1)}) == playerColor)
+    if (GetPlayerColorFromStonePos({uint8_t(posXY.first - 1), uint8_t(posXY.second + 1)}) == playerColor)
     {
         count++;
     }
 
-    if (GetPlayerColorFromStonePos({pos.first, uint8_t(pos.second + 1)}) == playerColor)
+    if (GetPlayerColorFromStonePos({posXY.first, uint8_t(posXY.second + 1)}) == playerColor)
     {
         count++;
     }
 
-    if (GetPlayerColorFromStonePos({uint8_t(pos.first + 1), uint8_t(pos.second + 1)}) == playerColor)
+    if (GetPlayerColorFromStonePos({uint8_t(posXY.first + 1), uint8_t(posXY.second + 1)}) == playerColor)
     {
         count++;
     }
 
-    if (GetPlayerColorFromStonePos({uint8_t(pos.first + 1), pos.second}) == playerColor)
+    if (GetPlayerColorFromStonePos({uint8_t(posXY.first + 1), posXY.second}) == playerColor)
     {
         count++;
     }
 
-    if (GetPlayerColorFromStonePos({uint8_t(pos.first + 1), uint8_t(pos.second - 1)}) == playerColor)
+    if (GetPlayerColorFromStonePos({uint8_t(posXY.first + 1), uint8_t(posXY.second - 1)}) == playerColor)
     {
         count++;
     }
 
-    if (GetPlayerColorFromStonePos({pos.first, uint8_t(pos.second - 1)}) == playerColor)
+    if (GetPlayerColorFromStonePos({posXY.first, uint8_t(posXY.second - 1)}) == playerColor)
     {
         count++;
     }
 
-    if (GetPlayerColorFromStonePos({uint8_t(pos.first - 1), uint8_t(pos.second - 1)}) == playerColor)
+    if (GetPlayerColorFromStonePos({uint8_t(posXY.first - 1), uint8_t(posXY.second - 1)}) == playerColor)
     {
         count++;
     }
@@ -90,20 +91,35 @@ uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Coord &pos
     return count;
 }
 
-bool Board::IsSameStoneNearbyPos(const Player &player, const Coord &poss) const
+bool Board::IsSameStoneNearbyPos(const Player &player, const Coord &pos) const
 {
-    return GetSameStoneNearbyPosCount(player, poss);
+    return GetSameStoneNearbyPosCount(player, pos);
 }
 
-bool Board::IsPositionValid(const Coord &poss) const
+bool Board::IsPositionValid(const Coord &pos) const
 {
-    auto &&pos = poss.GetXY();
-    return pos.first >= 0 && pos.first < mGameState.front().size() && pos.second >= 0 && pos.second < mGameState.size();
+    auto &&posXY = pos.GetXY();
+    return posXY.first >= 0 && posXY.first < GetSize().GetXY().first && posXY.second >= 0 &&
+           posXY.second < GetSize().GetXY().second;
+}
+
+bool Board::IsStoneOnPos(const Coord &pos) const
+{
+    return GetGameStatePos(pos) != Player::Color::NONE;
+}
+
+string Board::GetStoneColorAsString(const Coord &pos) const
+{
+    return format("\033[1;{}m{}\033[0m", to_string((int)GetGameStatePos(pos)), (char)STONE);
+}
+
+string Board::GetStoneColorOrAsString(const Coord &pos, const uint8_t value) const
+{
+    return IsStoneOnPos(pos) ? GetStoneColorAsString(pos) : string(1, value);
 }
 
 bool Board::IsStoneValid(const Player &player, const Stone &stone) const
 {
-    auto &&pos = stone.GetPosition().GetXY();
     if (!IsPositionValid(stone.GetPosition()))
     {
         return false;
@@ -115,23 +131,29 @@ bool Board::IsStoneValid(const Player &player, const Stone &stone) const
     case Player::Joker::REPLACE:
         return IsSameStoneNearbyPos(player, stone.GetPosition());
     case Player::Joker::FREEDOM:
-        return mGameState[pos.first][pos.second] == Player::Color::NONE;
+        return GetGameStatePos(stone.GetPosition()) == Player::Color::NONE;
     }
 
-    return mGameState[pos.first][pos.second] == Player::Color::NONE &&
+    return GetGameStatePos(stone.GetPosition()) == Player::Color::NONE &&
            IsSameStoneNearbyPos(player, stone.GetPosition());
 }
 
-const vector<vector<Player::Color>> &Board::GetGameState() const
+Player::Color Board::GetGameStatePos(const Coord &pos) const
 {
-    return mGameState;
+    auto &&posXY = pos.GetXY();
+    return mGameState[posXY.first][posXY.second];
+}
+
+Coord Board::GetSize() const
+{
+    return {(uint8_t)mGameState.size(), (uint8_t)mGameState.front().size()};
 }
 
 bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 {
-    for (uint8_t row = 0; row < mGameState.size(); row++)
+    for (uint8_t row = 0; row < GetSize().GetXY().first; row++)
     {
-        for (uint8_t column = 0; column < mGameState.front().size(); column++)
+        for (uint8_t column = 0; column < GetSize().GetXY().second; column++)
         {
             for (const auto &joker : player.GetJokers())
             {

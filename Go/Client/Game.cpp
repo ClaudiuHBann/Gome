@@ -15,8 +15,6 @@ constexpr uint8_t PIECE_HORIZONTAL = 196;
 constexpr uint8_t PIECE_HORIZONTAL_DOWN = 193;
 constexpr uint8_t PIECE_HORIZONTAL_UP = 194;
 
-constexpr uint8_t STONE = 254;
-
 namespace Client
 {
 GameI::GameI(Networking::IOContext &context)
@@ -103,8 +101,7 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
 
 void GameI::OnUninitialize(const ContextServerUninit &contextUninit)
 {
-    cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
-    ResetCursor();           // reset caret to the first pos
+    ResetCursor();
     TRACE(format("The game ended and the winner is player {}!", Player::GetColorName(contextUninit.winner)).c_str());
 
     mClient.Disconnect();
@@ -144,8 +141,7 @@ void GameI::Run()
 
     TRACE("Have fun!");
 
-    cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
-    ResetCursor();           // reset caret to the first pos
+    ResetCursor();
     Draw();
 
     while (!mFinished)
@@ -156,10 +152,10 @@ void GameI::Run()
 
 void GameI::DrawBoard() const
 {
-    ResetCursor();
+    ResetCursor(false);
 
     DrawLineBorderTop();
-    for (uint8_t row = 1; row < mBoard.GetGameState().size() - 1; row++)
+    for (uint8_t row = 1; row < mBoard.GetSize().GetXY().first - 1; row++)
     {
         DrawLineDivider(row);
     }
@@ -170,19 +166,19 @@ void GameI::DrawJokersState() const
 {
     const auto &jokers = mPlayer.GetJokers();
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 1});
-    cout << format("(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED");
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetSize().GetXY().second * 2), 1});
+    cout << format("(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED ");
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 2});
-    cout << format("(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED");
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetSize().GetXY().second * 2), 2});
+    cout << format("(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED ");
 
-    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetGameState().front().size() * 2), 3});
-    cout << format("(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED");
+    SetConsoleCursorPosition(mHandleConsoleOutput, {(SHORT)(mBoard.GetSize().GetXY().second * 2), 3});
+    cout << format("(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED ");
 }
 
 void GameI::DrawMessages() const
 {
-    SetConsoleCursorPosition(mHandleConsoleOutput, {0, (SHORT)(mBoard.GetGameState().size() + 1)});
+    SetConsoleCursorPosition(mHandleConsoleOutput, {0, (SHORT)(mBoard.GetSize().GetXY().first + 1)});
     for (const auto &message : mMessages)
     {
         cout << "\33[2K\r"; // clear line before writing the message
@@ -204,67 +200,58 @@ void GameI::Draw()
     SetConsoleCursorPosition(mHandleConsoleOutput, csbi.dwCursorPosition);
 }
 
-bool GameI::IsStoneOnPos(const Coord &pos) const
-{
-    return mBoard.GetGameState()[pos.GetXY().first][pos.GetXY().second] != Player::Color::NONE;
-}
-
-string GameI::GetStoneColored(const Coord &pos) const
-{
-    return format("\033[1;{}m{}\033[0m", to_string((int)mBoard.GetGameState()[pos.GetXY().first][pos.GetXY().second]),
-                  (char)STONE);
-}
-
-string GameI::GetStoneColoredOr(const Coord &pos, const uint8_t value) const
-{
-    return IsStoneOnPos(pos) ? GetStoneColored(pos) : string(1, value);
-}
-
 void GameI::DrawLineDivider(const uint8_t row) const
 {
-    cout << GetStoneColoredOr({row, 0}, PIECE_VERTICAL_LEFT);
-    for (uint8_t column = 1; column < mBoard.GetGameState().front().size() - 1; column++)
+    cout << mBoard.GetStoneColorOrAsString({row, 0}, PIECE_VERTICAL_LEFT);
+    for (uint8_t column = 1; column < mBoard.GetSize().GetXY().second - 1; column++)
     {
-        cout << PIECE_HORIZONTAL << GetStoneColoredOr({row, column}, PIECE_MIDDLE);
+        cout << PIECE_HORIZONTAL << mBoard.GetStoneColorOrAsString({row, column}, PIECE_MIDDLE);
     }
     cout << PIECE_HORIZONTAL
-         << GetStoneColoredOr({row, uint8_t(mBoard.GetGameState().front().size() - 1)}, PIECE_VERTICAL_RIGHT) << endl;
+         << mBoard.GetStoneColorOrAsString({row, uint8_t(mBoard.GetSize().GetXY().second - 1)}, PIECE_VERTICAL_RIGHT)
+         << endl;
 }
 
 void GameI::DrawLineBorderTop() const
 {
-    cout << GetStoneColoredOr({0, 0}, CORNER_LEFT_UP);
-    for (uint8_t column = 1; column < mBoard.GetGameState().front().size() - 1; column++)
+    cout << mBoard.GetStoneColorOrAsString({0, 0}, CORNER_LEFT_UP);
+    for (uint8_t column = 1; column < mBoard.GetSize().GetXY().second - 1; column++)
     {
-        cout << PIECE_HORIZONTAL << GetStoneColoredOr({0, column}, PIECE_HORIZONTAL_UP);
+        cout << PIECE_HORIZONTAL << mBoard.GetStoneColorOrAsString({0, column}, PIECE_HORIZONTAL_UP);
     }
     cout << PIECE_HORIZONTAL
-         << GetStoneColoredOr({0, uint8_t(mBoard.GetGameState().front().size() - 1)}, CORNER_RIGHT_UP) << endl;
+         << mBoard.GetStoneColorOrAsString({0, uint8_t(mBoard.GetSize().GetXY().second - 1)}, CORNER_RIGHT_UP) << endl;
 }
 
 void GameI::DrawLineBorderBottom() const
 {
-    cout << GetStoneColoredOr({uint8_t(mBoard.GetGameState().size() - 1), 0}, CORNER_LEFT_DOWN);
-    for (uint8_t column = 1; column < mBoard.GetGameState().front().size() - 1; column++)
+    cout << mBoard.GetStoneColorOrAsString({uint8_t(mBoard.GetSize().GetXY().first - 1), 0}, CORNER_LEFT_DOWN);
+    for (uint8_t column = 1; column < mBoard.GetSize().GetXY().second - 1; column++)
     {
         cout << PIECE_HORIZONTAL
-             << GetStoneColoredOr({uint8_t(mBoard.GetGameState().size() - 1), column}, PIECE_HORIZONTAL_DOWN);
+             << mBoard.GetStoneColorOrAsString({uint8_t(mBoard.GetSize().GetXY().first - 1), column},
+                                               PIECE_HORIZONTAL_DOWN);
     }
     cout << PIECE_HORIZONTAL
-         << GetStoneColoredOr(
-                {uint8_t(mBoard.GetGameState().size() - 1), uint8_t(mBoard.GetGameState().front().size() - 1)},
+         << mBoard.GetStoneColorOrAsString(
+                {uint8_t(mBoard.GetSize().GetXY().first - 1), uint8_t(mBoard.GetSize().GetXY().second - 1)},
                 CORNER_RIGHT_DOWN)
          << endl;
 }
 
-void GameI::ResetCursor() const
+void GameI::ResetCursor(const bool clearConsoleBefore /* = true */) const
 {
+    if (clearConsoleBefore)
+    {
+        cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
+    }
+
     SetConsoleCursorPosition(mHandleConsoleOutput, {});
 }
 
 COORD GameI::BoardToConsolePosition(const COORD &position) const
 {
-    return COORD(position.X * 2, position.Y);
+    return COORD(position.Y * 2, position.X);
 }
 
 void GameI::Move(const Keylogger::Key key)
@@ -273,16 +260,16 @@ void GameI::Move(const Keylogger::Key key)
     switch (key)
     {
     case Keylogger::Key::UP:
-        newPositionInBoard.Y--;
+        newPositionInBoard.X--;
         break;
     case Keylogger::Key::RIGHT:
-        newPositionInBoard.X++;
-        break;
-    case Keylogger::Key::DOWN:
         newPositionInBoard.Y++;
         break;
+    case Keylogger::Key::DOWN:
+        newPositionInBoard.X++;
+        break;
     case Keylogger::Key::LEFT:
-        newPositionInBoard.X--;
+        newPositionInBoard.Y--;
         break;
     }
 

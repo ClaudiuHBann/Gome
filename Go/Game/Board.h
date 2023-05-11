@@ -29,9 +29,10 @@ class Board
      * @brief Tries to add a stone in the board
      * @param player the player that wants to add the stone
      * @param stone the stone that the player wants to add
+     * @param validate validates position
      * @return true if the operation was succeesful otherwise false
      */
-    bool AddStone(Player &player, const Stone &stone);
+    bool AddStone(Player &player, const Stone &stone, const bool validate = true);
 
     /**
      * @brief Checks if a player can place the stone
@@ -65,6 +66,28 @@ class Board
     bool IsPositionValid(const Coord &pos) const;
 
     /**
+     * @brief Checks if a stone is on the position
+     * @param pos the position to check
+     * @return true if stone is on pos otherwise false
+     */
+    bool IsStoneOnPos(const Coord &pos) const;
+
+    /**
+     * @brief Gets the color of the stone as a string
+     * @param pos the position to get the color from
+     * @return the stone's color as string
+     */
+    string GetStoneColorAsString(const Coord &pos) const;
+
+    /**
+     * @brief Gets the color of the stone if there is one else the passed value as string
+     * @param pos the position to get the color of the stone from
+     * @param value the value to be stigified if position is empty
+     * @return the stone color or value as string
+     */
+    string GetStoneColorOrAsString(const Coord &pos, const uint8_t value) const;
+
+    /**
      * @brief Gets the winner if there is one else nullopt
      * @param players the players of the match
      * @return the winner or nullopt
@@ -72,10 +95,16 @@ class Board
     optional<Player::Color> GetWinner(const vector<Player> &players) const;
 
     /**
-     * @brief Gets the game state
-     * @return the game state
+     * @brief Gets the size of the board
+     * @return the size of the board
      */
-    const vector<vector<Player::Color>> &GetGameState() const;
+    Coord GetSize() const;
+
+    /**
+     * @brief Gets a position from the game state
+     * @return the position from the game state
+     */
+    Player::Color GetGameStatePos(const Coord &pos) const;
 
     /**
      * @brief C++20 Magic for the comparison boilerplate
