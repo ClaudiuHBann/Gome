@@ -142,8 +142,8 @@ void ContextServer::from_json(const nlohmann::json &nlohmann_json_j, ContextServ
     nlohmann_json_j.at("message").get_to(nlohmann_json_t.message);
 }
 
-ContextServer::ContextServer(const Board &board, const string &message)
-    : IContext(IContext::Type::SERVER), board(board), message(message)
+ContextServer::ContextServer(const Board &board, const Error error, const string &message)
+    : IContext(IContext::Type::SERVER), board(board), error(error), message(message)
 {
 }
 } // namespace Game

@@ -14,29 +14,33 @@ MatchManager::MatchManager(const vector<shared_ptr<TCPClient>> &clients, Match &
 {
 }
 
-void MatchManager::Process()
+void MatchManager::SendContextStarting(shared_ptr<TCPClient> client, function<void()> callback)
 {
-    TRACE("Send to every player it's color and the match rules...");
-    for (size_t i = 0; i < mClients.size(); i++)
-    {
-        // send the init context
-        ContextServerInit context(mMatch.mRules, GetPlayerByClient(mClients[i]).GetColor());
+    // send the init context
+    ContextServerInit context(mMatch.mRules, GetPlayerByClient(client).GetColor());
+    auto &&contextJSONString = context.ToJSONString();
+
+    bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
+    client->Send(data, HeaderMetadata::Type::TEXT, [this, client, callback = move(callback)](auto, auto) {
+        // send the updated context
+        ContextServer context(mMatch.mBoard, ContextServer::Error::NONE, "Have fun!");
         auto &&contextJSONString = context.ToJSONString();
 
         bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
-        mClients[i]->Send(data, HeaderMetadata::Type::TEXT, [this, i = i](auto, auto) {
-            // send the updated context
-            ContextServer context(mMatch.mBoard, "Have fun!");
-            auto &&contextJSONString = context.ToJSONString();
+        client->Send(data, HeaderMetadata::Type::TEXT, [callback = move(callback)](auto, auto) { callback(); });
+    });
+}
 
-            bytes data((byte *)contextJSONString.data(), (byte *)contextJSONString.data() + contextJSONString.size());
-            mClients[i]->Send(data, HeaderMetadata::Type::TEXT,
-                              [this, i = i](auto, auto) { ProcessPlayer(mClients[i]); });
-        });
+void MatchManager::Process()
+{
+    TRACE("Send to every player it's color, the match rules and the board...");
+    for (size_t i = 0; i < mClients.size(); i++)
+    {
+        SendContextStarting(mClients[i], [this, i]() { ProcessPlayer(mClients[i]); });
     }
 }
 
-void MatchManager::Finish(shared_ptr<TCPClient> client)
+void MatchManager::Finish()
 {
     auto winner = mMatch.mBoard.GetWinner(mMatch.mPlayers);
     if (!winner.has_value())
@@ -47,27 +51,44 @@ void MatchManager::Finish(shared_ptr<TCPClient> client)
     // create a response to send the winner through the message
     ContextServerUninit contextResponse(winner.value());
 
-    // send it
+    // send it to every client
     auto &&json = contextResponse.ToJSONString();
     bytes jsonAsBytes((byte *)json.data(), (byte *)json.data() + json.size());
-    client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
 
-    client->Disconnect();
+    for (const auto &client : mClients)
+    {
+        client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT,
+                     [client](auto, auto) { client->Disconnect(); });
+    }
 }
 
-void MatchManager::ProcessPlayer(shared_ptr<TCPClient> client)
+void MatchManager::ProcessPlayer(shared_ptr<TCPClient> clientCurrent)
 {
-    client->Receive([&, client](auto ec, shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
+    clientCurrent->Receive([&, clientCurrent](auto ec,
+                                              shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
         if (!ec)
         {
-            auto &&json = ProcessPlayerMessage(GetPlayerByClient(client), messageDisassembled);
-            bytes jsonAsBytes((byte *)json.data(), (byte *)json.data() + json.size());
-            client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+            auto &&context = ProcessPlayerMessage(GetPlayerByClient(clientCurrent), messageDisassembled);
+            auto &&jsonString = context.ToJSONString();
+            bytes jsonAsBytes((byte *)jsonString.data(), (byte *)jsonString.data() + jsonString.size());
+
+            // if eveything is good send it to everyone else to the client that made the error
+            if (context.error == ContextServer::Error::NONE)
+            {
+                for (const auto &client : mClients)
+                {
+                    client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+                }
+            }
+            else
+            {
+                clientCurrent->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+            }
         }
 
         if (!mMatch.mBoard.IsGameStateTerminal(mMatch.mPlayers))
         {
-            ProcessPlayer(client);
+            ProcessPlayer(clientCurrent);
         }
         else
         {
@@ -77,10 +98,10 @@ void MatchManager::ProcessPlayer(shared_ptr<TCPClient> client)
             {
                 TRACE(
                     format("A match has finished and the winner is {}.", Player::GetColorName(winner.value())).c_str());
-                TRACE("Disconnecting clients...");
+                TRACE("Sending context to every client and disconnecting them...");
             }
 
-            Finish(client);
+            Finish();
         }
     });
 }
@@ -99,7 +120,8 @@ Player &MatchManager::GetPlayerByClient(const shared_ptr<TCPClient> &client)
     return mMatch.mPlayers[indexOfClient];
 }
 
-string MatchManager::ProcessPlayerMessage(Player &player, shared_ptr<MessageManager::MessageDisassembled> message)
+ContextServer MatchManager::ProcessPlayerMessage(Player &player,
+                                                 shared_ptr<MessageManager::MessageDisassembled> message)
 {
     auto &[guid, type, bytes] = *message;
 
@@ -116,7 +138,7 @@ string MatchManager::ProcessPlayerMessage(Player &player, shared_ptr<MessageMana
         TRACE(format("\033[1;{}mPlayer\033[0m tried to make a move when it wasn't his turn...",
                      to_string((int)player.GetColor()))
                   .c_str());
-        return CreateResponse(contextRequest, Error::TURN);
+        return CreateResponse(contextRequest, ContextServer::Error::TURN);
     }
 
     // has a joker active but could not activate on server side (it's already used)
@@ -125,7 +147,7 @@ string MatchManager::ProcessPlayerMessage(Player &player, shared_ptr<MessageMana
         TRACE(format("\033[1;{}mPlayer\033[0m tried to use Joker::{} twice...", to_string((int)player.GetColor()),
                      Player::GetJokerName(contextRequest.joker))
                   .c_str());
-        return CreateResponse(contextRequest, Error::JOKER);
+        return CreateResponse(contextRequest, ContextServer::Error::JOKER);
     }
 
     // could not add the stone
@@ -136,7 +158,7 @@ string MatchManager::ProcessPlayerMessage(Player &player, shared_ptr<MessageMana
                                        (int)contextRequest.stone.GetPosition().GetXY().first,
                                        (int)contextRequest.stone.GetPosition().GetXY().second))
                   .c_str());
-        return CreateResponse(contextRequest, Error::STONE);
+        return CreateResponse(contextRequest, ContextServer::Error::STONE);
     }
 
     // cycle player and respond
@@ -149,26 +171,25 @@ string MatchManager::ProcessPlayerMessage(Player &player, shared_ptr<MessageMana
         mMatch.GetPlayerNext();
     }
 
-    return CreateResponse(contextRequest, Error::NONE);
+    return CreateResponse(contextRequest, ContextServer::Error::NONE);
 }
 
-string MatchManager::CreateResponse(const ContextClient &contextRequest, const Error error)
+ContextServer MatchManager::CreateResponse(const ContextClient &contextRequest, const ContextServer::Error error)
 {
-    string message{"All Good!"s};
+    string message{format("\033[1;{}mPlayer\033[0m is next...", to_string((int)mMatch.GetPlayerCurrent().GetColor()))};
     switch (error)
     {
-    case Error::TURN:
+    case ContextServer::Error::TURN:
         message = "Wait your turn!"s;
         break;
-    case Error::JOKER:
+    case ContextServer::Error::JOKER:
         message = format("Joker {} is already used!", Player::GetJokerName(contextRequest.joker));
         break;
-    case Error::STONE:
-        message = format("Couldn't add stone!", Player::GetJokerName(contextRequest.joker));
+    case ContextServer::Error::STONE:
+        message = format("Could not add stone there!", Player::GetJokerName(contextRequest.joker));
         break;
     }
 
-    ContextServer contextResponse(mMatch.mBoard, message);
-    return contextResponse.ToJSONString();
+    return ContextServer(mMatch.mBoard, error, message);
 }
 } // namespace Server

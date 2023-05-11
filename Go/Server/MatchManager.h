@@ -30,34 +30,30 @@ class MatchManager
     void Process();
 
   private:
-    /**
-     * @brief The type of errors that a player can do
-     */
-    enum class Error
-    {
-        NONE,
-        TURN,  // not the turn of the requesting player
-        JOKER, // joker already used
-        STONE  // could not add stone
-    };
-
     Match &mMatch;
     vector<shared_ptr<TCPClient>> mClients{};
     shared_ptr<mutex> mMutexPlayerCurrent;
 
     /**
-     * @brief Finishes the game
-     * @param client the client that will be disconnected
+     * @brief Send the init context and a server context
+     * @param client the client to send contexts to
+     * @param callback the callback to be invoked when the operation finishes
      */
-    void Finish(shared_ptr<TCPClient> client);
+    void SendContextStarting(shared_ptr<TCPClient> client, function<void()> callback);
+
+    /**
+     * @brief Finishes the game
+     * @note Sends to every client the uninit context and disconnects them from the server
+     */
+    void Finish();
 
     /**
      * @brief Creates a response based on the context that the player sends
      * @param contextRequest the client's context
      * @param error the error that the player did
-     * @return
+     * @return the context
      */
-    string CreateResponse(const ContextClient &contextRequest, const Error error);
+    ContextServer CreateResponse(const ContextClient &contextRequest, const ContextServer::Error error);
 
     /**
      * @brief Handles the client processing
@@ -69,9 +65,9 @@ class MatchManager
      * @brief Processes the player context
      * @param player the player
      * @param message the informative message
-     * @return the context as json
+     * @return the context
      */
-    string ProcessPlayerMessage(Player &player, shared_ptr<MessageManager::MessageDisassembled> message);
+    ContextServer ProcessPlayerMessage(Player &player, shared_ptr<MessageManager::MessageDisassembled> message);
 
     /**
      * @brief Gets the player associated with the client

@@ -33,7 +33,7 @@ class Keylogger
     /**
      * @brief The keys that we handle for the game
      */
-    enum class Key
+    enum class Key : uint8_t
     {
         UP = VK_UP,
         RIGHT = VK_RIGHT,

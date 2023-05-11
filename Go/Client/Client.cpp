@@ -28,7 +28,7 @@ void Client::ReceiveProcess(const string &jsonString)
     }
     break;
     case IContext::Type::SERVER: {
-        ContextServer context(Coord{0, 0}, {});
+        ContextServer context(Coord{0, 0}, ContextServer::Error::NONE, {});
         context.FromJSONString(jsonString);
         mCallback(context);
     }

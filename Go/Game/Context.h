@@ -16,7 +16,7 @@ class IContext
     /**
      * @brief Types of context
      */
-    enum class Type
+    enum class Type : uint8_t
     {
         NONE = 1, // if this is 0 then we need to change the json (de)serializing methods
         CLIENT,
@@ -125,7 +125,19 @@ class ContextServer : public IContext
     void to_json(nlohmann::json &nlohmann_json_j, const ContextServer &nlohmann_json_t);
     void from_json(const nlohmann::json &nlohmann_json_j, ContextServer &nlohmann_json_t);
 
+    /**
+     * @brief The type of errors that a player can do
+     */
+    enum class Error : uint8_t
+    {
+        NONE = 1, // if this is 0 then we need to change the json (de)serializing methods
+        TURN,     // not the turn of the requesting player
+        JOKER,    // joker already used
+        STONE     // could not add stone
+    };
+
     Board board;
+    Error error;
     string message;
 
     /**
@@ -133,6 +145,6 @@ class ContextServer : public IContext
      * @param board the game state
      * @param message an informative message
      */
-    ContextServer(const Board &board, const string &message);
+    ContextServer(const Board &board, const Error error, const string &message);
 };
 } // namespace Game
