@@ -64,7 +64,6 @@ void GameI::SetJoker(const Keylogger::Key key)
 
 void GameI::AddStone()
 {
-    scoped_lock lock(mMutexConsole);
     TRACE_NO_STDOUT("Adding stone...");
 
     ContextClient context(Coord{(uint8_t)mCurrentPositionInBoard.X, (uint8_t)mCurrentPositionInBoard.Y},
@@ -116,7 +115,6 @@ void GameI::OnUpdate(const ContextServer &context)
         return;
     }
 
-    scoped_lock lock(mMutexConsole);
     TRACE_NO_STDOUT("Updating board and messages...");
 
     // update jokers
@@ -164,6 +162,22 @@ void GameI::DrawBoard() const
         DrawLineDivider(row);
     }
     DrawLineBorderBottom();
+}
+
+/* static */ void GameI::GetCaretPos(POINT *point)
+{
+    static auto handleConsoleStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi{};
+    GetConsoleScreenBufferInfo(handleConsoleStdOut, &csbi);
+
+    point->x = csbi.dwCursorPosition.X;
+    point->y = csbi.dwCursorPosition.Y;
+}
+
+/* static */ void GameI::SetCaretPos(int x, int y)
+{
+    static auto handleConsoleStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleCursorPosition(handleConsoleStdOut, {(SHORT)x, (SHORT)y});
 }
 
 void GameI::DrawJokersStateAndPlayerColor() const

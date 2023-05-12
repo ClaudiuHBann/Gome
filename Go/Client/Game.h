@@ -38,6 +38,8 @@ class GameI
     void DrawLineBorderTop() const;
     void DrawLineBorderBottom() const;
 
+    static void GetCaretPos(POINT *point);
+    static void SetCaretPos(int x, int y);
     void ResetCursor(const bool clearConsoleBefore = true) const;
     COORD BoardToConsolePosition(const COORD &position) const;
 
