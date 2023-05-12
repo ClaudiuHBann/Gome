@@ -12,9 +12,3 @@ int main()
 
     return 0;
 }
-
-/*
-    TODO:
-            - add comments for the Go project
-            - documentatie despre arhitectura si cum functioneaza
-*/

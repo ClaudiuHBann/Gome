@@ -100,7 +100,7 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
 
 void GameI::OnUninitialize(const ContextServerUninit &contextUninit)
 {
-    ResetCursor();
+    ResetCaret();
     TRACE(format("The game ended and the winner is player {}!", Player::GetColorName(contextUninit.winner)).c_str());
 
     mClient.Disconnect();
@@ -143,7 +143,7 @@ void GameI::Run()
     {
     }
 
-    ResetCursor();
+    ResetCaret();
     Draw();
 
     while (!mFinished)
@@ -154,7 +154,7 @@ void GameI::Run()
 
 void GameI::DrawBoard() const
 {
-    ResetCursor(false);
+    ResetCaret(false);
 
     DrawLineBorderTop();
     for (uint8_t row = 1; row < mBoard.GetSize().GetXY().first - 1; row++)
@@ -260,7 +260,7 @@ void GameI::DrawLineBorderBottom() const
          << endl;
 }
 
-void GameI::ResetCursor(const bool clearConsoleBefore /* = true */) const
+void GameI::ResetCaret(const bool clearConsoleBefore /* = true */) const
 {
     if (clearConsoleBefore)
     {
