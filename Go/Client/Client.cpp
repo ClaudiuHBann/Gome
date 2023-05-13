@@ -34,7 +34,7 @@ void Client::ReceiveProcess(const string &jsonString)
     }
     break;
     case IContext::Type::SERVER_UNINIT: {
-        ContextServerUninit context(Player::Color::NONE);
+        ContextServerUninit context(Player::Color::NONE, {});
         context.FromJSONString(jsonString);
         mCallbackUninit(context);
     }

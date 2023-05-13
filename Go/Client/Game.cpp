@@ -100,8 +100,15 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
 
 void GameI::OnUninitialize(const ContextServerUninit &contextUninit)
 {
-    ResetCaret();
-    TRACE(format("The game ended and the winner is player {}!", Player::GetColorName(contextUninit.winner)).c_str());
+    TRACE_NO_STDOUT(contextUninit.message);
+
+    mMessages.push_back(contextUninit.message);
+    if (mMessages.size() > 5)
+    {
+        mMessages.pop_front();
+    }
+
+    Draw();
 
     mClient.Disconnect();
     mFinished = true;

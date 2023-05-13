@@ -115,16 +115,18 @@ void ContextServerUninit::to_json(nlohmann::json &nlohmann_json_j, const Context
 {
     nlohmann::to_json(nlohmann_json_j, static_cast<const IContext &>(nlohmann_json_t));
     nlohmann_json_j["winner"] = nlohmann_json_t.winner;
+    nlohmann_json_j["message"] = nlohmann_json_t.message;
 }
 
 void ContextServerUninit::from_json(const nlohmann::json &nlohmann_json_j, ContextServerUninit &nlohmann_json_t)
 {
     nlohmann::from_json(nlohmann_json_j, static_cast<IContext &>(nlohmann_json_t));
     nlohmann_json_j.at("winner").get_to(nlohmann_json_t.winner);
+    nlohmann_json_j.at("message").get_to(nlohmann_json_t.message);
 }
 
-ContextServerUninit::ContextServerUninit(const Player::Color winner)
-    : IContext(IContext::Type::SERVER_UNINIT), winner(winner)
+ContextServerUninit::ContextServerUninit(const Player::Color winner, const string &message)
+    : IContext(IContext::Type::SERVER_UNINIT), winner(winner), message(message)
 {
 }
 

@@ -51,7 +51,16 @@ void MatchManager::Finish()
     }
 
     // create a response to send the winner through the message
-    ContextServerUninit contextResponse(winner.value());
+    auto message = "The match has ended with"s;
+    for (const auto &player : mMatch.mPlayers)
+    {
+        message += format(" \033[1;{}m{}\033[0m having {} stones,", to_string((int)player.GetColor()),
+                          Player::GetColorName(player.GetColor()), mMatch.mBoard.GetPlayerStoneCount(player));
+    }
+    message.pop_back();
+    message += vformat(" and the winner is {}."s, make_format_args(Player::GetColorName(winner.value())));
+
+    ContextServerUninit contextResponse(winner.value(), message);
 
     // send it to every client
     auto &&json = contextResponse.ToJSONString();

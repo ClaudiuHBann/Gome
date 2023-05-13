@@ -101,6 +101,13 @@ class Board
     Coord GetSize() const;
 
     /**
+     * @brief Gets the number of stones that the player places
+     * @param player the player to look for
+     * @return the stone count
+     */
+    uint8_t GetPlayerStoneCount(const Player &player) const;
+
+    /**
      * @brief Gets a position from the game state
      * @return the position from the game state
      */

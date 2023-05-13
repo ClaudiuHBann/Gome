@@ -144,6 +144,24 @@ Player::Color Board::GetGameStatePos(const Coord &pos) const
     return mGameState[posXY.first][posXY.second];
 }
 
+uint8_t Board::GetPlayerStoneCount(const Player &player) const
+{
+    uint8_t stoneCount{};
+
+    for (uint8_t row = 0; row < GetSize().GetXY().first; row++)
+    {
+        for (uint8_t column = 0; column < GetSize().GetXY().second; column++)
+        {
+            if (mGameState[row][column] == player.GetColor())
+            {
+                stoneCount++;
+            }
+        }
+    }
+
+    return stoneCount;
+}
+
 Coord Board::GetSize() const
 {
     return {(uint8_t)mGameState.size(), (uint8_t)mGameState.front().size()};
@@ -218,28 +236,23 @@ optional<Player::Color> Board::GetWinner(const vector<Player> &players) const
         return nullopt;
     }
 
-    uint8_t playerBestIndex = 0;
-    uint8_t playerBestStoneCount = 0;
-    for (uint8_t i = 0; i < players.size(); i++)
+    vector<uint8_t> stoneCountPlayers{};
+    for (const auto &player : players)
     {
-        uint8_t playerStoneCount = 0;
-        for (const auto &row : mGameState)
-        {
-            for (const auto &column : row)
-            {
-                if (players[i].GetColor() == column)
-                {
-                    playerStoneCount++;
-                }
-            }
-        }
+        stoneCountPlayers.push_back(GetPlayerStoneCount(player));
+    }
 
-        if (playerStoneCount >= playerBestStoneCount)
+    uint8_t winnerIndex = 0;
+    uint8_t stoneCountPlayerBest = stoneCountPlayers.front();
+    for (uint8_t i = 1; i < stoneCountPlayers.size(); i++)
+    {
+        if (stoneCountPlayers[i] >= stoneCountPlayerBest)
         {
-            playerBestIndex = i;
+            stoneCountPlayerBest = stoneCountPlayers[i];
+            winnerIndex = i;
         }
     }
 
-    return players[playerBestIndex].GetColor();
+    return players[winnerIndex].GetColor();
 }
 }; // namespace Game

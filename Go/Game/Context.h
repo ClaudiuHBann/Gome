@@ -107,12 +107,14 @@ class ContextServerUninit : public IContext
     void from_json(const nlohmann::json &nlohmann_json_j, ContextServerUninit &nlohmann_json_t);
 
     Player::Color winner;
+    string message;
 
     /**
      * @brief Constructor
      * @param winner the winner of the game
+     * @param message a message containing the final game state
      */
-    ContextServerUninit(const Player::Color winner);
+    ContextServerUninit(const Player::Color winner, const string &message);
 };
 
 /**
