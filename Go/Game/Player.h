@@ -15,6 +15,7 @@ class Player
      */
     enum class Color : uint8_t
     {
+        UNKNOWN = 255,
         NONE = 37,
         BLACK = 30,
         RED = 31,

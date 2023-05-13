@@ -11,6 +11,11 @@ void Keylogger::Accelerator::Register(const vector<uint8_t> &keys, const functio
 
 void Keylogger::Accelerator::Check()
 {
+    if (GetForegroundWindow() != GetConsoleWindow())
+    {
+        return;
+    }
+
     for (auto &[keys, callback, state] : mAccelerators)
     {
         bool fire = true;

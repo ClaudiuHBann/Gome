@@ -264,7 +264,7 @@ void GameI::ResetCaret(const bool clearConsoleBefore /* = true */) const
 {
     if (clearConsoleBefore)
     {
-        cout << "\x1B[2J\x1B[H"; // clear console with ASCII escape sequence
+        system("cls");
     }
 
     SetCaretPos(0, 0);

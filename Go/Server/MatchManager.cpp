@@ -171,6 +171,15 @@ ContextServer MatchManager::ProcessPlayerMessage(Player &player,
     else
     {
         mMatch.GetPlayerNext();
+        auto &playerStart = mMatch.GetPlayerCurrent();
+        while (!mMatch.mBoard.CanPlayerPlaceAnyStone(mMatch.GetPlayerCurrent()))
+        {
+            mMatch.GetPlayerNext();
+            if (mMatch.GetPlayerCurrent() == playerStart)
+            {
+                break;
+            }
+        }
     }
 
     return CreateResponse(contextRequest, ContextServer::Error::NONE);

@@ -41,7 +41,7 @@ uint8_t Board::GetSameStoneNearbyPosCount(const Player &player, const Coord &pos
     auto GetPlayerColorFromStonePos = [this](const Coord &pos) {
         if (!IsPositionValid(pos))
         {
-            return Player::Color::NONE;
+            return Player::Color::UNKNOWN;
         }
 
         return GetGameStatePos(pos);
@@ -170,7 +170,8 @@ bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 
                 // we can place anywhere but need to have nearby allies
                 case Player::Joker::REPLACE: {
-                    if (GetSameStoneNearbyPosCount(player, {row, column}) < MAX_NEARBY_STONES_COUNT)
+                    if (mGameState[row][column] == player.GetColor() &&
+                        GetSameStoneNearbyPosCount(player, {row, column}) < MAX_NEARBY_STONES_COUNT)
                     {
                         return true;
                     }
@@ -179,10 +180,13 @@ bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 
                 // DOUBLE_MOVE is the same as a joker free move and
                 default: {
-                    if (mGameState[row][column] == Player::Color::NONE &&
-                        GetSameStoneNearbyPosCount(player, {row, column}) < MAX_NEARBY_STONES_COUNT)
+                    if (mGameState[row][column] == player.GetColor())
                     {
-                        return true;
+                        Player playerNONE(Player::Color::NONE); // empty space
+                        if (IsSameStoneNearbyPos(playerNONE, {row, column}))
+                        {
+                            return true;
+                        }
                     }
                 }
                 break;
