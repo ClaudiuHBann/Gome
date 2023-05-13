@@ -185,16 +185,20 @@ void GameI::DrawJokersStateAndPlayerColor() const
     const auto &jokers = mPlayer.GetJokers();
 
     SetCaretPos(mBoard.GetSize().GetXY().second * 2, 1);
-    cout << format("Your color is {}", Player::GetColorName(mPlayer.GetColor()));
+    cout << format("Your color is \033[1;{}m{}\033[0m", to_string((int)mPlayer.GetColor()),
+                   Player::GetColorName(mPlayer.GetColor()));
 
     SetCaretPos(mBoard.GetSize().GetXY().second * 2, 2);
-    cout << format("(F1) Joker Double-Move: {}", jokers[0] != Player::Joker::NONE ? "READY" : "USED ");
+    cout << format("(F1) Joker Double-Move: \033[1;{}m{}\033[0m", jokers[0] != Player::Joker::NONE ? "32" : "31",
+                   jokers[0] != Player::Joker::NONE ? "READY" : "USED ");
 
     SetCaretPos(mBoard.GetSize().GetXY().second * 2, 3);
-    cout << format("(F2) Joker Replace: {}", jokers[1] != Player::Joker::NONE ? "READY" : "USED ");
+    cout << format("(F2) Joker Replace: \033[1;{}m{}\033[0m", jokers[1] != Player::Joker::NONE ? "32" : "31",
+                   jokers[1] != Player::Joker::NONE ? "READY" : "USED ");
 
     SetCaretPos(mBoard.GetSize().GetXY().second * 2, 4);
-    cout << format("(F3) Joker Freedom: {}", jokers[2] != Player::Joker::NONE ? "READY" : "USED ");
+    cout << format("(F3) Joker Freedom: \033[1;{}m{}\033[0m", jokers[2] != Player::Joker::NONE ? "32" : "31",
+                   jokers[2] != Player::Joker::NONE ? "READY" : "USED ");
 }
 
 void GameI::DrawMessages() const
@@ -264,7 +268,17 @@ void GameI::ResetCaret(const bool clearConsoleBefore /* = true */) const
 {
     if (clearConsoleBefore)
     {
-        system("cls");
+        static auto console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        CONSOLE_SCREEN_BUFFER_INFO csbi{};
+        GetConsoleScreenBufferInfo(console, &csbi);
+
+        DWORD writtenCharsCount{};
+        FillConsoleOutputCharacter(console, ' ', csbi.dwSize.X * csbi.dwSize.Y, {}, &writtenCharsCount);
+
+        FillConsoleOutputAttribute(console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
+                                   csbi.dwSize.X * csbi.dwSize.Y, {}, &writtenCharsCount);
+        SetConsoleCursorPosition(console, {});
     }
 
     SetCaretPos(0, 0);

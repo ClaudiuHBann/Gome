@@ -65,6 +65,12 @@ bool Player::SetActiveJoker(const Joker joker)
         return false;
     }
 
+    // deactivate current joker
+    if (mJokerActive != Joker::NONE)
+    {
+        *ranges::find(mJokers, Joker::NONE) = mJokerActive;
+    }
+
     mJokerActive = *itJoker;
     *itJoker = Joker::NONE;
 

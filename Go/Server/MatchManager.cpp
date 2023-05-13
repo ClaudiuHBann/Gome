@@ -79,7 +79,23 @@ void MatchManager::ProcessPlayer(shared_ptr<TCPClient> clientCurrent)
             {
                 for (const auto &client : mClients)
                 {
-                    client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+                    // send specific message to the player that makes the next move
+                    if (GetPlayerByClient(client) == mMatch.GetPlayerCurrent())
+                    {
+                        auto &&contextSpecial =
+                            ProcessPlayerMessage(GetPlayerByClient(clientCurrent), messageDisassembled);
+                        contextSpecial.message = "It's your turn next..."s;
+                        auto &&jsonStringSpecial = contextSpecial.ToJSONString();
+                        bytes jsonAsBytesSpecial((byte *)jsonStringSpecial.data(),
+                                                 (byte *)jsonStringSpecial.data() + jsonStringSpecial.size());
+
+                        client->Send(jsonAsBytesSpecial, Networking::Message::HeaderMetadata::Type::TEXT,
+                                     [](auto, auto) {});
+                    }
+                    else
+                    {
+                        client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+                    }
                 }
             }
             else
