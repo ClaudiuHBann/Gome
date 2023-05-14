@@ -62,6 +62,13 @@ class MatchManager
     void ProcessPlayer(shared_ptr<TCPClient> client);
 
     /**
+     * @brief Send the specific context to every connected client except the passed client
+     * @param contextServer the context to finish building and send
+     * @param client the client to except
+     */
+    void SendContextServerToEveryoneExcept(ContextServer contextServer, shared_ptr<TCPClient> clientExcept);
+
+    /**
      * @brief Processes the player context
      * @param player the player
      * @param message the informative message

@@ -24,7 +24,7 @@ void MatchManager::SendContextStarting(shared_ptr<TCPClient> client, function<vo
     client->Send(data, HeaderMetadata::Type::TEXT, [this, client, callback = move(callback)](auto, auto) {
         // send the updated context
         ContextServer context(
-            mMatch.mBoard, ContextServer::Error::NONE,
+            mMatch.mBoard, GetPlayerByClient(client).GetJokers(), ContextServer::Error::NONE,
             format("\033[1;{}mPlayer\033[0m is first...", to_string((int)mMatch.GetPlayerCurrent().GetColor())));
         auto &&contextJSONString = context.ToJSONString();
 
@@ -58,7 +58,8 @@ void MatchManager::Finish()
                           Player::GetColorName(player.GetColor()), mMatch.mBoard.GetPlayerStoneCount(player));
     }
     message.pop_back();
-    message += vformat(" and the winner is {}."s, make_format_args(Player::GetColorName(winner.value())));
+    message += vformat(" and the winner is \033[1;{}m{}\033[0m."s,
+                       make_format_args(to_string((int)winner.value()), Player::GetColorName(winner.value())));
 
     ContextServerUninit contextResponse(winner.value(), message);
 
@@ -73,42 +74,54 @@ void MatchManager::Finish()
     }
 }
 
+void MatchManager::SendContextServerToEveryoneExcept(ContextServer contextServer, shared_ptr<TCPClient> clientExcept)
+{
+    for (const auto &client : mClients)
+    {
+        if (client == clientExcept)
+        {
+            continue;
+        }
+
+        contextServer.jokers = GetPlayerByClient(client).GetJokers();
+        auto &&jsonString = contextServer.ToJSONString();
+        bytes jsonAsBytes((byte *)jsonString.data(), (byte *)jsonString.data() + jsonString.size());
+
+        client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+    }
+}
+
 void MatchManager::ProcessPlayer(shared_ptr<TCPClient> clientCurrent)
 {
     clientCurrent->Receive([&, clientCurrent](auto ec,
                                               shared_ptr<MessageManager::MessageDisassembled> messageDisassembled) {
+        scoped_lock lock(*mMutexPlayerCurrent);
+
         if (!ec)
         {
+            // the context needs the jokers to be populated further
+            // warning: be careful when changing this context, look for the below logic first
             auto &&context = ProcessPlayerMessage(GetPlayerByClient(clientCurrent), messageDisassembled);
-            auto &&jsonString = context.ToJSONString();
-            bytes jsonAsBytes((byte *)jsonString.data(), (byte *)jsonString.data() + jsonString.size());
 
             // if eveything is good send it to everyone else to the client that made the error
             if (context.error == ContextServer::Error::NONE)
             {
-                for (const auto &client : mClients)
-                {
-                    // send specific message to the player that makes the next move
-                    if (GetPlayerByClient(client) == mMatch.GetPlayerCurrent())
-                    {
-                        auto &&contextSpecial =
-                            ProcessPlayerMessage(GetPlayerByClient(clientCurrent), messageDisassembled);
-                        contextSpecial.message = "It's your turn next..."s;
-                        auto &&jsonStringSpecial = contextSpecial.ToJSONString();
-                        bytes jsonAsBytesSpecial((byte *)jsonStringSpecial.data(),
-                                                 (byte *)jsonStringSpecial.data() + jsonStringSpecial.size());
+                SendContextServerToEveryoneExcept(context, clientCurrent);
 
-                        client->Send(jsonAsBytesSpecial, Networking::Message::HeaderMetadata::Type::TEXT,
-                                     [](auto, auto) {});
-                    }
-                    else
-                    {
-                        client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
-                    }
-                }
+                // send specific message to the player that makes the next move
+                context.message = "It's your turn next..."s;
+                context.jokers = GetPlayerByClient(clientCurrent).GetJokers();
+                auto &&jsonString = context.ToJSONString();
+                bytes jsonAsBytes((byte *)jsonString.data(), (byte *)jsonString.data() + jsonString.size());
+
+                clientCurrent->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
             }
             else
             {
+                context.jokers = GetPlayerByClient(clientCurrent).GetJokers();
+                auto &&jsonString = context.ToJSONString();
+                bytes jsonAsBytes((byte *)jsonString.data(), (byte *)jsonString.data() + jsonString.size());
+
                 clientCurrent->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
             }
         }
@@ -156,8 +169,6 @@ ContextServer MatchManager::ProcessPlayerMessage(Player &player,
 
     ContextClient contextRequest(Coord{0, 0}, Player::Joker::NONE);
     contextRequest.FromJSONString(jsonString);
-
-    scoped_lock lock(*mMutexPlayerCurrent);
 
     // not his turn
     if (player != mMatch.GetPlayerCurrent())
@@ -226,6 +237,6 @@ ContextServer MatchManager::CreateResponse(const ContextClient &contextRequest, 
         break;
     }
 
-    return ContextServer(mMatch.mBoard, error, message);
+    return ContextServer(mMatch.mBoard, {}, error, message);
 }
 } // namespace Server

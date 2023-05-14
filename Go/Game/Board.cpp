@@ -18,6 +18,7 @@ bool Board::AddStone(Player &player, const Stone &stone, const bool validate /* 
 {
     if (validate && !IsStoneValid(player, stone))
     {
+        player.DeactivateActiveJoker();
         return false;
     }
 
@@ -173,8 +174,23 @@ bool Board::CanPlayerPlaceAnyStone(const Player &player) const
     {
         for (uint8_t column = 0; column < GetSize().GetXY().second; column++)
         {
-            for (const auto &joker : player.GetJokers())
+            for (const auto &[joker, state] : player.GetJokers())
             {
+                // if the joker is used check for a joker free move
+                if (!state)
+                {
+                    if (mGameState[row][column] == player.GetColor())
+                    {
+                        Player playerNONE(Player::Color::NONE); // empty space
+                        if (IsSameStoneNearbyPos(playerNONE, {row, column}))
+                        {
+                            return true;
+                        }
+                    }
+
+                    continue;
+                }
+
                 switch (joker)
                 {
                 // we can place on a free spot without nearby allies

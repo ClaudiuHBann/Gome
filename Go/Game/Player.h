@@ -38,8 +38,9 @@ class Player
     /**
      * @brief Constructor
      * @param color the color of the player
+     * @param color the jokers that the player has left
      */
-    Player(const Color color);
+    Player(const Color color, const vector<pair<Player::Joker, bool>> &jokers = {});
 
     /**
      * @brief Gets the joker name
@@ -69,15 +70,20 @@ class Player
     Joker GetActiveJoker() const;
 
     /**
-     * @brief Gets the jokers that the player has
-     * @return the jokers that the player has
+     * @brief Gets the jokers and their state that the player has
+     * @return the jokers and their state that the player has
      */
-    const vector<Joker> &GetJokers() const;
+    const vector<pair<Player::Joker, bool>> &GetJokers() const;
 
     /**
      * @brief Unvalidates the active joker
      */
     void UseActiveJoker();
+
+    /**
+     * @brief Deactivates the current active joker
+     */
+    void DeactivateActiveJoker();
 
     /**
      * @brief Gets the color of the player
@@ -93,6 +99,6 @@ class Player
   private:
     Color mColor = Color::NONE;
     Joker mJokerActive = Joker::NONE;
-    vector<Joker> mJokers{Joker::DOUBLE_MOVE, Joker::REPLACE, Joker::FREEDOM};
+    vector<pair<Joker, bool>> mJokers{{Joker::DOUBLE_MOVE, true}, {Joker::REPLACE, true}, {Joker::FREEDOM, true}};
 };
 }; // namespace Game

@@ -134,6 +134,7 @@ void ContextServer::to_json(nlohmann::json &nlohmann_json_j, const ContextServer
 {
     nlohmann::to_json(nlohmann_json_j, static_cast<const IContext &>(nlohmann_json_t));
     nlohmann_json_j["board"] = nlohmann_json_t.board;
+    nlohmann_json_j["jokers"] = nlohmann_json_t.jokers;
     nlohmann_json_j["error"] = nlohmann_json_t.error;
     nlohmann_json_j["message"] = nlohmann_json_t.message;
 }
@@ -142,12 +143,14 @@ void ContextServer::from_json(const nlohmann::json &nlohmann_json_j, ContextServ
 {
     nlohmann::from_json(nlohmann_json_j, static_cast<IContext &>(nlohmann_json_t));
     nlohmann_json_j.at("board").get_to(nlohmann_json_t.board);
+    nlohmann_json_j.at("jokers").get_to(nlohmann_json_t.jokers);
     nlohmann_json_j.at("error").get_to(nlohmann_json_t.error);
     nlohmann_json_j.at("message").get_to(nlohmann_json_t.message);
 }
 
-ContextServer::ContextServer(const Board &board, const Error error, const string &message)
-    : IContext(IContext::Type::SERVER), board(board), error(error), message(message)
+ContextServer::ContextServer(const Board &board, const vector<pair<Player::Joker, bool>> &jokers, const Error error,
+                             const string &message)
+    : IContext(IContext::Type::SERVER), board(board), jokers(jokers), error(error), message(message)
 {
 }
 } // namespace Game

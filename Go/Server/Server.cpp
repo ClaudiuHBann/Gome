@@ -22,7 +22,7 @@ Server::Server(IOContext &context, const uint16_t port, Rules &rules) : TCPServe
             // send the every connected client how many clients needs to connect to start the match
             for (const auto &playerWaiting : mPlayersWaiting)
             {
-                ContextServer context(Coord{0, 0}, ContextServer::Error::WAIT,
+                ContextServer context(Coord{0, 0}, {}, ContextServer::Error::WAIT,
                                       format("Waiting for {} more player(s) to connect...",
                                              rules.GetPlayersPerMatch() - mPlayersWaiting.size()));
                 auto &&contextJSONString = context.ToJSONString();

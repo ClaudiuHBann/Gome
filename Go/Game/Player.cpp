@@ -5,7 +5,8 @@
 
 namespace Game
 {
-Player::Player(const Color color) : mColor(color)
+Player::Player(const Color color, const vector<pair<Player::Joker, bool>> &jokers /* = {} */)
+    : mColor(color), mJokers(jokers)
 {
 }
 
@@ -57,33 +58,55 @@ Player::Joker Player::GetActiveJoker() const
     }
 }
 
+void Player::DeactivateActiveJoker()
+{
+    if (mJokerActive == Joker::NONE)
+    {
+        return;
+    }
+
+    ranges::find_if(mJokers, [&](const auto &pair) { return pair.first == mJokerActive; })->second = true;
+    mJokerActive = Joker::NONE;
+}
+
 bool Player::SetActiveJoker(const Joker joker)
 {
-    auto itJoker = ranges::find(mJokers, joker);
-    if (itJoker == mJokers.end())
+    // signal to deactivate current active joker if there is one
+    if (joker == Joker::NONE)
+    {
+        DeactivateActiveJoker();
+        return true;
+    }
+
+    // already used
+    auto it = ranges::find_if(mJokers, [&](const auto &pair) { return pair.first == joker; });
+    if (!it->second)
     {
         return false;
     }
 
-    // deactivate current joker
-    if (mJokerActive != Joker::NONE)
-    {
-        *ranges::find(mJokers, Joker::NONE) = mJokerActive;
-    }
+    // save previous active joker if there is one
+    DeactivateActiveJoker();
 
-    mJokerActive = *itJoker;
-    *itJoker = Joker::NONE;
+    it->second = false;
+    mJokerActive = it->first;
 
     return true;
 }
 
-const vector<Player::Joker> &Player::GetJokers() const
+const vector<pair<Player::Joker, bool>> &Player::GetJokers() const
 {
     return mJokers;
 }
 
 void Player::UseActiveJoker()
 {
+    if (mJokerActive == Joker::NONE)
+    {
+        return;
+    }
+
+    ranges::find_if(mJokers, [&](const auto &pair) { return pair.first == mJokerActive; })->second = false;
     mJokerActive = Joker::NONE;
 }
 }; // namespace Game

@@ -140,6 +140,7 @@ class ContextServer : public IContext
     };
 
     Board board;
+    vector<pair<Player::Joker, bool>> jokers;
     Error error;
     string message;
 
@@ -148,6 +149,7 @@ class ContextServer : public IContext
      * @param board the game state
      * @param message an informative message
      */
-    ContextServer(const Board &board, const Error error, const string &message);
+    ContextServer(const Board &board, const vector<pair<Player::Joker, bool>> &jokers, const Error error,
+                  const string &message);
 };
 } // namespace Game
