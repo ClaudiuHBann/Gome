@@ -5,9 +5,14 @@
 
 namespace Game
 {
-Player::Player(const Color color, const vector<pair<Player::Joker, bool>> &jokers /* = {} */)
-    : mColor(color), mJokers(jokers)
+Player::Player(const Color color, const vector<pair<Player::Joker, bool>> &jokers /* = {} */) : mColor(color)
 {
+    if (jokers.empty())
+    {
+        return;
+    }
+
+    mJokers = jokers;
 }
 
 Player::Color Player::GetColor() const

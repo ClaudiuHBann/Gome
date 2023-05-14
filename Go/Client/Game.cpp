@@ -50,15 +50,39 @@ void GameI::SetJoker(const Keylogger::Key key)
 {
     switch (key)
     {
-    case Keylogger::Key::F1:
-        mPlayer.SetActiveJoker(Player::Joker::DOUBLE_MOVE);
-        break;
-    case Keylogger::Key::F2:
-        mPlayer.SetActiveJoker(Player::Joker::REPLACE);
-        break;
-    case Keylogger::Key::F3:
-        mPlayer.SetActiveJoker(Player::Joker::FREEDOM);
-        break;
+    case Keylogger::Key::F1: {
+        if (mPlayer.GetActiveJoker() == Player::Joker::DOUBLE_MOVE)
+        {
+            mPlayer.SetActiveJoker(Player::Joker::NONE);
+        }
+        else
+        {
+            mPlayer.SetActiveJoker(Player::Joker::DOUBLE_MOVE);
+        }
+    }
+    break;
+    case Keylogger::Key::F2: {
+        if (mPlayer.GetActiveJoker() == Player::Joker::REPLACE)
+        {
+            mPlayer.SetActiveJoker(Player::Joker::NONE);
+        }
+        else
+        {
+            mPlayer.SetActiveJoker(Player::Joker::REPLACE);
+        }
+    }
+    break;
+    case Keylogger::Key::F3: {
+        if (mPlayer.GetActiveJoker() == Player::Joker::FREEDOM)
+        {
+            mPlayer.SetActiveJoker(Player::Joker::NONE);
+        }
+        else
+        {
+            mPlayer.SetActiveJoker(Player::Joker::FREEDOM);
+        }
+    }
+    break;
     }
 }
 
@@ -124,16 +148,8 @@ void GameI::OnUpdate(const ContextServer &context)
 
     TRACE_NO_STDOUT("Updating board and messages...");
 
-    // update jokers
-    if (mPlayer.GetActiveJoker() != Player::Joker::NONE)
-    {
-        if (mBoard != context.board)
-        {
-            mPlayer.UseActiveJoker();
-        }
-    }
-
     mBoard = context.board;
+    mPlayer = Player(mPlayer.GetColor(), context.jokers);
 
     mMessages.push_front(context.message);
     if (mMessages.size() > 5)
@@ -189,23 +205,27 @@ void GameI::DrawBoard() const
 
 void GameI::DrawJokersStateAndPlayerColor() const
 {
-    const auto &jokers = mPlayer.GetJokers();
 
     SetCaretPos(mBoard.GetSize().GetXY().second * 2, 1);
     cout << format("Your color is \033[1;{}m{}\033[0m", to_string((int)mPlayer.GetColor()),
                    Player::GetColorName(mPlayer.GetColor()));
 
-    SetCaretPos(mBoard.GetSize().GetXY().second * 2, 2);
-    cout << format("(F1) Joker Double-Move: \033[1;{}m{}\033[0m", jokers[0] != Player::Joker::NONE ? "32" : "31",
-                   jokers[0] != Player::Joker::NONE ? "READY" : "USED ");
+    // READY (GREEN) -> ACTIVE (YELLOW) -> USED (RED)
+    const auto &jokers = mPlayer.GetJokers();
+    for (size_t i = 0; i < jokers.size(); i++)
+    {
+        string color("32"s);
+        string text("READY "s);
+        if (!jokers[i].second)
+        {
+            color = mPlayer.GetActiveJoker() == jokers[i].first ? "33"s : "31"s;
+            text = mPlayer.GetActiveJoker() == jokers[i].first ? "ACTIVE"s : "USED  "s;
+        }
 
-    SetCaretPos(mBoard.GetSize().GetXY().second * 2, 3);
-    cout << format("(F2) Joker Replace: \033[1;{}m{}\033[0m", jokers[1] != Player::Joker::NONE ? "32" : "31",
-                   jokers[1] != Player::Joker::NONE ? "READY" : "USED ");
-
-    SetCaretPos(mBoard.GetSize().GetXY().second * 2, 4);
-    cout << format("(F3) Joker Freedom: \033[1;{}m{}\033[0m", jokers[2] != Player::Joker::NONE ? "32" : "31",
-                   jokers[2] != Player::Joker::NONE ? "READY" : "USED ");
+        SetCaretPos(mBoard.GetSize().GetXY().second * 2, i + 2);
+        cout << format("(F{}) Joker {}: \033[1;{}m{}\033[0m", i + 1, Player::GetJokerName(jokers[i].first), color,
+                       text);
+    }
 }
 
 void GameI::DrawMessages() const
