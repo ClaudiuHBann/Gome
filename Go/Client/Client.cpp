@@ -47,6 +47,7 @@ void Client::Connect(const string &ip, const uint16_t port)
     auto &&resolver = mContext.CreateResolver();
     auto &&endpoints = resolver.resolve(ip, to_string(port));
 
+    TRACE(format("Connecting to {}:{}...", SERVER_IP, SERVER_PORT).c_str());
     mClient.Connect(endpoints, [=, this](const auto &ec, auto) {
         if (ec)
         {

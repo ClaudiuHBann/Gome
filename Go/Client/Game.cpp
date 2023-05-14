@@ -23,9 +23,21 @@ GameI::GameI(Networking::IOContext &context)
               bind(&GameI::OnUpdate, this, std::placeholders::_1),
               bind(&GameI::OnUninitialize, this, std::placeholders::_1))
 {
+    string serverIP(SERVER_IP);
+
+    ifstream file("host.cfg");
+    if (!file.is_open())
+    {
+        TRACE("Config file doesn't exist, fallback to local IP!");
+    }
+    else
+    {
+        getline(file, serverIP);
+    }
+
     InitializeCLI();
 
-    mClient.Connect(SERVER_IP, SERVER_PORT);
+    mClient.Connect(serverIP, SERVER_PORT);
 }
 
 void GameI::OnKeyPress(const Keylogger::Key key)
