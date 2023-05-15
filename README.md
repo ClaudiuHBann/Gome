@@ -15,6 +15,6 @@ The server has a command line interface and looks like this:
 The client has a command line interface and looks like this:
 ![image](https://github.com/ClaudiuHBann/Gome/assets/78564392/4663ff5d-d9ab-480e-bf8f-2f7d68be9fed)
 
-From which you can move around with the arrows, with enter you can place a stone and with the first 3 function keys you can use the jokers.
+From which you can move around with the arrow keys, with the enter key you can place a stone and with the first 3 function keys you can use the jokers.
 
 Have fun!
