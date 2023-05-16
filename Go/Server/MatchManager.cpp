@@ -106,15 +106,17 @@ void MatchManager::ProcessPlayer(shared_ptr<TCPClient> clientCurrent)
             // if eveything is good send it to everyone else to the client that made the error
             if (context.error == ContextServer::Error::NONE)
             {
-                SendContextServerToEveryoneExcept(context, clientCurrent);
+                auto &client = GetClientByPlayer(mMatch.GetPlayerCurrent());
+
+                SendContextServerToEveryoneExcept(context, client);
 
                 // send specific message to the player that makes the next move
                 context.message = "It's your turn next..."s;
-                context.jokers = GetPlayerByClient(clientCurrent).GetJokers();
+                context.jokers = mMatch.GetPlayerCurrent().GetJokers();
                 auto &&jsonString = context.ToJSONString();
                 bytes jsonAsBytes((byte *)jsonString.data(), (byte *)jsonString.data() + jsonString.size());
 
-                clientCurrent->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
+                client->Send(jsonAsBytes, Networking::Message::HeaderMetadata::Type::TEXT, [](auto, auto) {});
             }
             else
             {
@@ -144,6 +146,20 @@ void MatchManager::ProcessPlayer(shared_ptr<TCPClient> clientCurrent)
             Finish();
         }
     });
+}
+
+shared_ptr<TCPClient> &MatchManager::GetClientByPlayer(Player &player)
+{
+    size_t indexOfPlayer = 0;
+    for (; indexOfPlayer < mMatch.mPlayers.size(); indexOfPlayer++)
+    {
+        if (player == mMatch.mPlayers[indexOfPlayer])
+        {
+            break;
+        }
+    }
+
+    return mClients[indexOfPlayer];
 }
 
 Player &MatchManager::GetPlayerByClient(const shared_ptr<TCPClient> &client)

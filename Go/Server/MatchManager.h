@@ -82,5 +82,12 @@ class MatchManager
      * @return the player
      */
     Player &GetPlayerByClient(const shared_ptr<TCPClient> &client);
+
+    /**
+     * @brief Gets the client associated with the player
+     * @param player the player
+     * @return the client
+     */
+    shared_ptr<TCPClient> &GetClientByPlayer(Player &player);
 };
 } // namespace Server
