@@ -1,20 +1,16 @@
 #pragma once
 
+#include "Gome/uuid.hpp"
+
 namespace Utility
 {
-// TODO: don't expose window's API data types for the GUID manipulation
+using namespace uuids;
 
 /**
- * @brief GUID class wrapper for windows's API
+ * @brief Wrapper for Marius Bancila's stduuid
  */
 class GUID
 {
-#if defined(UNICODE) || defined(_UNICODE)
-    using RPC_STR = ::RPC_WSTR;
-#else
-    using RPC_STR = ::RPC_CSTR;
-#endif // defined(UNICODE) || defined(_UNICODE)
-
   public:
     /**
      * @brief GUID size in bytes
@@ -27,75 +23,29 @@ class GUID
     GUID();
 
     /**
-     * @brief Destructor
-     */
-    ~GUID();
-
-    /**
      * @brief Constructor
-     * @note allocates a new GUID on heap
-     * @param guid the GUID to be copied
+     * @param guid as bytes
      */
-    GUID(const GUID &guid);
-
-    /**
-     * @brief = operator overload
-     * @param right the GUID to be copied
-     * @return the GUID
-     */
-    GUID &operator=(const GUID &right);
-
-    /**
-     * @brief Creates the GUID from the UUID
-     * @param uuid the uuid
-     */
-    void SetUUID(const ::UUID &uuid);
+    GUID(const bytes &guid);
 
     /**
      * @brief Gets the GUID as a string
      * @return the guid as a string
      */
-    RPC_STR GetStr();
+    string GetStr();
 
     /**
      * @brief Gets the UUID of the GUID
      * @return the uuid
      */
-    const ::UUID &GetUUID() const;
+    const uuid &GetUUID() const;
 
     /**
      * @brief C++20 Magic for the comparison boilerplate
      */
     auto operator<=>(const GUID &) const = default;
 
-    /**
-     * @brief Specialization for <=>
-     * @param right the GUID copmaring to
-     * @return checks if the guids are the same
-     */
-    bool operator==(const GUID &right) const;
-
-    /**
-     * @brief Specialization for <=>
-     * @param right the GUID copmaring to
-     * @return checks if the guids are the same
-     */
-    bool operator!=(const GUID &right) const;
-
   private:
-    /**
-     * @brief Frees the GUID internally lazy initialized string
-     */
-    void Uninitialize();
-
-    ::UUID mUUID{};
-    static inline ::UUID mUUIDDefault{};
-
-    RPC_STR mUUIDString{};
-    static inline RPC_STR mUUIDStringDefault = (RPC_STR)TEXT("");
-
-    ::RPC_STATUS mStatus{};
-    bool mIsGood{};
-    bool mIsGlobal{};
+    uuid mUUID{};
 };
 } // namespace Utility

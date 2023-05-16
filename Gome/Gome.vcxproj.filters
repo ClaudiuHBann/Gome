@@ -101,6 +101,7 @@
       <Filter>Networking\Server</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Random.h" />
+    <ClInclude Include="uuid.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

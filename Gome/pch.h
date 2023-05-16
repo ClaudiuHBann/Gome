@@ -17,9 +17,6 @@
 using namespace asio;
 using namespace ip;
 
-#include <Rpc.h>
-#pragma comment(lib, "Rpcrt4.lib")
-
 #include <fstream>
 #include <iostream>
 #include <numeric>

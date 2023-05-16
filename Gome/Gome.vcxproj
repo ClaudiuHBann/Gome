@@ -171,6 +171,7 @@
     <ClInclude Include="Networking\Client\TCPClient.h" />
     <ClInclude Include="Networking\Server\TCPServerRaw.h" />
     <ClInclude Include="Networking\Server\TCPServer.h" />
+    <ClInclude Include="uuid.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -96,7 +96,7 @@ namespace Networking::Message
 {
     bytes headerAsBytes;
 
-    auto guidRawAsBytePtr = (byte *)&headerMetadata.GetGUID().GetUUID();
+    auto guidRawAsBytePtr = headerMetadata.GetGUID().GetUUID().as_bytes().data();
     bytes guidRawAsBytes(guidRawAsBytePtr, guidRawAsBytePtr + Utility::GUID::GUID_SIZE);
     headerAsBytes.append_range(guidRawAsBytes);
 
@@ -114,9 +114,8 @@ namespace Networking::Message
     THROW_INVALID_ARG_IF(bytess.size() != HeaderMetadata::SIZE);
 
     bytes guidAsBytes(bytess.begin(), bytess.begin() + Utility::GUID::GUID_SIZE);
-    Utility::GUID guid;
-    guid.SetUUID(*reinterpret_cast<UUID *>(guidAsBytes.data()));
-    THROW_INVALID_ARG_IF(!guid.GetStr());
+    Utility::GUID guid(guidAsBytes);
+    THROW_INVALID_ARG_IF(guid.GetUUID().is_nil());
 
     auto type = (HeaderMetadata::Type)bytess[Utility::GUID::GUID_SIZE];
     THROW_INVALID_ARG_IF(HeaderMetadata::Type::NONE > type || type > HeaderMetadata::Type::COUNT);
@@ -132,7 +131,7 @@ namespace Networking::Message
 {
     bytes headerAsBytes;
 
-    auto guidRawAsBytePtr = (byte *)&headerData.GetGUID().GetUUID();
+    auto guidRawAsBytePtr = headerData.GetGUID().GetUUID().as_bytes().data();
     bytes guidRawAsBytes(guidRawAsBytePtr, guidRawAsBytePtr + Utility::GUID::GUID_SIZE);
     headerAsBytes.append_range(guidRawAsBytes);
 
@@ -148,9 +147,8 @@ namespace Networking::Message
     THROW_INVALID_ARG_IF(bytess.size() != HeaderData::SIZE);
 
     bytes guidAsBytes(bytess.begin(), bytess.begin() + Utility::GUID::GUID_SIZE);
-    Utility::GUID guid;
-    guid.SetUUID(*reinterpret_cast<UUID *>(guidAsBytes.data()));
-    THROW_INVALID_ARG_IF(!guid.GetStr());
+    Utility::GUID guid(guidAsBytes);
+    THROW_INVALID_ARG_IF(guid.GetUUID().is_nil());
 
     bytes indexAsBytes(bytess.begin() + Utility::GUID::GUID_SIZE, bytess.begin() + HeaderData::SIZE);
     auto index = *reinterpret_cast<size_t *>(indexAsBytes.data());

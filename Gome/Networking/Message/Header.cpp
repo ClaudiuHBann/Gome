@@ -32,7 +32,7 @@ String HeaderMetadata::ToString()
 {
     String headerAsString;
 
-    headerAsString += reinterpret_cast<const ::TCHAR *>(mGUID.GetStr());
+    headerAsString += mGUID.GetStr();
     headerAsString += HEADER_STRING_DELIMITATOR;
     headerAsString += TypeToString();
     headerAsString += HEADER_STRING_DELIMITATOR;
@@ -64,7 +64,7 @@ String HeaderData::ToString()
 {
     String headerAsString;
 
-    headerAsString += reinterpret_cast<const ::TCHAR *>(mGUID.GetStr());
+    headerAsString += mGUID.GetStr();
     headerAsString += HEADER_STRING_DELIMITATOR;
     headerAsString += Utility::ToString(mIndex);
 
