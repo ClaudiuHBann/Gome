@@ -6,7 +6,7 @@ The project consists of a server that is temporary located in the [Tests](https:
 	
 The server needs a configuration file like [this](https://github.com/ClaudiuHBann/Gome/blob/master/Tests/rules.cfg).
 
-The client connects to the local server automatically.
+The client can have a configuration file like [this](https://github.com/ClaudiuHBann/Gome/blob/master/Go/host.cfg), else it will connect to the local server automatically.
 
 The server has a command line interface and looks like this:
 ![image](https://github.com/ClaudiuHBann/Gome/assets/78564392/3c344737-9052-447a-8b16-019d17330e7a)
