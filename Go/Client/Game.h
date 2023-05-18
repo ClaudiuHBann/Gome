@@ -147,5 +147,11 @@ class GameI
      * @param contextInit the uninitializing context
      */
     void OnUninitialize(const ContextServerUninit &contextUninit);
+
+    /**
+     * @brief Adds a message to the queue
+     * @param message the message to be added
+    */
+    void AddMessage(const string& message);
 };
 } // namespace Client

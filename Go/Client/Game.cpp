@@ -134,15 +134,19 @@ void GameI::OnInitialize(const ContextServerInit &contextInit)
     mReady = true;
 }
 
+void GameI::AddMessage(const string& message) {
+  mMessages.push_back(message);
+  if (mMessages.size() > 5)
+  {
+    mMessages.pop_front();
+  }
+}
+
 void GameI::OnUninitialize(const ContextServerUninit &contextUninit)
 {
     TRACE_NO_STDOUT(contextUninit.message);
 
-    mMessages.push_back(contextUninit.message);
-    if (mMessages.size() > 5)
-    {
-        mMessages.pop_front();
-    }
+    AddMessage(contextUninit.message);
 
     Draw();
 
@@ -163,11 +167,7 @@ void GameI::OnUpdate(const ContextServer &context)
     mBoard = context.board;
     mPlayer = Player(mPlayer.GetColor(), context.jokers);
 
-    mMessages.push_front(context.message);
-    if (mMessages.size() > 5)
-    {
-        mMessages.pop_back();
-    }
+    AddMessage(context.message);
 
     Draw();
 }
