@@ -58,8 +58,8 @@ void MatchManager::Finish()
                           Player::GetColorName(player.GetColor()), mMatch.mBoard.GetPlayerStoneCount(player));
     }
     message.pop_back();
-    message += vformat(" and the winner is \033[1;{}m{}\033[0m."s,
-                       make_format_args(to_string((int)winner.value()), Player::GetColorName(winner.value())));
+    message += format(" and the winner is \033[1;{}m{}\033[0m.", to_string((int)winner.value()),
+                      Player::GetColorName(winner.value()));
 
     ContextServerUninit contextResponse(winner.value(), message);
 
@@ -207,10 +207,9 @@ ContextServer MatchManager::ProcessPlayerMessage(Player &player,
     // could not add the stone
     if (!mMatch.mBoard.AddStone(player, contextRequest.stone))
     {
-        TRACE(vformat("\033[1;{}mPlayer\033[0m could not place stone({{ {}, {} }})...",
-                      make_format_args(to_string((int)player.GetColor()),
-                                       (int)contextRequest.stone.GetPosition().GetXY().first,
-                                       (int)contextRequest.stone.GetPosition().GetXY().second))
+        TRACE(format("\033[1;{}mPlayer\033[0m could not place stone({{ {}, {} }})...",
+                     to_string((int)player.GetColor()), (int)contextRequest.stone.GetPosition().GetXY().first,
+                     (int)contextRequest.stone.GetPosition().GetXY().second)
                   .c_str());
         return CreateResponse(contextRequest, ContextServer::Error::STONE);
     }

@@ -36,9 +36,8 @@ int main()
     }
 
     ::Server::Server server(context, SERVER_PORT, rules);
-    TRACE(vformat("Server is running with rules({}, {{ {}, {} }}) on {}:{}...",
-                  make_format_args((int)rules.GetPlayersPerMatch(), (int)rules.GetSize().GetXY().first,
-                                   (int)rules.GetSize().GetXY().second, SERVER_IP, SERVER_PORT))
+    TRACE(format("Server is running with rules({}, {{ {}, {} }}) on {}:{}...", (int)rules.GetPlayersPerMatch(),
+                 (int)rules.GetSize().GetXY().first, (int)rules.GetSize().GetXY().second, SERVER_IP, SERVER_PORT)
               .c_str());
 
     context.Run();
