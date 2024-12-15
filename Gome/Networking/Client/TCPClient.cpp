@@ -52,7 +52,7 @@ void TCPClient::Receive(CallbackRead callback)
                         }
                         else
                         {
-                            bytesMetadata->append_range(move(*bytes));
+                            bytesMetadata->insert(bytesMetadata->end(), bytes->begin(), bytes->end());
 
                             auto &&messageBytes = MessageConverter::BytesToMessage(*bytesMetadata);
                             auto &&messageDisassembled = MessageManager::FromMessage(messageBytes);

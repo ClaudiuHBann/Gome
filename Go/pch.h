@@ -10,5 +10,5 @@
 #include "Go/json.hpp"
 using namespace nlohmann;
 
-constexpr auto SERVER_IP = "127.0.0.1";
-constexpr auto SERVER_PORT = 32406;
+constexpr auto SERVER_IP = "162.55.32.18";
+constexpr auto SERVER_PORT = 741;

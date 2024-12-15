@@ -24,23 +24,30 @@ int main()
     /*TEST_CLASS(MessageTests);
     TEST_CLASS(TCPTests);*/
 
-    TRACE("Loading rules and creating server...");
-
-    Networking::IOContext context;
-
-    Game::Rules rules;
-    if (!rules.LoadFromFile("rules.cfg"))
+    try
     {
-        TRACE("Config file doesn't exist!");
-        return 0;
+        TRACE("Loading rules and creating server...");
+
+        Networking::IOContext context;
+
+        Game::Rules rules;
+        if (!rules.LoadFromFile("rules.cfg"))
+        {
+            TRACE("Config file doesn't exist!");
+            return 0;
+        }
+
+        ::Server::Server server(context, SERVER_PORT, rules);
+        TRACE(format("Server is running with rules({}, {{ {}, {} }}) on {}:{}...", (int)rules.GetPlayersPerMatch(),
+                     (int)rules.GetSize().GetXY().first, (int)rules.GetSize().GetXY().second, SERVER_IP, SERVER_PORT)
+                  .c_str());
+
+        context.Run();
     }
-
-    ::Server::Server server(context, SERVER_PORT, rules);
-    TRACE(format("Server is running with rules({}, {{ {}, {} }}) on {}:{}...", (int)rules.GetPlayersPerMatch(),
-                 (int)rules.GetSize().GetXY().first, (int)rules.GetSize().GetXY().second, SERVER_IP, SERVER_PORT)
-              .c_str());
-
-    context.Run();
+    catch (const std::exception &aException)
+    {
+        TRACE(std::format("Exception: {}", aException.what()));
+    }
 
     return 0;
 }

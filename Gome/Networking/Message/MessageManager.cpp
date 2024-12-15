@@ -51,8 +51,8 @@ namespace Networking::Message
 
     for (const auto &packetData : message.mPacketDatas)
     {
-        bytes.insert_range(bytes.begin() + packetData.GetHeaderData().GetIndex() * PacketData::CONTENT_SIZE_MAX,
-                           packetData.GetContent());
+        bytes.insert(bytes.begin() + packetData.GetHeaderData().GetIndex() * PacketData::CONTENT_SIZE_MAX,
+                     packetData.GetContent().begin(), packetData.GetContent().end());
     }
 
     return {message.mPacketMetadata.GetHeaderMetadata().GetGUID(),

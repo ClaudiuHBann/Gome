@@ -66,10 +66,13 @@ static inline void OutputDebugStringForced(const ::TCHAR *str, const bool useStd
 #endif // defined(_UNICODE) || defined(UNICODE)
     }
 
-    static auto &&currentZoneTime = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
-    static String fileName(format(TEXT("{:%Y-%m-%d--%H-%M-%OS}.log"), currentZoneTime));
-    static FileOutStream file(fileName);
-    file << str << flush;
+    // TODO: wine on ubuntu doesn't like this -> Exception: Module not found.
+    // 011c:err:seh:NtRaiseException Unhandled exception code c0000409 flags 1 addr 0x140066451
+    //
+    // static auto &&currentZoneTime = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
+    // static String fileName(format(TEXT("{:%Y-%m-%d--%H-%M-%OS}.log"), currentZoneTime));
+    // static FileOutStream file(fileName);
+    // file << str << flush;
 }
 
 /**
