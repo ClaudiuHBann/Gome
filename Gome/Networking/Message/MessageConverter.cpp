@@ -8,7 +8,7 @@ namespace Networking::Message
 {
     auto &&bytes = PacketMetadataToBytes(message.mPacketMetadata);
     auto &&bytesPacketDatas = PacketDatasToBytes(message.mPacketDatas);
-    bytes.append_range(bytesPacketDatas);
+    bytes.insert(bytes.end(), bytesPacketDatas.begin(), bytesPacketDatas.end());
 
     return bytes;
 }
@@ -34,7 +34,7 @@ namespace Networking::Message
 /* static */ bytes MessageConverter::PacketDataToBytes(const PacketData &packetData)
 {
     auto &&bytes(HeaderDataToBytes(packetData.GetHeaderData()));
-    bytes.append_range(packetData.GetContent());
+    bytes.insert(bytes.end(), packetData.GetContent().begin(), packetData.GetContent().end());
 
     return bytes;
 }
@@ -86,7 +86,8 @@ namespace Networking::Message
 
     for (const auto &packetData : packetDatas)
     {
-        bytes.append_range(PacketDataToBytes(packetData));
+        auto packetDataBytes = PacketDataToBytes(packetData);
+        bytes.insert(bytes.end(), packetDataBytes.begin(), packetDataBytes.end());
     }
 
     return bytes;
@@ -98,13 +99,13 @@ namespace Networking::Message
 
     auto guidRawAsBytePtr = headerMetadata.GetGUID().GetUUID().as_bytes().data();
     bytes guidRawAsBytes(guidRawAsBytePtr, guidRawAsBytePtr + Utility::GUID::GUID_SIZE);
-    headerAsBytes.append_range(guidRawAsBytes);
+    headerAsBytes.insert(headerAsBytes.end(), guidRawAsBytes.begin(), guidRawAsBytes.end());
 
     headerAsBytes.push_back((byte)headerMetadata.GetType());
 
     auto sizeAsBytePtr = (byte *)&headerMetadata.GetSize();
     bytes sizeAsBytes(sizeAsBytePtr, sizeAsBytePtr + sizeof(headerMetadata.GetSize()));
-    headerAsBytes.append_range(sizeAsBytes);
+    headerAsBytes.insert(headerAsBytes.end(), sizeAsBytes.begin(), sizeAsBytes.end());
 
     return headerAsBytes;
 }
@@ -133,11 +134,11 @@ namespace Networking::Message
 
     auto guidRawAsBytePtr = headerData.GetGUID().GetUUID().as_bytes().data();
     bytes guidRawAsBytes(guidRawAsBytePtr, guidRawAsBytePtr + Utility::GUID::GUID_SIZE);
-    headerAsBytes.append_range(guidRawAsBytes);
+    headerAsBytes.insert(headerAsBytes.end(), guidRawAsBytes.begin(), guidRawAsBytes.end());
 
     auto indexValidAsBytePtr = (byte *)&headerData.GetIndex();
     bytes indexValidAsBytes(indexValidAsBytePtr, indexValidAsBytePtr + sizeof(headerData.GetIndex()));
-    headerAsBytes.append_range(indexValidAsBytes);
+    headerAsBytes.insert(headerAsBytes.end(), indexValidAsBytes.begin(), indexValidAsBytes.end());
 
     return headerAsBytes;
 }
