@@ -168,6 +168,22 @@ Coord Board::GetSize() const
     return {(uint8_t)mGameState.size(), (uint8_t)mGameState.front().size()};
 }
 
+void Board::FillBoardWith(const Player &aPlayer)
+{
+    for (uint8_t row = 0; row < GetSize().GetXY().first; row++)
+    {
+        for (uint8_t column = 0; column < GetSize().GetXY().second; column++)
+        {
+            if (IsStoneOnPos({row, column}))
+            {
+                continue;
+            }
+
+            mGameState[row][column] = aPlayer.GetColor();
+        }
+    }
+}
+
 bool Board::CanPlayerPlaceAnyStone(const Player &player) const
 {
     for (uint8_t row = 0; row < GetSize().GetXY().first; row++)

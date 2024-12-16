@@ -50,6 +50,8 @@ class Board
      */
     bool CanPlayerPlaceAnyStone(const Player &player) const;
 
+    void FillBoardWith(const Player &aPlayer);
+
     /**
      * @brief Checks if the game is in terminal state
      * @param players the players from the match

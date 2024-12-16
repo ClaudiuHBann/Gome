@@ -221,15 +221,23 @@ ContextServer MatchManager::ProcessPlayerMessage(Player &player,
     }
     else
     {
-        mMatch.GetPlayerNext();
+        bool samePlayer = false;
+
         auto &playerStart = mMatch.GetPlayerCurrent();
+        mMatch.GetPlayerNext();
+
         while (!mMatch.mBoard.CanPlayerPlaceAnyStone(mMatch.GetPlayerCurrent()))
         {
-            mMatch.GetPlayerNext();
-            if (mMatch.GetPlayerCurrent() == playerStart)
+            if (mMatch.GetPlayerNext() == playerStart)
             {
+                samePlayer = true;
                 break;
             }
+        }
+
+        if (samePlayer)
+        {
+            mMatch.mBoard.FillBoardWith(playerStart);
         }
     }
 
